@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroung_registation_page"
+    tools:context=".Activities.RegistrationPage">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/profile_imag_registraion_page"
+        android:gravity="center"
+        android:padding="30dp">
+        <android.support.v7.widget.CardView
+            android:layout_width="150dp"
+            app:cardCornerRadius="75dp"
+            android:backgroundTint="@color/colorAccent"
+            android:layout_height="150dp">
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                />
+        </android.support.v7.widget.CardView>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/form_registation_page"
+        android:layout_below="@+id/profile_imag_registraion_page"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentRight="true">
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/Name_Registration_page"
+
+        android:background="@drawable/backgroung_edittext_registration_page"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+
+        android:hint="Name"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/Email_Registration_page"
+        android:layout_below="@+id/Name_Registration_page"
+
+        android:background="@drawable/backgroung_edittext_registration_page"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+
+        android:hint="Email"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/Mobile_Registration_page"
+
+        android:background="@drawable/backgroung_edittext_registration_page"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+
+        android:layout_below="@+id/Email_Registration_page"
+        android:hint="Mobile"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="@drawable/backgroung_edittext_registration_page"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+
+        android:layout_below="@+id/Mobile_Registration_page"
+        android:id="@+id/Collge_Registration_page"
+        android:hint="College/School"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="@drawable/backgroung_edittext_registration_page"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+
+        android:layout_below="@+id/Collge_Registration_page"
+        android:id="@+id/Branch_Registration_page"
+        android:hint="Branch"/>
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/TShirt_Size_Registration_page"
+        android:layout_below="@+id/Branch_Registration_page"
+
+        >
+    </Spinner>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:layout_below="@id/TShirt_Size_Registration_page"
+        android:id="@+id/Registe_Registration_page"/>
+    </RelativeLayout>
+</RelativeLayout>
