@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Ojass</string>
-    <string name="feeds">FEEDS</string>
+    <string name="feeds">Feeds</string>
     <string name="events">EVENTS</string>
     <string name="itinerary">ITINERARY</string>
     <string name="help"><![CDATA[HELP & SUPPORT]]></string>
