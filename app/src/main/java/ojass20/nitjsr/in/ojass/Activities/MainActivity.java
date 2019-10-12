@@ -14,6 +14,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
@@ -25,7 +30,10 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private NavigationView mNavigationDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
+    private ImageView mPullUp;
+    private ImageView mPullDown;
     private String LOG_TAG = "MAIN";
+    private TranslateAnimation mAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +42,28 @@ public class MainActivity extends AppCompatActivity {
 
         initializeInstanceVariables();
         setUpNavigationDrawer();
+        setUpAnimation(mPullUp);
+    }
+
+    private void setUpAnimation(ImageView mImageView) {
+        mAnimation.setDuration(700);
+        mAnimation.setRepeatCount(-1);
+        mAnimation.setRepeatMode(Animation.REVERSE);
+        mAnimation.setInterpolator(new LinearInterpolator());
+        mImageView.setAnimation(mAnimation);
     }
 
     private void initializeInstanceVariables() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationDrawer = (NavigationView) findViewById(R.id.navigation_view);
+        mPullUp = findViewById(R.id.pull_up);
+        mPullDown = findViewById(R.id.pull_down);
+        mAnimation = new TranslateAnimation(
+                TranslateAnimation.ABSOLUTE, 0f,
+                TranslateAnimation.ABSOLUTE, 0f,
+                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
+                TranslateAnimation.RELATIVE_TO_PARENT, 0.005f);
     }
 
     private void setUpNavigationDrawer() {
