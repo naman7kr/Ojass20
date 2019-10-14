@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements
 
         initializeInstanceVariables();
         setUpNavigationDrawer();
-        setUpAnimation(mPullUp);
+        setUpAnimationForImageView(mPullUp);
         detectTouchEvents();
     }
 
@@ -68,9 +69,11 @@ public class MainActivity extends AppCompatActivity implements
                 mPullDown.animate().alpha(1.0f).setDuration(1000);
                 mPullUp.animate().alpha(0.0f).setDuration(1000);
                 mPullUp.setVisibility(View.GONE);
-                setUpAnimation(mPullDown);
+                setUpAnimationForImageView(mPullDown);
+                mToolbar.setTitle("");
             }
         });
+
         mPullDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,9 +85,11 @@ public class MainActivity extends AppCompatActivity implements
                 mPullDown.animate().alpha(0.0f).setDuration(1000);
                 mHeading.animate().alpha(0.0f).setDuration(1000);
                 mPullDown.setVisibility(View.GONE);
-                setUpAnimation(mPullDown);
+                mToolbar.setTitle(getResources().getString(R.string.feeds));
+                setUpAnimationForImageView(mPullDown);
             }
         });
+
         mHeading.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -94,7 +99,47 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-    private void setUpAnimation(ImageView mImageView) {
+    private void setUpAnimationForTextView(final int code, final long mainTime, String curr) {
+        long tempTime = System.currentTimeMillis();
+        if (tempTime - mainTime > 500) {
+            mHeading.setText("Heading");
+            return;
+        }
+        String temp = " ";
+        Log.e(LOG_TAG, curr);
+        for (int i = 0; i < curr.length(); i++) {
+            char ch = curr.charAt(i);
+            if (code == 1) {
+                if (ch == 'Z')
+                    temp = temp + 'A';
+                else {
+                    int u = (int) ch;
+                    u++;
+                    temp = temp + (char) u;
+                }
+            } else {
+                if (ch == 'A')
+                    temp = temp + 'Z';
+                else {
+                    int u = (int) ch;
+                    u--;
+                    temp = temp + (char) u;
+                }
+            }
+        }
+        temp = temp.trim();
+        mHeading.setText(temp);
+        //Log.e(LOG_TAG, temp);
+        final String x = temp;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setUpAnimationForTextView(code, mainTime, x.toUpperCase());
+            }
+        }, 10);
+    }
+
+    private void setUpAnimationForImageView(ImageView mImageView) {
         mAnimation.setDuration(700);
         mAnimation.setRepeatCount(-1);
         mAnimation.setRepeatMode(Animation.REVERSE);
@@ -246,11 +291,13 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        Log.e(LOG_TAG, e1.getX() + " " + e2.getX());
-        if (e1.getX() < e2.getX())
+        if (e1.getX() < e2.getX()) {
             Toast.makeText(this, "Swiped Right", Toast.LENGTH_LONG).show();
-        else
+            setUpAnimationForTextView(1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
+        } else {
             Toast.makeText(this, "Swiped Left", Toast.LENGTH_LONG).show();
-        return false;
+            setUpAnimationForTextView(-1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
+        }
+        return true;
     }
 }
