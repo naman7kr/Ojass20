@@ -4,7 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
+import androidx.core.view.GestureDetectorCompat;
+import androidx.core.view.MotionEventCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -12,20 +13,24 @@ import androidx.fragment.app.FragmentManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
 import ojass20.nitjsr.in.ojass.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        GestureDetector.OnGestureListener {
     private DrawerLayout mDrawer;
     private Toolbar mToolbar;
     private NavigationView mNavigationDrawer;
@@ -34,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageView mPullDown;
     private String LOG_TAG = "MAIN";
     private TranslateAnimation mAnimation;
+    private TextView mHeading;
+    private GestureDetectorCompat mDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +50,48 @@ public class MainActivity extends AppCompatActivity {
         initializeInstanceVariables();
         setUpNavigationDrawer();
         setUpAnimation(mPullUp);
+        detectTouchEvents();
+    }
+
+    private void detectTouchEvents() {
+        mPullUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPullUp.setEnabled(false);
+                mPullDown.setEnabled(true);
+                mPullDown.setVisibility(View.VISIBLE);
+                mHeading.setVisibility(View.VISIBLE);
+                mPullDown.setAlpha(0.0f);
+                mHeading.setAllCaps(true);
+                mHeading.setAlpha(0.0f);
+                mHeading.animate().alpha(1.0f).setDuration(1000);
+                mPullDown.animate().alpha(1.0f).setDuration(1000);
+                mPullUp.animate().alpha(0.0f).setDuration(1000);
+                mPullUp.setVisibility(View.GONE);
+                setUpAnimation(mPullDown);
+            }
+        });
+        mPullDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPullDown.setEnabled(false);
+                mPullUp.setEnabled(true);
+                mPullUp.setVisibility(View.VISIBLE);
+                mPullUp.setAlpha(0.0f);
+                mPullUp.animate().alpha(1.0f).setDuration(1000);
+                mPullDown.animate().alpha(0.0f).setDuration(1000);
+                mHeading.animate().alpha(0.0f).setDuration(1000);
+                mPullDown.setVisibility(View.GONE);
+                setUpAnimation(mPullDown);
+            }
+        });
+        mHeading.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mDetector.onTouchEvent(event);
+                return true;
+            }
+        });
     }
 
     private void setUpAnimation(ImageView mImageView) {
@@ -64,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
                 TranslateAnimation.ABSOLUTE, 0f,
                 TranslateAnimation.RELATIVE_TO_PARENT, 0f,
                 TranslateAnimation.RELATIVE_TO_PARENT, 0.005f);
+        mHeading = (TextView) findViewById(R.id.heading);
+        mDetector = new GestureDetectorCompat(this, this);
     }
 
     private void setUpNavigationDrawer() {
@@ -84,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
-        Log.e(LOG_TAG, "I'm called");
         return new ActionBarDrawerToggle(MainActivity.this, mDrawer, mToolbar, R.string.drawer_open, R.string.drawer_close);
     }
 
@@ -167,5 +217,40 @@ public class MainActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        Log.e(LOG_TAG, e1.getX() + " " + e2.getX());
+        if (e1.getX() < e2.getX())
+            Toast.makeText(this, "Swiped Right", Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(this, "Swiped Left", Toast.LENGTH_LONG).show();
+        return false;
     }
 }
