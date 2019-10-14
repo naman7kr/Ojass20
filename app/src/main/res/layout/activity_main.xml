@@ -5,25 +5,13 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.MainActivity"
-    android:background="@color/colorAccent">
+    android:background="@color/colorAccent"
+    tools:context=".Activities.MainActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <include
-                layout="@layout/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
 
         <FrameLayout
             android:id="@+id/flContent"
@@ -55,10 +43,10 @@
                     android:src="@drawable/border_circle" />
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/feed_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="56dp"
-                    android:id="@+id/feed_recycler_view"
                     android:scrollbars="none" />
 
             </RelativeLayout>
@@ -79,6 +67,18 @@
             </RelativeLayout>
 
         </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
     </FrameLayout>
 

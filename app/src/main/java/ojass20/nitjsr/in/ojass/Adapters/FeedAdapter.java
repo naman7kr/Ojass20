@@ -73,8 +73,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final ImageView postImage = (ImageView) (customViewHolder.feedLayout.findViewById(R.id.feed_post_image));
         if (feedPosts[position].getImageURL() == null) {
             postImageView.setVisibility(View.GONE);
-        }
-        else{
+        } else {
             Glide.with(context)
                     .load(feedPosts[position].getImageURL())
                     .listener(new RequestListener<Drawable>() {
