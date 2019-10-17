@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +19,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
@@ -102,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
 //            case R.id.nav_third_fragment:
 //                fragmentClass = ThirdFragment.class;
 //                break;
+//            case R.id.logout:
+//                signout();
+//                break;
 //            default:
 //                fragmentClass = FirstFragment.class;
 //        }
@@ -122,6 +128,17 @@ public class MainActivity extends AppCompatActivity {
         setTitle(menuItem.getTitle());
         // Close the navigation drawer
         mDrawer.closeDrawers();
+    }
+
+    private void signout() {
+        FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
+        sendToLoginActivity();
+    }
+
+    private void sendToLoginActivity() {
+        startActivity(new Intent(MainActivity.this,LoginActivity.class));
+        finish();
     }
 
     private void setUpRecyclerView() {
@@ -156,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.notifications:
                 return true;
             case R.id.profile:
+                signout();
                 return true;
         }
 
