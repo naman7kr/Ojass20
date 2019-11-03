@@ -24,5 +24,4 @@
         android:id="@+id/facebook_sign_in_btn"
         android:layout_centerHorizontal="true"
         />
-
 </RelativeLayout>
