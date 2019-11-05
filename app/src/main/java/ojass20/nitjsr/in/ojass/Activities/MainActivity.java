@@ -180,7 +180,6 @@ public class MainActivity extends AppCompatActivity implements
         return new ActionBarDrawerToggle(MainActivity.this, mDrawer, mToolbar, R.string.drawer_open, R.string.drawer_close);
     }
 
-
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -191,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 });
     }
-
 
     public void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment = null;
