@@ -11,8 +11,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -28,6 +30,9 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.ArrayList;
+
+import ojass20.nitjsr.in.ojass.Helpers.HomePage;
 import ojass20.nitjsr.in.ojass.R;
 
 public class MainActivity extends AppCompatActivity implements
@@ -42,6 +47,11 @@ public class MainActivity extends AppCompatActivity implements
     private TranslateAnimation mAnimation;
     private TextView mHeading;
     private GestureDetectorCompat mDetector;
+    private ImageView mActiveCircle;
+    private ImageView mActiveCircleLeft;
+    private ImageView mActiveCircleRight;
+    private ArrayList<HomePage> mItems;
+    private int mInd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,26 +59,42 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         initializeInstanceVariables();
+        setUpArrayList();
         setUpNavigationDrawer();
         setUpAnimationForImageView(mPullUp);
         detectTouchEvents();
+    }
+
+    private void setUpArrayList() {
+        mItems.add(new HomePage("EVENTS", "#FF0000", 0));
+        mItems.add(new HomePage("GURUGYAN", "#00FF00", 1));
+        mItems.add(new HomePage("ITINERARY", "#0000FF", 2));
     }
 
     private void detectTouchEvents() {
         mPullUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mInd >= mItems.size())
+                    mInd = 0;
                 mPullUp.setEnabled(false);
                 mPullDown.setEnabled(true);
                 mPullDown.setVisibility(View.VISIBLE);
                 mHeading.setVisibility(View.VISIBLE);
+                mActiveCircle.setVisibility(View.VISIBLE);
                 mPullDown.setAlpha(0.0f);
                 mHeading.setAllCaps(true);
                 mHeading.setAlpha(0.0f);
                 mHeading.animate().alpha(1.0f).setDuration(1000);
                 mPullDown.animate().alpha(1.0f).setDuration(1000);
+                mActiveCircle.animate().alpha(1.0f).setDuration(1000);
+                if (mInd != 0)
+                    mActiveCircleLeft.animate().alpha(1.0f).setDuration(1000);
+                if (mInd == mItems.size() - 1)
+                    mActiveCircleRight.animate().alpha(1.0f).setDuration(1000);
                 mPullUp.animate().alpha(0.0f).setDuration(1000);
                 mPullUp.setVisibility(View.GONE);
+                setUpView();
                 setUpAnimationForImageView(mPullDown);
                 mToolbar.setTitle("");
             }
@@ -84,7 +110,13 @@ public class MainActivity extends AppCompatActivity implements
                 mPullUp.animate().alpha(1.0f).setDuration(1000);
                 mPullDown.animate().alpha(0.0f).setDuration(1000);
                 mHeading.animate().alpha(0.0f).setDuration(1000);
+                mActiveCircle.animate().alpha(0.0f).setDuration(1000);
+                mActiveCircleLeft.animate().alpha(0.0f).setDuration(1000);
+                mActiveCircleRight.animate().alpha(0.0f).setDuration(1000);
                 mPullDown.setVisibility(View.GONE);
+                mActiveCircle.setVisibility(View.GONE);
+                mActiveCircleLeft.setVisibility(View.GONE);
+                mActiveCircleRight.setVisibility(View.GONE);
                 mToolbar.setTitle(getResources().getString(R.string.feeds));
                 setUpAnimationForImageView(mPullDown);
             }
@@ -99,14 +131,29 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
+    private void setUpView() {
+        HomePage homePage = mItems.get(mInd);
+        mHeading.setText(homePage.getmTitle());
+        mActiveCircle.setColorFilter(Color.parseColor(homePage.getmCircleColor()));
+        mActiveCircleLeft.setVisibility(View.GONE);
+        mActiveCircleRight.setVisibility(View.GONE);
+        if (mInd > 0) {
+            mActiveCircleLeft.setVisibility(View.VISIBLE);
+            mActiveCircleLeft.setColorFilter(Color.parseColor(mItems.get(mInd - 1).getmCircleColor()));
+        }
+        if (mInd < mItems.size() - 1) {
+            mActiveCircleRight.setVisibility(View.VISIBLE);
+            mActiveCircleRight.setColorFilter(Color.parseColor(mItems.get(mInd + 1).getmCircleColor()));
+        }
+    }
+
     private void setUpAnimationForTextView(final int code, final long mainTime, String curr) {
         long tempTime = System.currentTimeMillis();
         if (tempTime - mainTime > 500) {
-            mHeading.setText("Heading");
+            setUpView();
             return;
         }
         String temp = " ";
-        Log.e(LOG_TAG, curr);
         for (int i = 0; i < curr.length(); i++) {
             char ch = curr.charAt(i);
             if (code == 1) {
@@ -159,6 +206,11 @@ public class MainActivity extends AppCompatActivity implements
                 TranslateAnimation.RELATIVE_TO_PARENT, 0f,
                 TranslateAnimation.RELATIVE_TO_PARENT, 0.005f);
         mHeading = (TextView) findViewById(R.id.heading);
+        mActiveCircle = findViewById(R.id.active_circle);
+        mActiveCircleLeft = findViewById(R.id.active_circle_left);
+        mActiveCircleRight = findViewById(R.id.active_circle_right);
+        mItems = new ArrayList<>();
+        mInd = 0;
         mDetector = new GestureDetectorCompat(this, this);
     }
 
@@ -292,10 +344,16 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         if (e1.getX() < e2.getX()) {
-            Toast.makeText(this, "Swiped Right", Toast.LENGTH_LONG).show();
+            mInd--;
+            if (mInd < 0)
+                mInd = mItems.size() - 1;
+            setUpView();
             setUpAnimationForTextView(1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
         } else {
-            Toast.makeText(this, "Swiped Left", Toast.LENGTH_LONG).show();
+            mInd++;
+            if (mInd >= mItems.size())
+                mInd = 0;
+            setUpView();
             setUpAnimationForTextView(-1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
         }
         return true;
