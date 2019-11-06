@@ -329,13 +329,13 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
         switch (mInd) {
-            case 1:
+            case 0:
                 Toast.makeText(MainActivity.this, "Events", Toast.LENGTH_LONG).show();
                 break;
-            case 2:
+            case 1:
                 Toast.makeText(MainActivity.this, "Gurugyan", Toast.LENGTH_LONG).show();
                 break;
-            case 3:
+            case 2:
                 Toast.makeText(MainActivity.this, "Itinerary", Toast.LENGTH_LONG).show();
                 break;
             default:
