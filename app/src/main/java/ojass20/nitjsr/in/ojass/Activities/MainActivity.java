@@ -328,7 +328,20 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
-        return false;
+        switch (mInd) {
+            case 1:
+                Toast.makeText(MainActivity.this, "Events", Toast.LENGTH_LONG).show();
+                break;
+            case 2:
+                Toast.makeText(MainActivity.this, "Gurugyan", Toast.LENGTH_LONG).show();
+                break;
+            case 3:
+                Toast.makeText(MainActivity.this, "Itinerary", Toast.LENGTH_LONG).show();
+                break;
+            default:
+                Log.e(LOG_TAG, "Bhai sahab ye kis line mein aa gye aap?");
+        }
+        return true;
     }
 
     @Override
