@@ -5,4 +5,6 @@
     <color name="colorAccent">#DCDCDC</color>
     <color name="navigationDrawerText">#616161</color>
     <color name="black">#000</color>
+    <color name="white">#FFF</color>
+    <color name="blue">#047BD5</color>
 </resources>

@@ -1,15 +1,5 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GestureDetectorCompat;
-import androidx.core.view.MotionEventCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,6 +23,14 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 
 import ojass20.nitjsr.in.ojass.Helpers.HomePage;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GestureDetectorCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import ojass20.nitjsr.in.ojass.R;
 
 public class MainActivity extends AppCompatActivity implements
@@ -235,7 +233,6 @@ public class MainActivity extends AppCompatActivity implements
         return new ActionBarDrawerToggle(MainActivity.this, mDrawer, mToolbar, R.string.drawer_open, R.string.drawer_close);
     }
 
-
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -246,7 +243,6 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 });
     }
-
 
     public void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment = null;

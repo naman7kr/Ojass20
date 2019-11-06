@@ -15,22 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "152106484750-a3rbbrt13a098ff12qr11blppu1obim7.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "ojass20.nitjsr.in.ojass",
-            "certificate_hash": "c18e76f00583c03f10cf2ead8ff4803feaa16f24"
-          }
-        },
-        {
-          "client_id": "152106484750-edtlmvc16joekfmhbsgu9k68p2o0ad2i.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "ojass20.nitjsr.in.ojass",
-            "certificate_hash": "c9d7c04317a452776b010bf1baa7235a6723286c"
-          }
-        },
-        {
           "client_id": "152106484750-pltcifpfm0825378hnmmqnk1uegohlv1.apps.googleusercontent.com",
           "client_type": 3
         }
