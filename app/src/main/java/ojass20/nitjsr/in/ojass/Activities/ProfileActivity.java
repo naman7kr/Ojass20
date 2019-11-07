@@ -8,6 +8,7 @@ import ojass20.nitjsr.in.ojass.R;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    String r=":";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
