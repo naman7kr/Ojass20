@@ -1,5 +1,6 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements
         mItems.add(new HomePage("EVENTS", "#FF0000", 0));
         mItems.add(new HomePage("GURUGYAN", "#00FF00", 1));
         mItems.add(new HomePage("ITINERARY", "#0000FF", 2));
+        mItems.add(new HomePage("MAPS","#FFCC00",3));
     }
 
     private void detectTouchEvents() {
@@ -333,6 +335,9 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case 2:
                 Toast.makeText(MainActivity.this, "Itinerary", Toast.LENGTH_LONG).show();
+                break;
+            case 3:
+                startActivity(new Intent(MainActivity.this,MapsActivity.class));
                 break;
             default:
                 Log.e(LOG_TAG, "Bhai sahab ye kis line mein aa gye aap?");
