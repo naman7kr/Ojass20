@@ -331,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements
                 Toast.makeText(MainActivity.this, "Events", Toast.LENGTH_LONG).show();
                 break;
             case 1:
-                Toast.makeText(MainActivity.this, "Gurugyan", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(MainActivity.this, GurugyanActivity.class));
                 break;
             case 2:
                 Toast.makeText(MainActivity.this, "Itinerary", Toast.LENGTH_LONG).show();

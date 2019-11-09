@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:paddingLeft="16dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/temp"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gurugyan"
+            android:layout_marginLeft="8dp"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/opensans" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.github.islamkhsh.CardSliderViewPager
+            android:layout_width="match_parent"
+            android:layout_height="600dp"
+            android:id="@+id/gurugyan_viewPager"
+            android:layout_marginTop="12dp"
+            app:cardSlider_smallScaleFactor="0.88"
+            app:cardSlider_otherPagesWidth="18dp"
+            app:cardSlider_pageMargin="18dp"
+            app:cardSlider_cardCornerRadius="4dp"
+            app:auto_slide_time="10"
+            app:cardSlider_indicator="@id/gurugyan_indicator" />
+
+        <com.github.islamkhsh.CardSliderIndicator
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="640dp"
+            android:layout_centerHorizontal="true"
+            app:indicatorsToShow="3"
+            android:id="@+id/gurugyan_indicator" />
+
+    </RelativeLayout>
+
+</LinearLayout>
