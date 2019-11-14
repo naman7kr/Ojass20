@@ -296,6 +296,7 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.notifications:
                 return true;
             case R.id.profile:
+                startActivity(new Intent(this,ProfileActivity.class));
                 return true;
         }
 
