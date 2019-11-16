@@ -43,7 +43,6 @@ public class SponserAdapter extends RecyclerView.Adapter<SponserAdapter.ViewHold
        // Log.d("ak47", "onBindViewHolder: "+list.get(position).get("Title"));
         holder.sponser_name.setText(list.get(position).get("Name"));
         Glide.with(context).asBitmap().load(list.get(position).get("Logo")).transform(new RoundedCorners(4)).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(holder.sponser_pic);
-
     }
 
     @Override
@@ -61,7 +60,6 @@ public class SponserAdapter extends RecyclerView.Adapter<SponserAdapter.ViewHold
             sponser_pic=itemView.findViewById(R.id.single_sponser_image);
             sponser_name=itemView.findViewById(R.id.single_sponser_name);
             frameLayout=itemView.findViewById(R.id.sponserlayout);
-
         }
     }
 }
