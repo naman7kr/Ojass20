@@ -23,6 +23,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
+import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
 import ojass20.nitjsr.in.ojass.Helpers.HomePage;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -32,6 +33,10 @@ import androidx.core.view.GestureDetectorCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.R;
 
 public class MainActivity extends AppCompatActivity implements
@@ -52,10 +57,20 @@ public class MainActivity extends AppCompatActivity implements
     private ArrayList<HomePage> mItems;
     private int mInd;
 
+    private RecyclerView mRecyclerView;
+    private FeedAdapter mFeedAdapter;
+    private LinearLayoutManager mLinearLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mRecyclerView = findViewById(R.id.feed_recycler_view);
+
+        initializeInstanceVariables();
+        setUpNavigationDrawer();
+        setUpRecyclerView();
 
         initializeInstanceVariables();
         setUpArrayList();
@@ -146,6 +161,24 @@ public class MainActivity extends AppCompatActivity implements
             mActiveCircleRight.setColorFilter(Color.parseColor(mItems.get(mInd + 1).getmCircleColor()));
         }
     }
+
+    private void setUpRecyclerView() {
+        mRecyclerView.setHasFixedSize(true);
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
+        // dummy posts
+        FeedPost[] posts = {
+                new FeedPost("NeoDrishti", "Codiyapa", "Coders GET READY! Codiyapa practice session is going to be organized tonight 10:00PM - 12:00AM for MCA and B.Tech first year students to give them a taste of whats coming in the main event.\nHappy Coding!", "http://i.redd.it/aoa42xsj09s31.png"),
+                new FeedPost("Vishwa CodeGenesis", "Codemania", "Codemania Finals will start tomorrow at sharp 8:00 AM. Teams are required to be present in CC before time with their own laptops. Teams must bring their 25 page reference sheets with them as specified in the rules section.", null),
+                new FeedPost("NeoDrishti", "SimpySQL", "Simply SQL is about to start! \nRoom No. 304\nTime: 2PM\nRegister here : http://google.com", "http://www.bestmobile.pk/mobile-wallpapers/original/Original_1543075868pexels-photo-1173777.jpeg"),
+                new FeedPost("NeoDrishti", "Game of Troves", "Game of Troves has been started. \nGo on http://tinyurl.com/neogot19 for registration and submitting solutions", null)
+        };
+
+        mFeedAdapter = new FeedAdapter(this, posts);
+        mRecyclerView.setAdapter(mFeedAdapter);
+    }
+
 
     private void setUpAnimationForTextView(final int code, final long mainTime, String curr) {
         long tempTime = System.currentTimeMillis();
