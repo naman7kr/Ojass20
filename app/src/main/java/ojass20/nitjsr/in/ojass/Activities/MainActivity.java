@@ -1,10 +1,14 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Path;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -15,8 +19,13 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
+import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -39,6 +48,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import ojass20.nitjsr.in.ojass.Helpers.MyAnimation;
 import ojass20.nitjsr.in.ojass.R;
 
 public class MainActivity extends AppCompatActivity implements
@@ -54,13 +64,19 @@ public class MainActivity extends AppCompatActivity implements
     private TextView mHeading;
     private GestureDetectorCompat mDetector;
     private ImageView mActiveCircle;
-    private LinearLayout mActiveCircleLeftLayout;
+    private RelativeLayout mActiveCircleLeftLayout;
+    private RelativeLayout mActiveCircleLeftLayoutf;
     private ImageView mActiveCircleLeft;
-    private LinearLayout mActiveCircleRightLayout;
+    private RelativeLayout mActiveCircleRightLayout;
+    private RelativeLayout mActiveCircleRightLayoutf;
     private ImageView mActiveCircleRight;
     private ArrayList<HomePage> mItems;
     private ImageView mBgCircle;
     private int mInd;
+    private ImageView mActiveCircleFake;
+    private FrameLayout mFlContent;
+    private ImageView mActiveCircleRightFake;
+    private ImageView mActiveCircleLeftFake;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements
         mItems.add(new HomePage("EVENTS", "#FF0000", 0));
         mItems.add(new HomePage("GURUGYAN", "#00FF00", 1));
         mItems.add(new HomePage("ITINERARY", "#0000FF", 2));
-        mItems.add(new HomePage("MAPS","#FFCC00",3));
+        mItems.add(new HomePage("MAPS", "#FFCC00", 3));
     }
 
     private void detectTouchEvents() {
@@ -98,20 +114,21 @@ public class MainActivity extends AppCompatActivity implements
                 mHeading.animate().alpha(1.0f).setDuration(1000);
                 mPullDown.animate().alpha(1.0f).setDuration(1000);
                 mActiveCircle.animate().alpha(1.0f).setDuration(1000);
-                mActiveCircleLeft.animate().alpha(1.0f).setDuration(1000);
-                mActiveCircleRight.animate().alpha(1.0f).setDuration(1000);
+                //mActiveCircleLeft.animate().alpha(1.0f).setDuration(1000);
+                //mActiveCircleRight.animate().alpha(1.0f).setDuration(1000);
                 mHeading.setVisibility(View.VISIBLE);
                 mPullUp.animate().alpha(0.0f).setDuration(1000);
                 mPullUp.setVisibility(View.GONE);
                 setUpAnimationForImageView(mPullDown);
                 mToolbar.setTitle("");
-                setUpView();
+                setUpView(0);
             }
         });
 
         mPullDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //mFlContent.setBackgroundColor(Color.parseColor("#ffffff"));
                 mPullDown.setEnabled(false);
                 mPullUp.setEnabled(true);
                 mPullUp.setVisibility(View.VISIBLE);
@@ -141,17 +158,34 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-    private void setUpView() {
+    private void setUpView(int counter) {
+
+        //mBackground.setBackground(getDrawable(R.drawable.x));
         HomePage homePage = mItems.get(mInd);
         mHeading.setText(homePage.getmTitle());
 
-        mActiveCircleLeft.setVisibility(View.VISIBLE);
-        mActiveCircleRight.setVisibility(View.VISIBLE);
         mActiveCircle.setColorFilter(Color.parseColor(homePage.getmCircleColor()));
 
         boolean left = true;
         boolean right = true;
 
+        double theta = Math.acos(59.0 / 125.0);
+        float r = convertDpToPixel(125, getApplicationContext());
+
+        if (counter != 0) {
+            mActiveCircleLeft.animate().alpha(0.0f).setDuration(0);
+            Animation anim1 = new MyAnimation(mBgCircle, convertDpToPixel(125, getApplicationContext()));
+            anim1.setFillAfter(true);
+            anim1.setDuration(1000);
+            mActiveCircleFake.setColorFilter(Color.parseColor(mItems.get(mInd - 1).getmCircleColor()));
+            mActiveCircleFake.startAnimation(anim1);
+
+            Animation anim2 = new MyAnimation(mBgCircle, convertDpToPixel(10, getApplicationContext()));
+            anim2.setFillAfter(true);
+            anim2.setDuration(1000);
+            mActiveCircleLeftFake.startAnimation(anim1);
+            mActiveCircleRightFake.startAnimation(anim2);
+        }
         if (mInd < 1) {
             mActiveCircleLeft.setVisibility(View.GONE);
             left = false;
@@ -165,8 +199,8 @@ public class MainActivity extends AppCompatActivity implements
         if (left) {
             mActiveCircleLeft.setVisibility(View.VISIBLE);
             mActiveCircleLeft.setColorFilter(Color.parseColor(mItems.get(mInd - 1).getmCircleColor()));
-            Log.e(LOG_TAG, mActiveCircleLeft.getVisibility() + "");
         }
+
         if (right) {
             mActiveCircleRight.setVisibility(View.VISIBLE);
             mActiveCircleRight.setColorFilter(Color.parseColor(mItems.get(mInd + 1).getmCircleColor()));
@@ -175,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setUpAnimationForTextView(final int code, final long mainTime, String curr) {
         long tempTime = System.currentTimeMillis();
-        if (tempTime - mainTime > 500) {
+        if (tempTime - mainTime > 1000) {
             mHeading.setText(mItems.get(mInd).getmTitle());
             return;
         }
@@ -241,6 +275,12 @@ public class MainActivity extends AppCompatActivity implements
         mBgCircle = findViewById(R.id.bg_circle);
         mActiveCircleLeftLayout = findViewById(R.id.left_layout);
         mActiveCircleRightLayout = findViewById(R.id.right_layout);
+        mFlContent = findViewById(R.id.flContent);
+        mActiveCircleRightFake = findViewById(R.id.active_circle_right_fake);
+        mActiveCircleFake = findViewById(R.id.active_circle_fake);
+        mActiveCircleLeftFake = findViewById(R.id.active_circle_left_fake);
+        mActiveCircleLeftLayoutf = findViewById(R.id.left_fake_layout);
+        mActiveCircleRightLayoutf = findViewById(R.id.right_fake_layout);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -254,14 +294,26 @@ public class MainActivity extends AppCompatActivity implements
         float m2 = m1 + 2 * x1;
 
         mActiveCircleLeft.setVisibility(View.VISIBLE);
+        mActiveCircleLeftFake.setVisibility(View.VISIBLE);
+
         FrameLayout.LayoutParams lpLeft = (FrameLayout.LayoutParams) mActiveCircleLeftLayout.getLayoutParams();
         lpLeft.setMargins((int) m1, 0, 0, 0);
         mActiveCircleLeftLayout.setLayoutParams(lpLeft);
 
+        FrameLayout.LayoutParams lpLeftf = (FrameLayout.LayoutParams) mActiveCircleLeftLayoutf.getLayoutParams();
+        lpLeftf.setMargins((int) m1, 0, 0, (int) convertDpToPixel(-32, getApplicationContext()));
+        mActiveCircleLeftLayoutf.setLayoutParams(lpLeftf);
+
         mActiveCircleRight.setVisibility(View.VISIBLE);
+        mActiveCircleRightFake.setVisibility(View.VISIBLE);
+
         FrameLayout.LayoutParams lpRight = (FrameLayout.LayoutParams) mActiveCircleRightLayout.getLayoutParams();
         lpRight.setMargins((int) m2, 0, 0, 0);
         mActiveCircleRightLayout.setLayoutParams(lpRight);
+
+        FrameLayout.LayoutParams lpRightf = (FrameLayout.LayoutParams) mActiveCircleRightLayoutf.getLayoutParams();
+        lpRightf.setMargins((int) m2, 0, 0, (int) convertDpToPixel(-32, getApplicationContext()));
+        mActiveCircleRightLayoutf.setLayoutParams(lpRightf);
 
         mActiveCircleLeft.setVisibility(View.GONE);
         mActiveCircleRight.setVisibility(View.GONE);
@@ -335,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private static float convertDpToPixel(float dp, Context context) {
+    public static float convertDpToPixel(float dp, Context context) {
         return dp * ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 
@@ -355,7 +407,7 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.notifications:
                 return true;
             case R.id.profile:
-                startActivity(new Intent(this,ProfileActivity.class));
+                startActivity(new Intent(this, ProfileActivity.class));
                 return true;
         }
 
@@ -397,7 +449,7 @@ public class MainActivity extends AppCompatActivity implements
                 Toast.makeText(MainActivity.this, "Itinerary", Toast.LENGTH_LONG).show();
                 break;
             case 3:
-                startActivity(new Intent(MainActivity.this,MapsActivity.class));
+                startActivity(new Intent(MainActivity.this, MapsActivity.class));
                 break;
             default:
                 Log.e(LOG_TAG, "Bhai sahab ye kis line mein aa gye aap?");
@@ -421,13 +473,13 @@ public class MainActivity extends AppCompatActivity implements
             mInd--;
             if (mInd < 0)
                 mInd = mItems.size() - 1;
-            setUpView();
+            setUpView(1);
             setUpAnimationForTextView(1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
         } else {
             mInd++;
             if (mInd >= mItems.size())
                 mInd = 0;
-            setUpView();
+            setUpView(-1);
             setUpAnimationForTextView(-1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
         }
         return true;

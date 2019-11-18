@@ -9,6 +9,7 @@
     android:animateLayoutChanges="true"
     tools:context=".Activities.MainActivity">
 
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,6 +30,7 @@
                 android:layout_height="1dp"
                 android:background="@color/colorPrimaryDark"></LinearLayout>
         </LinearLayout>
+
 
         <FrameLayout
             android:id="@+id/flContent"
@@ -62,37 +64,78 @@
                     android:src="@drawable/border_circle" />
             </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/left_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="bottom">
 
                 <ImageView
                     android:id="@+id/active_circle_left"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
+                    android:layout_alignParentBottom="true"
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="16dp"
                     android:src="@drawable/circle"
-                    android:visibility="gone" />
-            </LinearLayout>
+                    android:visibility="visible" />
 
-            <LinearLayout
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/left_fake_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom">
+
+                <ImageView
+                    android:id="@+id/active_circle_left_fake"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="16dp"
+                    android:src="@drawable/circle"
+                    android:visibility="visible" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/right_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="bottom">
 
                 <ImageView
                     android:id="@+id/active_circle_right"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
+                    android:layout_alignParentBottom="true"
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="16dp"
                     android:src="@drawable/circle"
                     android:visibility="gone" />
-            </LinearLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/right_fake_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom">
+
+                <ImageView
+                    android:id="@+id/active_circle_right_fake"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="16dp"
+                    android:src="@drawable/circle"
+                    android:visibility="visible" />
+
+            </RelativeLayout>
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -119,6 +162,16 @@
                     android:layout_marginBottom="84dp"
                     android:src="@drawable/circle"
                     android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/active_circle_fake"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="-41dp"
+                    android:src="@drawable/circle"
+                    android:visibility="visible" />
             </RelativeLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -144,7 +197,6 @@
                     app:layout_constraintVertical_bias="0.474" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
-
     </FrameLayout>
 
     <com.google.android.material.navigation.NavigationView
