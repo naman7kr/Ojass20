@@ -24,5 +24,26 @@
     <string name="gurugyan_3_title">Neymar Jr</string>
     <string name="gurugyan_3_description">Highly skilled. Puskas award winner. Won Olympic gold for Brazil. The PSG star will be here on Day 3. Meet him room D-403.</string>
 
+    <string-array name="noti_channel">
+        <item>Subscribed Events</item>
+        <item>OJASS</item>
+        <item>Arthashastra</item>
+        <item>CircuitHouse</item>
+        <item>VishwaCodeGenesis</item>
+        <item>NoGroundZone</item>
+        <item>Paraphernalia</item>
+        <item>Produs</item>
+        <item>SiliconValley</item>
+        <item>RiseOfMachines</item>
+        <item>NSCET</item>
+        <item>NeoDrishti</item>
+        <item>Exposicion</item>
+        <item>DeusXMachina</item>
+        <item>Avartan</item>
+        <item>Armageddon</item>
+        <item>Aakriti</item>
+        <item>Prayas</item>
+        <item>LiveCS</item>
+    </string-array>
 
 </resources>
