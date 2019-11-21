@@ -15,22 +15,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <include
-                layout="@layout/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorPrimaryDark"></LinearLayout>
-        </LinearLayout>
-
 
         <FrameLayout
             android:id="@+id/flContent"
@@ -38,21 +22,52 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <ImageView
-                android:id="@+id/pull_down"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="42dp"
-                android:background="@drawable/circle"
-                android:padding="4dp"
-                android:src="@drawable/ic_keyboard_arrow_down_black_24dp"
-                android:visibility="gone" />
-
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+                <com.ogaclejapan.arclayout.ArcLayout
+                    android:id="@+id/arc_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/white"
+                    android:padding="16dp"
+                    app:arc_axisRadius="105dp"
+                    app:arc_color="#fff000"
+                    app:arc_freeAngle="true"
+                    app:arc_origin="center_vertical"
+                    app:arc_radius="105dp"
+                    app:arc_reverseAngle="true"
+                    app:layout_gravity="bottom">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/circle"
+                        app:arc_angle="0" />
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/circle"
+                        app:arc_angle="62.87" />
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/circle"
+                        app:arc_angle="125.74" />
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/circle"
+                        app:arc_angle="186.61" />
+
+                </com.ogaclejapan.arclayout.ArcLayout>
 
                 <ImageView
                     android:id="@+id/bg_circle"
@@ -62,77 +77,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="-150dp"
                     android:src="@drawable/border_circle" />
-            </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/left_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom">
-
-                <ImageView
-                    android:id="@+id/active_circle_left"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="16dp"
-                    android:src="@drawable/circle"
-                    android:visibility="visible" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/left_fake_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom">
-
-                <ImageView
-                    android:id="@+id/active_circle_left_fake"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="16dp"
-                    android:src="@drawable/circle"
-                    android:visibility="visible" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/right_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom">
-
-                <ImageView
-                    android:id="@+id/active_circle_right"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="16dp"
-                    android:src="@drawable/circle"
-                    android:visibility="gone" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/right_fake_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom">
-
-                <ImageView
-                    android:id="@+id/active_circle_right_fake"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="16dp"
-                    android:src="@drawable/circle"
-                    android:visibility="visible" />
 
             </RelativeLayout>
 
@@ -151,26 +96,6 @@
                     android:background="@drawable/circle"
                     android:padding="4dp"
                     android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
-                    android:visibility="visible" />
-
-                <ImageView
-                    android:id="@+id/active_circle"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="84dp"
-                    android:src="@drawable/circle"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:id="@+id/active_circle_fake"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="-41dp"
-                    android:src="@drawable/circle"
                     android:visibility="visible" />
             </RelativeLayout>
 
@@ -197,6 +122,33 @@
                     app:layout_constraintVertical_bias="0.474" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark"></LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/pull_down"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="42dp"
+            android:background="@drawable/circle"
+            android:padding="4dp"
+            android:src="@drawable/ic_keyboard_arrow_down_black_24dp"
+            android:visibility="gone" />
     </FrameLayout>
 
     <com.google.android.material.navigation.NavigationView

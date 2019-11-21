@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Path;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,6 +36,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
+import com.ogaclejapan.arclayout.Arc;
+import com.ogaclejapan.arclayout.ArcLayout;
 
 import java.util.ArrayList;
 
@@ -63,20 +66,10 @@ public class MainActivity extends AppCompatActivity implements
     private TranslateAnimation mAnimation;
     private TextView mHeading;
     private GestureDetectorCompat mDetector;
-    private ImageView mActiveCircle;
-    private RelativeLayout mActiveCircleLeftLayout;
-    private RelativeLayout mActiveCircleLeftLayoutf;
-    private ImageView mActiveCircleLeft;
-    private RelativeLayout mActiveCircleRightLayout;
-    private RelativeLayout mActiveCircleRightLayoutf;
-    private ImageView mActiveCircleRight;
     private ArrayList<HomePage> mItems;
     private ImageView mBgCircle;
     private int mInd;
-    private ImageView mActiveCircleFake;
-    private FrameLayout mFlContent;
-    private ImageView mActiveCircleRightFake;
-    private ImageView mActiveCircleLeftFake;
+    private com.ogaclejapan.arclayout.ArcLayout mArcLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,20 +95,15 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 mHeading.setClickable(true);
-                mActiveCircleRight.setVisibility(View.VISIBLE);
                 mPullUp.setEnabled(false);
                 mPullDown.setEnabled(true);
                 mPullDown.setVisibility(View.VISIBLE);
                 mHeading.setVisibility(View.VISIBLE);
-                mActiveCircle.setVisibility(View.VISIBLE);
                 mPullDown.setAlpha(0.0f);
                 mHeading.setAllCaps(true);
                 mHeading.setAlpha(0.0f);
                 mHeading.animate().alpha(1.0f).setDuration(1000);
                 mPullDown.animate().alpha(1.0f).setDuration(1000);
-                mActiveCircle.animate().alpha(1.0f).setDuration(1000);
-                //mActiveCircleLeft.animate().alpha(1.0f).setDuration(1000);
-                //mActiveCircleRight.animate().alpha(1.0f).setDuration(1000);
                 mHeading.setVisibility(View.VISIBLE);
                 mPullUp.animate().alpha(0.0f).setDuration(1000);
                 mPullUp.setVisibility(View.GONE);
@@ -136,13 +124,7 @@ public class MainActivity extends AppCompatActivity implements
                 mPullUp.animate().alpha(1.0f).setDuration(1000);
                 mPullDown.animate().alpha(0.0f).setDuration(1000);
                 mHeading.animate().alpha(0.0f).setDuration(1000);
-                mActiveCircle.animate().alpha(0.0f).setDuration(1000);
-                mActiveCircleLeft.animate().alpha(0.0f).setDuration(1000);
-                mActiveCircleRight.animate().alpha(0.0f).setDuration(1000);
                 mPullDown.setVisibility(View.GONE);
-                mActiveCircle.setVisibility(View.GONE);
-                mActiveCircleLeft.setVisibility(View.GONE);
-                mActiveCircleRight.setVisibility(View.GONE);
                 mHeading.setVisibility(View.GONE);
                 mToolbar.setTitle(getResources().getString(R.string.feeds));
                 setUpAnimationForImageView(mPullDown);
@@ -164,47 +146,11 @@ public class MainActivity extends AppCompatActivity implements
         HomePage homePage = mItems.get(mInd);
         mHeading.setText(homePage.getmTitle());
 
-        mActiveCircle.setColorFilter(Color.parseColor(homePage.getmCircleColor()));
-
-        boolean left = true;
-        boolean right = true;
-
-        double theta = Math.acos(59.0 / 125.0);
-        float r = convertDpToPixel(125, getApplicationContext());
-
-        if (counter != 0) {
-            mActiveCircleLeft.animate().alpha(0.0f).setDuration(0);
-            Animation anim1 = new MyAnimation(mBgCircle, convertDpToPixel(125, getApplicationContext()));
-            anim1.setFillAfter(true);
-            anim1.setDuration(1000);
-            mActiveCircleFake.setColorFilter(Color.parseColor(mItems.get(mInd - 1).getmCircleColor()));
-            mActiveCircleFake.startAnimation(anim1);
-
-            Animation anim2 = new MyAnimation(mBgCircle, convertDpToPixel(10, getApplicationContext()));
-            anim2.setFillAfter(true);
-            anim2.setDuration(1000);
-            mActiveCircleLeftFake.startAnimation(anim1);
-            mActiveCircleRightFake.startAnimation(anim2);
-        }
-        if (mInd < 1) {
-            mActiveCircleLeft.setVisibility(View.GONE);
-            left = false;
-        }
-        if (mInd >= mItems.size() - 1) {
-            mActiveCircleRight.setVisibility(View.GONE);
-            right = false;
-        }
-
-
-        if (left) {
-            mActiveCircleLeft.setVisibility(View.VISIBLE);
-            mActiveCircleLeft.setColorFilter(Color.parseColor(mItems.get(mInd - 1).getmCircleColor()));
-        }
-
-        if (right) {
-            mActiveCircleRight.setVisibility(View.VISIBLE);
-            mActiveCircleRight.setColorFilter(Color.parseColor(mItems.get(mInd + 1).getmCircleColor()));
-        }
+        RotateAnimation rotateAnimation = new RotateAnimation(0f, -125.78f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotateAnimation.setDuration(1000);
+        rotateAnimation.setFillAfter(true);
+        mArcLayout.setAnimation(rotateAnimation);
+        mArcLayout.startAnimation(rotateAnimation);
     }
 
     private void setUpAnimationForTextView(final int code, final long mainTime, String curr) {
@@ -266,21 +212,11 @@ public class MainActivity extends AppCompatActivity implements
                 TranslateAnimation.RELATIVE_TO_PARENT, 0f,
                 TranslateAnimation.RELATIVE_TO_PARENT, 0.005f);
         mHeading = (TextView) findViewById(R.id.heading);
-        mActiveCircle = findViewById(R.id.active_circle);
-        mActiveCircleLeft = findViewById(R.id.active_circle_left);
-        mActiveCircleRight = findViewById(R.id.active_circle_right);
         mItems = new ArrayList<>();
         mInd = 0;
         mDetector = new GestureDetectorCompat(this, this);
-        mBgCircle = findViewById(R.id.bg_circle);
-        mActiveCircleLeftLayout = findViewById(R.id.left_layout);
-        mActiveCircleRightLayout = findViewById(R.id.right_layout);
-        mFlContent = findViewById(R.id.flContent);
-        mActiveCircleRightFake = findViewById(R.id.active_circle_right_fake);
-        mActiveCircleFake = findViewById(R.id.active_circle_fake);
-        mActiveCircleLeftFake = findViewById(R.id.active_circle_left_fake);
-        mActiveCircleLeftLayoutf = findViewById(R.id.left_fake_layout);
-        mActiveCircleRightLayoutf = findViewById(R.id.right_fake_layout);
+        //mBgCircle = findViewById(R.id.bg_circle);
+        mArcLayout = findViewById(R.id.arc_layout);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -293,30 +229,7 @@ public class MainActivity extends AppCompatActivity implements
         m1 = m1 + (x - x1);
         float m2 = m1 + 2 * x1;
 
-        mActiveCircleLeft.setVisibility(View.VISIBLE);
-        mActiveCircleLeftFake.setVisibility(View.VISIBLE);
 
-        FrameLayout.LayoutParams lpLeft = (FrameLayout.LayoutParams) mActiveCircleLeftLayout.getLayoutParams();
-        lpLeft.setMargins((int) m1, 0, 0, 0);
-        mActiveCircleLeftLayout.setLayoutParams(lpLeft);
-
-        FrameLayout.LayoutParams lpLeftf = (FrameLayout.LayoutParams) mActiveCircleLeftLayoutf.getLayoutParams();
-        lpLeftf.setMargins((int) m1, 0, 0, (int) convertDpToPixel(-32, getApplicationContext()));
-        mActiveCircleLeftLayoutf.setLayoutParams(lpLeftf);
-
-        mActiveCircleRight.setVisibility(View.VISIBLE);
-        mActiveCircleRightFake.setVisibility(View.VISIBLE);
-
-        FrameLayout.LayoutParams lpRight = (FrameLayout.LayoutParams) mActiveCircleRightLayout.getLayoutParams();
-        lpRight.setMargins((int) m2, 0, 0, 0);
-        mActiveCircleRightLayout.setLayoutParams(lpRight);
-
-        FrameLayout.LayoutParams lpRightf = (FrameLayout.LayoutParams) mActiveCircleRightLayoutf.getLayoutParams();
-        lpRightf.setMargins((int) m2, 0, 0, (int) convertDpToPixel(-32, getApplicationContext()));
-        mActiveCircleRightLayoutf.setLayoutParams(lpRightf);
-
-        mActiveCircleLeft.setVisibility(View.GONE);
-        mActiveCircleRight.setVisibility(View.GONE);
     }
 
     private void setUpNavigationDrawer() {
