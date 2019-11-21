@@ -46,6 +46,7 @@ import ojass20.nitjsr.in.ojass.Helpers.HomePage;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -69,7 +70,8 @@ public class MainActivity extends AppCompatActivity implements
     private ArrayList<HomePage> mItems;
     private ImageView mBgCircle;
     private int mInd;
-    private com.ogaclejapan.arclayout.ArcLayout mArcLayout;
+    private ConstraintLayout mCl;
+    private ArrayList<ImageView> mCircles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,15 +144,34 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setUpView(int counter) {
 
-        //mBackground.setBackground(getDrawable(R.drawable.x));
         HomePage homePage = mItems.get(mInd);
         mHeading.setText(homePage.getmTitle());
+        ArrayList<ValueAnimator> animators = new ArrayList<>();
+        for (int i = 0; i < mCircles.size(); i++) {
+            mCircles.get(i).setColorFilter(Color.parseColor(mItems.get(i).getmCircleColor()));
+            animators.add(animateView(mCircles.get(i), 700, counter * 60));
+        }
+        if (counter != 0) {
+            for (int i = 0; i < animators.size(); i++)
+                animators.get(i).start();
+        }
+    }
 
-        RotateAnimation rotateAnimation = new RotateAnimation(0f, -125.78f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        rotateAnimation.setDuration(1000);
-        rotateAnimation.setFillAfter(true);
-        mArcLayout.setAnimation(rotateAnimation);
-        mArcLayout.startAnimation(rotateAnimation);
+    private ValueAnimator animateView(final ImageView imageView, long duration, long angle) {
+        ConstraintLayout.LayoutParams lP = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+        ValueAnimator anim = ValueAnimator.ofInt((int) lP.circleAngle, (int) lP.circleAngle + (int) angle);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+                layoutParams.circleAngle = val;
+                imageView.setLayoutParams(layoutParams);
+            }
+        });
+        anim.setDuration(duration);
+        anim.setInterpolator(new LinearInterpolator());
+        return anim;
     }
 
     private void setUpAnimationForTextView(final int code, final long mainTime, String curr) {
@@ -215,8 +236,13 @@ public class MainActivity extends AppCompatActivity implements
         mItems = new ArrayList<>();
         mInd = 0;
         mDetector = new GestureDetectorCompat(this, this);
-        //mBgCircle = findViewById(R.id.bg_circle);
-        mArcLayout = findViewById(R.id.arc_layout);
+        mBgCircle = findViewById(R.id.bg_circle);
+        mCl = findViewById(R.id.cl);
+        mCircles = new ArrayList<>();
+        mCircles.add((ImageView) findViewById(R.id.img1));
+        mCircles.add((ImageView) findViewById(R.id.img2));
+        mCircles.add((ImageView) findViewById(R.id.img3));
+        mCircles.add((ImageView) findViewById(R.id.img4));
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
