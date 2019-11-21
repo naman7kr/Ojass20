@@ -91,16 +91,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     .into(postImage);
         }
 
-        if (position == feedPosts.length - 1) {
-            customViewHolder.feedLayout.findViewById(R.id.feed_page_bottom_divider).setVisibility(
-                    View.VISIBLE
-            );
-        } else {
-            customViewHolder.feedLayout.findViewById(R.id.feed_page_bottom_divider).setVisibility(
-                    View.GONE
-            );
-        }
-
     }
 
     @Override

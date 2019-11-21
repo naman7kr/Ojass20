@@ -1,5 +1,4 @@
 package ojass20.nitjsr.in.ojass.Activities;
-
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +26,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
+import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
 import ojass20.nitjsr.in.ojass.Helpers.HomePage;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -37,7 +37,10 @@ import androidx.core.view.GestureDetectorCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.R;
 
 public class MainActivity extends AppCompatActivity implements
@@ -53,16 +56,25 @@ public class MainActivity extends AppCompatActivity implements
     private TextView mHeading;
     private GestureDetectorCompat mDetector;
     private ArrayList<HomePage> mItems;
-    private ImageView mBgCircle;
     private int mInd;
     private ConstraintLayout mCl;
     private ArrayList<ImageView> mCircles;
     private TextView mSubHeading;
 
+    private RecyclerView mRecyclerView;
+    private FeedAdapter mFeedAdapter;
+    private LinearLayoutManager mLinearLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mRecyclerView = findViewById(R.id.feed_recycler_view);
+
+        initializeInstanceVariables();
+        setUpNavigationDrawer();
+        setUpRecyclerView();
 
         initializeInstanceVariables();
         setUpArrayList();
@@ -100,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements
                 mSubHeading.setVisibility(View.VISIBLE);
                 mPullUp.animate().alpha(0.0f).setDuration(1000);
                 mPullUp.setVisibility(View.GONE);
+                setUpView();
                 setUpAnimationForImageView(mPullDown);
                 mToolbar.setTitle("");
                 setUpView(0);
@@ -179,10 +192,28 @@ public class MainActivity extends AppCompatActivity implements
         return anim;
     }
 
+    private void setUpRecyclerView() {
+        mRecyclerView.setHasFixedSize(true);
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
+        // dummy posts
+        FeedPost[] posts = {
+                new FeedPost("NeoDrishti", "Codiyapa", "Coders GET READY! Codiyapa practice session is going to be organized tonight 10:00PM - 12:00AM for MCA and B.Tech first year students to give them a taste of whats coming in the main event.\nHappy Coding!", "http://i.redd.it/aoa42xsj09s31.png"),
+                new FeedPost("Vishwa CodeGenesis", "Codemania", "Codemania Finals will start tomorrow at sharp 8:00 AM. Teams are required to be present in CC before time with their own laptops. Teams must bring their 25 page reference sheets with them as specified in the rules section.", null),
+                new FeedPost("NeoDrishti", "SimpySQL", "Simply SQL is about to start! \nRoom No. 304\nTime: 2PM\nRegister here : http://google.com", "http://www.bestmobile.pk/mobile-wallpapers/original/Original_1543075868pexels-photo-1173777.jpeg"),
+                new FeedPost("NeoDrishti", "Game of Troves", "Game of Troves has been started. \nGo on http://tinyurl.com/neogot19 for registration and submitting solutions", null)
+        };
+
+        mFeedAdapter = new FeedAdapter(this, posts);
+        mRecyclerView.setAdapter(mFeedAdapter);
+    }
+
+
     private void setUpAnimationForTextView(final int code, final long mainTime, String curr) {
         long tempTime = System.currentTimeMillis();
         if (tempTime - mainTime > 500) {
-            mHeading.setText(mItems.get(mInd).getmTitle());
+            setUpView();
             return;
         }
         String temp = " ";
@@ -208,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements
         }
         temp = temp.trim();
         mHeading.setText(temp);
+        //Log.e(LOG_TAG, temp);
         final String x = temp;
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -215,7 +247,6 @@ public class MainActivity extends AppCompatActivity implements
                 setUpAnimationForTextView(code, mainTime, x.toUpperCase());
             }
         }, 10);
-
     }
 
     private void setUpAnimationForImageView(ImageView mImageView) {
@@ -260,8 +291,6 @@ public class MainActivity extends AppCompatActivity implements
         m1 = m1 - convertDpToPixel(9, this);
         m1 = m1 + (x - x1);
         float m2 = m1 + 2 * x1;
-
-
     }
 
     private void setUpNavigationDrawer() {
@@ -331,12 +360,9 @@ public class MainActivity extends AppCompatActivity implements
         mDrawer.closeDrawers();
     }
 
-
     public static float convertDpToPixel(float dp, Context context) {
         return dp * ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
