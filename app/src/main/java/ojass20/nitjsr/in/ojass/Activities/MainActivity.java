@@ -12,6 +12,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements
     private int mInd;
     private ConstraintLayout mCl;
     private ArrayList<ImageView> mCircles;
+    private TextView mSubHeading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,10 +108,13 @@ public class MainActivity extends AppCompatActivity implements
                 mHeading.setAllCaps(true);
                 mHeading.setAlpha(0.0f);
                 mHeading.animate().alpha(1.0f).setDuration(1000);
+                mHeading.animate().alpha(1.0f).setDuration(1000);
+                mSubHeading.animate().alpha(1.0f).setDuration(1000);
                 mPullDown.animate().alpha(1.0f).setDuration(1000);
                 mCl.animate().alpha(1.0f).setDuration(1000);
                 mCl.setVisibility(View.VISIBLE);
                 mHeading.setVisibility(View.VISIBLE);
+                mSubHeading.setVisibility(View.VISIBLE);
                 mPullUp.animate().alpha(0.0f).setDuration(1000);
                 mPullUp.setVisibility(View.GONE);
                 setUpAnimationForImageView(mPullDown);
@@ -128,16 +134,27 @@ public class MainActivity extends AppCompatActivity implements
                 mPullUp.animate().alpha(1.0f).setDuration(1000);
                 mPullDown.animate().alpha(0.0f).setDuration(1000);
                 mHeading.animate().alpha(0.0f).setDuration(1000);
+                mSubHeading.animate().alpha(0.0f).setDuration(1000);
                 mCl.animate().alpha(0.0f).setDuration(1000);
                 mCl.setVisibility(View.GONE);
                 mPullDown.setVisibility(View.GONE);
                 mHeading.setVisibility(View.GONE);
+                mSubHeading.setVisibility(View.GONE);
                 mToolbar.setTitle(getResources().getString(R.string.feeds));
                 setUpAnimationForImageView(mPullDown);
             }
         });
+        mCl.setClickable(false);
 
         mHeading.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mDetector.onTouchEvent(event);
+                return true;
+            }
+        });
+
+        mCl.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 mDetector.onTouchEvent(event);
@@ -149,15 +166,17 @@ public class MainActivity extends AppCompatActivity implements
     private void setUpView(int counter) {
         HomePage homePage = mItems.get(mInd);
         mHeading.setText(homePage.getmTitle());
+        String mystring = new String("Ojass 20");
+        SpannableString content = new SpannableString(mystring);
+        content.setSpan(new UnderlineSpan(), 0, mystring.length(), 0);
+        mSubHeading.setText(content);
         ArrayList<ValueAnimator> animators = new ArrayList<>();
         for (int i = 0; i < mCircles.size(); i++) {
             mCircles.get(i).setColorFilter(Color.parseColor(mItems.get(i).getmCircleColor()));
-            animators.add(animateView(mCircles.get(i), 700, counter * 60));
+            animators.add(animateView(mCircles.get(i), 500, counter * 60));
         }
-        if (counter != 0) {
-            for (int i = 0; i < animators.size(); i++)
-                animators.get(i).start();
-        }
+        for (int i = 0; i < animators.size(); i++)
+            animators.get(i).start();
     }
 
     private ValueAnimator animateView(final ImageView imageView, long duration, long angle) {
@@ -179,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setUpAnimationForTextView(final int code, final long mainTime, String curr) {
         long tempTime = System.currentTimeMillis();
-        if (tempTime - mainTime > 1000) {
+        if (tempTime - mainTime > 500) {
             mHeading.setText(mItems.get(mInd).getmTitle());
             return;
         }
@@ -246,6 +265,7 @@ public class MainActivity extends AppCompatActivity implements
         mCircles.add((ImageView) findViewById(R.id.img2));
         mCircles.add((ImageView) findViewById(R.id.img3));
         mCircles.add((ImageView) findViewById(R.id.img4));
+        mSubHeading = findViewById(R.id.sub_heading);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -413,15 +433,19 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         if (e1.getX() < e2.getX()) {
             mInd--;
-            if (mInd < 0)
+            if (mInd < 0) {
                 mInd = mItems.size() - 1;
-            setUpView(1);
+                setUpView(3);
+            } else
+                setUpView(1);
             setUpAnimationForTextView(1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
         } else {
             mInd++;
-            if (mInd >= mItems.size())
+            if (mInd >= mItems.size()) {
                 mInd = 0;
-            setUpView(-1);
+                setUpView(-3);
+            } else
+                setUpView(-1);
             setUpAnimationForTextView(-1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
         }
         return true;
