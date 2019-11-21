@@ -1,75 +1,155 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.github.islamkhsh.CardSliderAdapter;
 import com.github.islamkhsh.CardSliderViewPager;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
-
+import ojass20.nitjsr.in.ojass.Models.GurugyanItem;
 import ojass20.nitjsr.in.ojass.R;
 
 public class GurugyanActivity extends AppCompatActivity {
+
+    int itemCount;
+    ArrayList<GurugyanItem> itemList;
+
+    RelativeLayout viewGroup;
+    CardSliderViewPager viewPager;
+    ProgressBar progressBar;
+
+    ChildEventListener childEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gurugyan);
 
-        ArrayList<Card> cards = new ArrayList<>();
-        cards.add(new Card(R.drawable.messi, 1, getString(R.string.gurugyan_1_title), getString(R.string.gurugyan_1_description)));
-        cards.add(new Card(R.drawable.ronaldo, 2, getString(R.string.gurugyan_2_title), getString(R.string.gurugyan_2_description)));
-        cards.add(new Card(R.drawable.neymar, 3, getString(R.string.gurugyan_3_title), getString(R.string.gurugyan_3_description)));
+        viewGroup = findViewById(R.id.gurugyan_pages);
+        viewPager = findViewById(R.id.gurugyan_viewPager);
+        progressBar = findViewById(R.id.gurugyan_progress_bar);
+        itemList = new ArrayList<>();
 
-        CardSliderViewPager viewPager = (CardSliderViewPager) findViewById(R.id.gurugyan_viewPager);
-        viewPager.setAdapter(new ViewPagerAdapter(cards));
-
+        setUpFirebaseListeners();
     }
 
-    private class Card {
-        int backgroundResource;
-        int day;
-        String title;
-        String description;
+    private void setUpFirebaseListeners() {
+        setUpChildEventListener();
+        FirebaseDatabase.getInstance().getReference().child("GuruGyan/count").
+                addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        itemCount = dataSnapshot.getValue(Integer.class);
+                        FirebaseDatabase.getInstance().getReference().child("GuruGyan/events").
+                                addChildEventListener(childEventListener);
+                    }
 
-        public Card(int backgroundResource, int day, String title, String description) {
-            this.backgroundResource = backgroundResource;
-            this.day = day;
-            this.title = title;
-            this.description = description;
-        }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                }
+        );
     }
 
-    private class ViewPagerAdapter extends CardSliderAdapter<Card> {
+    private void setUpChildEventListener(){
+        childEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot,
+                                     @Nullable String s) {
+                GurugyanItem item = dataSnapshot.getValue(GurugyanItem.class);
+                itemList.add(item);
+                if (itemList.size() == itemCount) {
+                    updateUI();
+                    removeChildEventListener();
+                }
+            }
 
-        public ViewPagerAdapter(ArrayList<Card> items) {
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot,
+                                       @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot,
+                                     @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+    }
+
+    private void updateUI() {
+        sortItems();
+        viewPager.setAdapter(new ViewPagerAdapter(itemList, this));
+        viewGroup.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void sortItems() {
+        Collections.sort(itemList);
+    }
+
+    private void removeChildEventListener(){
+        FirebaseDatabase.getInstance().getReference().child("GuruGyan/events").removeEventListener(
+                childEventListener
+        );
+    }
+
+    private class ViewPagerAdapter extends CardSliderAdapter<GurugyanItem> {
+
+        Context context;
+
+        ViewPagerAdapter(ArrayList<GurugyanItem> items, Context context) {
             super(items);
-        }
-
-        @Override
-        public void bindView(int i, View view, Card card) {
-            ImageView background = (ImageView) view.findViewById(R.id.gurugyan_card_background);
-            TextView day = (TextView) view.findViewById(R.id.gurugyan_card_day);
-            TextView title = (TextView) view.findViewById(R.id.gurugyan_card_title);
-            TextView description = (TextView) view.findViewById(R.id.gurugyan_card_description);
-
-            background.setImageResource(card.backgroundResource);
-            day.setText("Day " + card.day);
-            title.setText(card.title);
-            description.setText(card.description);
+            this.context = context;
         }
 
         @Override
         public int getItemContentLayout(int i) {
             return R.layout.gurugyan_item;
         }
+
+        @Override
+        public void bindView(int i, View view, GurugyanItem gurugyanItem) {
+            ImageView background = view.findViewById(R.id.gurugyan_card_background);
+            TextView day = view.findViewById(R.id.gurugyan_card_day);
+            TextView title = view.findViewById(R.id.gurugyan_card_title);
+            TextView description = view.findViewById(R.id.gurugyan_card_description);
+
+            Glide.with(context).load(gurugyanItem.getUrl()).into(background);
+            day.setText("Day " + gurugyanItem.getDay());
+            title.setText(gurugyanItem.getTitle());
+            description.setText(gurugyanItem.getDescription());
+        }
     }
-    
+
 }

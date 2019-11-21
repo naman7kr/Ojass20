@@ -34,25 +34,39 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.github.islamkhsh.CardSliderViewPager
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="600dp"
-            android:id="@+id/gurugyan_viewPager"
-            android:layout_marginTop="12dp"
-            app:cardSlider_smallScaleFactor="0.88"
-            app:cardSlider_otherPagesWidth="18dp"
-            app:cardSlider_pageMargin="18dp"
-            app:cardSlider_cardCornerRadius="4dp"
-            app:auto_slide_time="10"
-            app:cardSlider_indicator="@id/gurugyan_indicator" />
+            android:layout_height="match_parent"
+            android:id="@+id/gurugyan_pages"
+            android:visibility="gone">
 
-        <com.github.islamkhsh.CardSliderIndicator
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="640dp"
-            android:layout_centerHorizontal="true"
-            app:indicatorsToShow="3"
-            android:id="@+id/gurugyan_indicator" />
+            <com.github.islamkhsh.CardSliderViewPager
+                android:layout_width="match_parent"
+                android:layout_height="600dp"
+                android:id="@+id/gurugyan_viewPager"
+                android:layout_marginTop="12dp"
+                app:cardSlider_smallScaleFactor="0.88"
+                app:cardSlider_otherPagesWidth="18dp"
+                app:cardSlider_pageMargin="18dp"
+                app:cardSlider_cardCornerRadius="4dp"
+                app:auto_slide_time="10"
+                app:cardSlider_indicator="@id/gurugyan_indicator" />
+
+            <com.github.islamkhsh.CardSliderIndicator
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="640dp"
+                android:layout_centerHorizontal="true"
+                app:indicatorsToShow="3"
+                android:id="@+id/gurugyan_indicator" />
+
+        </RelativeLayout>
+
+        <ProgressBar
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:id="@+id/gurugyan_progress_bar"
+            android:layout_centerInParent="true" />
 
     </RelativeLayout>
 
