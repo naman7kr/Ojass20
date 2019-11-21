@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements
                 mHeading.setAlpha(0.0f);
                 mHeading.animate().alpha(1.0f).setDuration(1000);
                 mPullDown.animate().alpha(1.0f).setDuration(1000);
+                mCl.animate().alpha(1.0f).setDuration(1000);
+                mCl.setVisibility(View.VISIBLE);
                 mHeading.setVisibility(View.VISIBLE);
                 mPullUp.animate().alpha(0.0f).setDuration(1000);
                 mPullUp.setVisibility(View.GONE);
@@ -126,6 +128,8 @@ public class MainActivity extends AppCompatActivity implements
                 mPullUp.animate().alpha(1.0f).setDuration(1000);
                 mPullDown.animate().alpha(0.0f).setDuration(1000);
                 mHeading.animate().alpha(0.0f).setDuration(1000);
+                mCl.animate().alpha(0.0f).setDuration(1000);
+                mCl.setVisibility(View.GONE);
                 mPullDown.setVisibility(View.GONE);
                 mHeading.setVisibility(View.GONE);
                 mToolbar.setTitle(getResources().getString(R.string.feeds));
@@ -143,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void setUpView(int counter) {
-
         HomePage homePage = mItems.get(mInd);
         mHeading.setText(homePage.getmTitle());
         ArrayList<ValueAnimator> animators = new ArrayList<>();

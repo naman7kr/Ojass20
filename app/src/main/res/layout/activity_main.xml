@@ -25,6 +25,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+
+                <ImageView
+                    android:id="@+id/bg_circle"
+                    android:layout_width="248dp"
+                    android:layout_height="248dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="-125dp"
+                    android:src="@drawable/border_circle" />
+
+
+                <ImageView
+                    android:id="@+id/pull_up"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="109dp"
+                    android:background="@drawable/circle"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
+                    android:visibility="visible" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl"
                     android:layout_width="match_parent"
@@ -35,7 +65,21 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginBottom="-150dp"
-                    android:background="#ffffff">
+                    android:background="#ffffff"
+                    android:visibility="gone">
+
+
+                    <ImageView
+                        android:id="@+id/bg_circle1"
+                        android:layout_width="258dp"
+                        android:layout_height="258dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/border_circle"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
                         android:id="@+id/center_image"
@@ -118,35 +162,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-
-                <ImageView
-                    android:id="@+id/bg_circle"
-                    android:layout_width="250dp"
-                    android:layout_height="250dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="-125dp"
-                    android:src="@drawable/border_circle" />
-
-
-                <ImageView
-                    android:id="@+id/pull_up"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="109dp"
-                    android:background="@drawable/circle"
-                    android:padding="4dp"
-                    android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
-                    android:visibility="visible" />
-
-
-            </RelativeLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
