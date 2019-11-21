@@ -1,4 +1,5 @@
 package ojass20.nitjsr.in.ojass.Activities;
+
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
@@ -111,8 +112,9 @@ public class MainActivity extends AppCompatActivity implements
                 mHeading.setVisibility(View.VISIBLE);
                 mSubHeading.setVisibility(View.VISIBLE);
                 mPullUp.animate().alpha(0.0f).setDuration(1000);
+                mRecyclerView.animate().alpha(0.0f).setDuration(1000);
+                mRecyclerView.setVisibility(View.GONE);
                 mPullUp.setVisibility(View.GONE);
-                setUpView();
                 setUpAnimationForImageView(mPullDown);
                 mToolbar.setTitle("");
                 setUpView(0);
@@ -128,6 +130,8 @@ public class MainActivity extends AppCompatActivity implements
                 mPullUp.setVisibility(View.VISIBLE);
                 mPullUp.setAlpha(0.0f);
                 mPullUp.animate().alpha(1.0f).setDuration(1000);
+                mRecyclerView.animate().alpha(1.0f).setDuration(1000);
+                mRecyclerView.setVisibility(View.VISIBLE);
                 mPullDown.animate().alpha(0.0f).setDuration(1000);
                 mHeading.animate().alpha(0.0f).setDuration(1000);
                 mSubHeading.animate().alpha(0.0f).setDuration(1000);
@@ -213,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements
     private void setUpAnimationForTextView(final int code, final long mainTime, String curr) {
         long tempTime = System.currentTimeMillis();
         if (tempTime - mainTime > 500) {
-            setUpView();
+            mHeading.setText(mItems.get(mInd).getmTitle());
             return;
         }
         String temp = " ";
@@ -272,7 +276,6 @@ public class MainActivity extends AppCompatActivity implements
         mItems = new ArrayList<>();
         mInd = 0;
         mDetector = new GestureDetectorCompat(this, this);
-        mBgCircle = findViewById(R.id.bg_circle);
         mCl = findViewById(R.id.cl);
         mCircles = new ArrayList<>();
         mCircles.add((ImageView) findViewById(R.id.img1));
@@ -363,6 +366,7 @@ public class MainActivity extends AppCompatActivity implements
     public static float convertDpToPixel(float dp, Context context) {
         return dp * ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
