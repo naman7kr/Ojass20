@@ -1,10 +1,14 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
+import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -29,6 +33,7 @@ import ojass20.nitjsr.in.ojass.Helpers.HomePage;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -51,11 +56,11 @@ public class MainActivity extends AppCompatActivity implements
     private TranslateAnimation mAnimation;
     private TextView mHeading;
     private GestureDetectorCompat mDetector;
-    private ImageView mActiveCircle;
-    private ImageView mActiveCircleLeft;
-    private ImageView mActiveCircleRight;
     private ArrayList<HomePage> mItems;
     private int mInd;
+    private ConstraintLayout mCl;
+    private ArrayList<ImageView> mCircles;
+    private TextView mSubHeading;
 
     private RecyclerView mRecyclerView;
     private FeedAdapter mFeedAdapter;
@@ -83,59 +88,63 @@ public class MainActivity extends AppCompatActivity implements
         mItems.add(new HomePage("EVENTS", "#FF0000", 0));
         mItems.add(new HomePage("GURUGYAN", "#00FF00", 1));
         mItems.add(new HomePage("ITINERARY", "#0000FF", 2));
-        mItems.add(new HomePage("MAPS","#FFCC00",3));
+        mItems.add(new HomePage("MAPS", "#FFCC00", 3));
     }
 
     private void detectTouchEvents() {
         mPullUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mInd >= mItems.size())
-                    mInd = 0;
+                mHeading.setClickable(true);
                 mPullUp.setEnabled(false);
                 mPullDown.setEnabled(true);
                 mPullDown.setVisibility(View.VISIBLE);
                 mHeading.setVisibility(View.VISIBLE);
-                mActiveCircle.setVisibility(View.VISIBLE);
                 mPullDown.setAlpha(0.0f);
                 mHeading.setAllCaps(true);
                 mHeading.setAlpha(0.0f);
                 mHeading.animate().alpha(1.0f).setDuration(1000);
+                mHeading.animate().alpha(1.0f).setDuration(1000);
+                mSubHeading.animate().alpha(1.0f).setDuration(1000);
                 mPullDown.animate().alpha(1.0f).setDuration(1000);
-                mActiveCircle.animate().alpha(1.0f).setDuration(1000);
-                if (mInd != 0)
-                    mActiveCircleLeft.animate().alpha(1.0f).setDuration(1000);
-                if (mInd == mItems.size() - 1)
-                    mActiveCircleRight.animate().alpha(1.0f).setDuration(1000);
+                mCl.animate().alpha(1.0f).setDuration(1000);
+                mCl.setVisibility(View.VISIBLE);
+                mHeading.setVisibility(View.VISIBLE);
+                mSubHeading.setVisibility(View.VISIBLE);
                 mPullUp.animate().alpha(0.0f).setDuration(1000);
+                mRecyclerView.animate().alpha(0.0f).setDuration(1000);
+                mRecyclerView.setVisibility(View.GONE);
                 mPullUp.setVisibility(View.GONE);
-                setUpView();
                 setUpAnimationForImageView(mPullDown);
                 mToolbar.setTitle("");
+                setUpView(0);
             }
         });
 
         mPullDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //mFlContent.setBackgroundColor(Color.parseColor("#ffffff"));
                 mPullDown.setEnabled(false);
                 mPullUp.setEnabled(true);
                 mPullUp.setVisibility(View.VISIBLE);
                 mPullUp.setAlpha(0.0f);
                 mPullUp.animate().alpha(1.0f).setDuration(1000);
+                mRecyclerView.animate().alpha(1.0f).setDuration(1000);
+                mRecyclerView.setVisibility(View.VISIBLE);
                 mPullDown.animate().alpha(0.0f).setDuration(1000);
                 mHeading.animate().alpha(0.0f).setDuration(1000);
-                mActiveCircle.animate().alpha(0.0f).setDuration(1000);
-                mActiveCircleLeft.animate().alpha(0.0f).setDuration(1000);
-                mActiveCircleRight.animate().alpha(0.0f).setDuration(1000);
+                mSubHeading.animate().alpha(0.0f).setDuration(1000);
+                mCl.animate().alpha(0.0f).setDuration(1000);
+                mCl.setVisibility(View.GONE);
                 mPullDown.setVisibility(View.GONE);
-                mActiveCircle.setVisibility(View.GONE);
-                mActiveCircleLeft.setVisibility(View.GONE);
-                mActiveCircleRight.setVisibility(View.GONE);
+                mHeading.setVisibility(View.GONE);
+                mSubHeading.setVisibility(View.GONE);
                 mToolbar.setTitle(getResources().getString(R.string.feeds));
                 setUpAnimationForImageView(mPullDown);
             }
         });
+        mCl.setClickable(false);
 
         mHeading.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -144,22 +153,47 @@ public class MainActivity extends AppCompatActivity implements
                 return true;
             }
         });
+
+        mCl.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mDetector.onTouchEvent(event);
+                return true;
+            }
+        });
     }
 
-    private void setUpView() {
+    private void setUpView(int counter) {
         HomePage homePage = mItems.get(mInd);
         mHeading.setText(homePage.getmTitle());
-        mActiveCircle.setColorFilter(Color.parseColor(homePage.getmCircleColor()));
-        mActiveCircleLeft.setVisibility(View.GONE);
-        mActiveCircleRight.setVisibility(View.GONE);
-        if (mInd > 0) {
-            mActiveCircleLeft.setVisibility(View.VISIBLE);
-            mActiveCircleLeft.setColorFilter(Color.parseColor(mItems.get(mInd - 1).getmCircleColor()));
+        String mystring = new String("Ojass 20");
+        SpannableString content = new SpannableString(mystring);
+        content.setSpan(new UnderlineSpan(), 0, mystring.length(), 0);
+        mSubHeading.setText(content);
+        ArrayList<ValueAnimator> animators = new ArrayList<>();
+        for (int i = 0; i < mCircles.size(); i++) {
+            mCircles.get(i).setColorFilter(Color.parseColor(mItems.get(i).getmCircleColor()));
+            animators.add(animateView(mCircles.get(i), 500, counter * 60));
         }
-        if (mInd < mItems.size() - 1) {
-            mActiveCircleRight.setVisibility(View.VISIBLE);
-            mActiveCircleRight.setColorFilter(Color.parseColor(mItems.get(mInd + 1).getmCircleColor()));
-        }
+        for (int i = 0; i < animators.size(); i++)
+            animators.get(i).start();
+    }
+
+    private ValueAnimator animateView(final ImageView imageView, long duration, long angle) {
+        ConstraintLayout.LayoutParams lP = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+        ValueAnimator anim = ValueAnimator.ofInt((int) lP.circleAngle, (int) lP.circleAngle + (int) angle);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+                layoutParams.circleAngle = val;
+                imageView.setLayoutParams(layoutParams);
+            }
+        });
+        anim.setDuration(duration);
+        anim.setInterpolator(new LinearInterpolator());
+        return anim;
     }
 
     private void setUpRecyclerView() {
@@ -183,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements
     private void setUpAnimationForTextView(final int code, final long mainTime, String curr) {
         long tempTime = System.currentTimeMillis();
         if (tempTime - mainTime > 500) {
-            setUpView();
+            mHeading.setText(mItems.get(mInd).getmTitle());
             return;
         }
         String temp = " ";
@@ -239,12 +273,27 @@ public class MainActivity extends AppCompatActivity implements
                 TranslateAnimation.RELATIVE_TO_PARENT, 0f,
                 TranslateAnimation.RELATIVE_TO_PARENT, 0.005f);
         mHeading = (TextView) findViewById(R.id.heading);
-        mActiveCircle = findViewById(R.id.active_circle);
-        mActiveCircleLeft = findViewById(R.id.active_circle_left);
-        mActiveCircleRight = findViewById(R.id.active_circle_right);
         mItems = new ArrayList<>();
         mInd = 0;
         mDetector = new GestureDetectorCompat(this, this);
+        mCl = findViewById(R.id.cl);
+        mCircles = new ArrayList<>();
+        mCircles.add((ImageView) findViewById(R.id.img1));
+        mCircles.add((ImageView) findViewById(R.id.img2));
+        mCircles.add((ImageView) findViewById(R.id.img3));
+        mCircles.add((ImageView) findViewById(R.id.img4));
+        mSubHeading = findViewById(R.id.sub_heading);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+        float x = (float) Math.sqrt(convertDpToPixel(125, this) * convertDpToPixel(125, this) - convertDpToPixel(41, this) * convertDpToPixel(41, this));
+        float x1 = (float) Math.sqrt(convertDpToPixel(125, this) * convertDpToPixel(125, this) - convertDpToPixel(57, this) * convertDpToPixel(57, this));
+
+        float m1 = width / 2 - x;
+        m1 = m1 - convertDpToPixel(9, this);
+        m1 = m1 + (x - x1);
+        float m2 = m1 + 2 * x1;
     }
 
     private void setUpNavigationDrawer() {
@@ -314,6 +363,10 @@ public class MainActivity extends AppCompatActivity implements
         mDrawer.closeDrawers();
     }
 
+    public static float convertDpToPixel(float dp, Context context) {
+        return dp * ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -329,7 +382,7 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.notifications:
                 return true;
             case R.id.profile:
-                startActivity(new Intent(this,ProfileActivity.class));
+                startActivity(new Intent(this, ProfileActivity.class));
                 return true;
         }
 
@@ -371,7 +424,7 @@ public class MainActivity extends AppCompatActivity implements
                 Toast.makeText(MainActivity.this, "Itinerary", Toast.LENGTH_LONG).show();
                 break;
             case 3:
-                startActivity(new Intent(MainActivity.this,MapsActivity.class));
+                startActivity(new Intent(MainActivity.this, MapsActivity.class));
                 break;
             default:
                 Log.e(LOG_TAG, "Bhai sahab ye kis line mein aa gye aap?");
@@ -393,15 +446,19 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         if (e1.getX() < e2.getX()) {
             mInd--;
-            if (mInd < 0)
+            if (mInd < 0) {
                 mInd = mItems.size() - 1;
-            setUpView();
+                setUpView(3);
+            } else
+                setUpView(1);
             setUpAnimationForTextView(1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
         } else {
             mInd++;
-            if (mInd >= mItems.size())
+            if (mInd >= mItems.size()) {
                 mInd = 0;
-            setUpView();
+                setUpView(-3);
+            } else
+                setUpView(-1);
             setUpAnimationForTextView(-1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
         }
         return true;
