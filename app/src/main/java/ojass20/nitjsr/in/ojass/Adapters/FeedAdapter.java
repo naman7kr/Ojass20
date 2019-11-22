@@ -2,6 +2,7 @@ package ojass20.nitjsr.in.ojass.Adapters;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,20 +24,24 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import java.util.ArrayList;
+
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.R;
 
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
-    private FeedPost[] feedPosts;
+    private ArrayList<FeedPost> feedPosts;
 
     public static class CustomViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout feedLayout;
+        public TextView subevent_name;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
             feedLayout = (LinearLayout) itemView;
+            subevent_name=itemView.findViewById(R.id.feed_post_sub_event_name);
         }
     }
 
@@ -51,13 +57,21 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         CustomViewHolder customViewHolder = (CustomViewHolder) holder;
         ((TextView) (customViewHolder.feedLayout.findViewById(R.id.feed_post_event_name))).setText(
-                feedPosts[position].getEvent()
+                feedPosts.get(position).getEvent()
         );
+
+        //Log.e("HEEE", " event = "+feedPosts.get(position).getEvent() );
+        //Log.e("HEEE", " subevent = "+feedPosts.get(position).getSubEvent() );
+
         ((TextView) (customViewHolder.feedLayout.findViewById(R.id.feed_post_sub_event_name))).setText(
-                feedPosts[position].getSubEvent()
+                feedPosts.get(position).getSubEvent()
         );
+
+        //((CustomViewHolder) holder).subevent_name.setText(feedPosts.get(position).getSubEvent());
+        //Toast.makeText(context, "subevent name "+feedPosts.get(position).getEvent(), Toast.LENGTH_SHORT).show();
+
         ((TextView) (customViewHolder.feedLayout.findViewById(R.id.feed_post_content))).setText(
-                feedPosts[position].getContent()
+                feedPosts.get(position).getContent()
         );
 
         RelativeLayout postImageView = (RelativeLayout) (customViewHolder.feedLayout.findViewById(
@@ -71,11 +85,12 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         progressBar.setVisibility(View.VISIBLE);
 
         final ImageView postImage = (ImageView) (customViewHolder.feedLayout.findViewById(R.id.feed_post_image));
-        if (feedPosts[position].getImageURL() == null) {
+        Log.e("Hey", feedPosts.get(position).getImageURL());
+        if (feedPosts.get(position).getImageURL() == null) {
             postImageView.setVisibility(View.GONE);
         } else {
             Glide.with(context)
-                    .load(feedPosts[position].getImageURL())
+                    .load(feedPosts.get(position).getImageURL())
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -95,11 +110,14 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return feedPosts.length;
+
+        return feedPosts.size();
     }
 
-    public FeedAdapter(Context context, FeedPost[] feedPosts) {
+    public FeedAdapter(Context context, ArrayList<FeedPost> mfeedPosts) {
         this.context = context;
-        this.feedPosts = feedPosts;
+        feedPosts = new ArrayList<>();
+        this.feedPosts = mfeedPosts;
+        Log.e("VIVZ", "FeedAdapter: called COUNT = " + mfeedPosts.size());
     }
 }

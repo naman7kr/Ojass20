@@ -24,12 +24,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
 import ojass20.nitjsr.in.ojass.Helpers.HomePage;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -66,22 +72,69 @@ public class MainActivity extends AppCompatActivity implements
     private FeedAdapter mFeedAdapter;
     private LinearLayoutManager mLinearLayoutManager;
 
+    private DatabaseReference dref;
+    private ArrayList<FeedPost> listposts;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         mRecyclerView = findViewById(R.id.feed_recycler_view);
+        listposts = new ArrayList<>();
+
+        dref = FirebaseDatabase.getInstance().getReference().child("Feeds");
+        dref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                listposts.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    FeedPost post = ds.getValue(FeedPost.class);
+
+//                    Log.e("vila", "event = "+post.getEvent());
+//                    Log.e("vila", "subevent = "+post.getSubEvent());
+//
+                    Log.e("vila", post.getImageURL());
+                    listposts.add(post);
+                }
+                setUpRecyclerView();
+                Log.e("VIVZ", "onDataChange: listposts count = " + listposts.size());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         initializeInstanceVariables();
         setUpNavigationDrawer();
-        setUpRecyclerView();
+        //setUpRecyclerView();
 
-        initializeInstanceVariables();
         setUpArrayList();
         setUpNavigationDrawer();
         setUpAnimationForImageView(mPullUp);
         detectTouchEvents();
+
+
+    }
+
+    private void setUpRecyclerView() {
+        mRecyclerView.setHasFixedSize(true);
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
+        // dummy posts
+        FeedPost[] posts = {
+                new FeedPost("NeoDrishti", "Codiyapa", "Coders GET READY! Codiyapa practice session is going to be organized tonight 10:00PM - 12:00AM for MCA and B.Tech first year students to give them a taste of whats coming in the main event.\nHappy Coding!", "http://i.redd.it/aoa42xsj09s31.png"),
+                new FeedPost("Vishwa CodeGenesis", "Codemania", "Codemania Finals will start tomorrow at sharp 8:00 AM. Teams are required to be present in CC before time with their own laptops. Teams must bring their 25 page reference sheets with them as specified in the rules section.", null),
+                new FeedPost("NeoDrishti", "SimpySQL", "Simply SQL is about to start! \nRoom No. 304\nTime: 2PM\nRegister here : http://google.com", "http://www.bestmobile.pk/mobile-wallpapers/original/Original_1543075868pexels-photo-1173777.jpeg"),
+                new FeedPost("NeoDrishti", "Game of Troves", "Game of Troves has been started. \nGo on http://tinyurl.com/neogot19 for registration and submitting solutions", null)
+        };
+
+        //Log.e("VIVZ", "set");
+        mFeedAdapter = new FeedAdapter(this, listposts);
+        mRecyclerView.setAdapter(mFeedAdapter);
     }
 
     private void setUpArrayList() {
@@ -194,23 +247,6 @@ public class MainActivity extends AppCompatActivity implements
         anim.setDuration(duration);
         anim.setInterpolator(new LinearInterpolator());
         return anim;
-    }
-
-    private void setUpRecyclerView() {
-        mRecyclerView.setHasFixedSize(true);
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
-
-        // dummy posts
-        FeedPost[] posts = {
-                new FeedPost("NeoDrishti", "Codiyapa", "Coders GET READY! Codiyapa practice session is going to be organized tonight 10:00PM - 12:00AM for MCA and B.Tech first year students to give them a taste of whats coming in the main event.\nHappy Coding!", "http://i.redd.it/aoa42xsj09s31.png"),
-                new FeedPost("Vishwa CodeGenesis", "Codemania", "Codemania Finals will start tomorrow at sharp 8:00 AM. Teams are required to be present in CC before time with their own laptops. Teams must bring their 25 page reference sheets with them as specified in the rules section.", null),
-                new FeedPost("NeoDrishti", "SimpySQL", "Simply SQL is about to start! \nRoom No. 304\nTime: 2PM\nRegister here : http://google.com", "http://www.bestmobile.pk/mobile-wallpapers/original/Original_1543075868pexels-photo-1173777.jpeg"),
-                new FeedPost("NeoDrishti", "Game of Troves", "Game of Troves has been started. \nGo on http://tinyurl.com/neogot19 for registration and submitting solutions", null)
-        };
-
-        mFeedAdapter = new FeedAdapter(this, posts);
-        mRecyclerView.setAdapter(mFeedAdapter);
     }
 
 

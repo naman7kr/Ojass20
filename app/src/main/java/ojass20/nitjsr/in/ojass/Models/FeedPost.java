@@ -9,7 +9,11 @@ public class FeedPost {
     private String content;
     private String imageURL;
 
-    public FeedPost(String event, String subEvent, String content, String imageURL) {
+    public FeedPost(){
+
+    }
+
+    public FeedPost(String content,String event,  String imageURL, String subEvent) {
         this.event = event;
         this.subEvent = subEvent;
         this.content = content;
