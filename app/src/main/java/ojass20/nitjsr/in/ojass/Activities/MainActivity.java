@@ -20,6 +20,7 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements
     private ConstraintLayout mCl;
     private ArrayList<ImageView> mCircles;
     private TextView mSubHeading;
+    private ProgressBar recyclerview_progress;
 
     private RecyclerView mRecyclerView;
     private FeedAdapter mFeedAdapter;
@@ -87,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements
         dref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                recyclerview_progress.setVisibility(View.VISIBLE);
                 listposts.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     FeedPost post = ds.getValue(FeedPost.class);
@@ -135,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements
         //Log.e("VIVZ", "set");
         mFeedAdapter = new FeedAdapter(this, listposts);
         mRecyclerView.setAdapter(mFeedAdapter);
+        recyclerview_progress.setVisibility(View.GONE);
     }
 
     private void setUpArrayList() {
@@ -167,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements
                 mPullUp.animate().alpha(0.0f).setDuration(1000);
                 mRecyclerView.animate().alpha(0.0f).setDuration(1000);
                 mRecyclerView.setVisibility(View.GONE);
+                recyclerview_progress.setVisibility(View.GONE);
                 mPullUp.setVisibility(View.GONE);
                 setUpAnimationForImageView(mPullDown);
                 mToolbar.setTitle("");
@@ -195,6 +200,10 @@ public class MainActivity extends AppCompatActivity implements
                 mSubHeading.setVisibility(View.GONE);
                 mToolbar.setTitle(getResources().getString(R.string.feeds));
                 setUpAnimationForImageView(mPullDown);
+
+                if(listposts.size()==0){
+                    recyclerview_progress.setVisibility(View.VISIBLE);
+                }
             }
         });
         mCl.setClickable(false);
@@ -298,6 +307,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void initializeInstanceVariables() {
+        recyclerview_progress=findViewById(R.id.recycler_view_progress);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationDrawer = (NavigationView) findViewById(R.id.navigation_view);
