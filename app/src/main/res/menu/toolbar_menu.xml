@@ -13,5 +13,14 @@
         android:icon="@drawable/ic_notifications_active_black_24dp"
         android:orderInCategory="200"
         app:showAsAction="always"></item>
+    <item
+        android:id="@+id/emergency"
+        android:title="EMERGENCY"
+        android:icon="@drawable/emergency"
+        app:showAsAction="always"
+        >
+
+    </item>
+
 
 </menu>

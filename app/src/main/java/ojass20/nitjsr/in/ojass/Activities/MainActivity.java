@@ -2,10 +2,12 @@ package ojass20.nitjsr.in.ojass.Activities;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -21,6 +23,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,6 +39,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import androidx.appcompat.app.AlertDialog;
 import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
 import ojass20.nitjsr.in.ojass.Helpers.HomePage;
 
@@ -63,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements
     private NavigationView mNavigationDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
     private ImageView mPullUp;
+    private AlertDialog.Builder builder;
     private ImageView mPullDown;
     private String LOG_TAG = "MAIN";
     private TranslateAnimation mAnimation;
@@ -89,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        builder=new AlertDialog.Builder(this);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
@@ -477,10 +483,74 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.profile:
                 startActivity(new Intent(this, ProfileActivity.class));
                 return true;
+            case R.id.emergency:
+                showList();
         }
 
         return super.onOptionsItemSelected(item);
     }
+    public void showList()
+    {
+
+        final ArrayList<String> emer=new ArrayList<>();
+        emer.add("Emergency");
+        emer.add("Police");
+        emer.add("Fire");
+        emer.add("Ambulance");
+        emer.add("Gas Leakage");
+        emer.add("Tourist-Helpline");
+        emer.add("Child-Helpline");
+        emer.add("Blood-Requirement");
+        emer.add("Women-Helpline");
+        emer.add("Ambulance Network (Emergency or Non-Emergency)");
+
+
+        final ArrayList<String> num=new ArrayList<>();
+
+            num.add("112");
+            num.add("100");
+            num.add("102");
+            num.add("108");
+            num.add("1906");
+            num.add("1363");
+            num.add("1098");
+            num.add("104");
+            num.add("181");
+            num.add("09343180000");
+
+
+
+
+
+        builder.setTitle("Emergency Numbers");
+        builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.setPositiveButton("", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        final Intent intent =new Intent(Intent.ACTION_DIAL);
+        ArrayAdapter<String> adapter=new ArrayAdapter<>(MainActivity.this,android.R.layout.simple_list_item_1,emer);
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                intent.setData(Uri.parse("tel:"+num.get(which)));
+                startActivity(intent);
+
+            }
+        });
+
+        AlertDialog dialog=builder.create();
+        dialog.show();
+    }
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
