@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,9 +33,11 @@ public class GurugyanActivity extends AppCompatActivity {
     int itemCount;
     ArrayList<GurugyanItem> itemList;
 
-    RelativeLayout viewGroup;
+    LinearLayout viewGroup;
     CardSliderViewPager viewPager;
     ProgressBar progressBar;
+    com.github.islamkhsh.CardSliderIndicator mCardSliderIndicator;
+    com.github.islamkhsh.CardSliderViewPager mCardSliderViewPager;
 
     ChildEventListener childEventListener;
 
@@ -47,6 +50,16 @@ public class GurugyanActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.gurugyan_viewPager);
         progressBar = findViewById(R.id.gurugyan_progress_bar);
         itemList = new ArrayList<>();
+        mCardSliderIndicator = findViewById(R.id.gurugyan_indicator);
+        mCardSliderViewPager = findViewById(R.id.gurugyan_viewPager);
+
+//        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mCardSliderViewPager.getLayoutParams();
+//        layoutParams.height = (int) MainActivity.convertDpToPixel(600, getApplicationContext());
+//        mCardSliderViewPager.setLayoutParams(layoutParams);
+//
+//        layoutParams = (RelativeLayout.LayoutParams) mCardSliderIndicator.getLayoutParams();
+//        layoutParams.setMargins(0, (int) MainActivity.convertDpToPixel(640, getApplicationContext()), 0, 0);
+//        mCardSliderIndicator.setLayoutParams(layoutParams);
 
         setUpFirebaseListeners();
     }
@@ -55,22 +68,22 @@ public class GurugyanActivity extends AppCompatActivity {
         setUpChildEventListener();
         FirebaseDatabase.getInstance().getReference().child("GuruGyan/count").
                 addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        itemCount = dataSnapshot.getValue(Integer.class);
-                        FirebaseDatabase.getInstance().getReference().child("GuruGyan/events").
-                                addChildEventListener(childEventListener);
-                    }
+                                                   @Override
+                                                   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                       itemCount = dataSnapshot.getValue(Integer.class);
+                                                       FirebaseDatabase.getInstance().getReference().child("GuruGyan/events").
+                                                               addChildEventListener(childEventListener);
+                                                   }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                   @Override
+                                                   public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                }
-        );
+                                                   }
+                                               }
+                );
     }
 
-    private void setUpChildEventListener(){
+    private void setUpChildEventListener() {
         childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot,
@@ -118,7 +131,7 @@ public class GurugyanActivity extends AppCompatActivity {
         Collections.sort(itemList);
     }
 
-    private void removeChildEventListener(){
+    private void removeChildEventListener() {
         FirebaseDatabase.getInstance().getReference().child("GuruGyan/events").removeEventListener(
                 childEventListener
         );
