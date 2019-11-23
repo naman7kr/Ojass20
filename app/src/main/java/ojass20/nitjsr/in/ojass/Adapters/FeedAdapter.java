@@ -1,6 +1,7 @@
 package ojass20.nitjsr.in.ojass.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ojass20.nitjsr.in.ojass.Activities.CommentsActivity;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.Models.Likes;
 import ojass20.nitjsr.in.ojass.R;
@@ -54,7 +56,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         public LinearLayout feedLayout;
         public TextView subevent_name,like_text,eventname,content;
         public ImageView like_icon,postImage;
-        public LinearLayout like_layout;
+        public LinearLayout like_layout,comment_layout;
         RelativeLayout postImageView;
         ProgressBar progressBar;
         public CustomViewHolder(@NonNull View itemView) {
@@ -69,6 +71,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
             like_text=itemView.findViewById(R.id.like_textview);
             like_icon=itemView.findViewById(R.id.like_icon);
             like_layout=itemView.findViewById(R.id.feed_post_upvote);
+            comment_layout=itemView.findViewById(R.id.comments_post);
         }
     }
 
@@ -111,16 +114,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         }
         mpost_id=feedPosts.get(position).getPostid();
 
-//        ArrayList<Likes> mlikes=feedPosts.get(position).getLikes();
-//        for(Likes like : mlikes) {
-//            if (like.getUser_id().equals(mcurrentuid)) {
-//                is_already_liked = true;
-//                holder.like_icon.setImageResource(R.drawable.upvoted);
-//                break;
-//            } else
-//                is_already_liked = false;
-//        }
-
         is_already_liked=feedPosts.get(position).isIs_already_liked();
         if(is_already_liked==true){
             holder.like_icon.setImageResource(R.drawable.upvoted);
@@ -132,6 +125,14 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
 
         final DatabaseReference dref= FirebaseDatabase.getInstance().getReference().child("Feeds");
 
+        holder.comment_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(context, CommentsActivity.class);
+                intent.putExtra("PostId",feedPosts.get(position).getPostid());
+                context.startActivity(intent);
+            }
+        });
 
         holder.like_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,25 +143,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
                 editor.putString("PostNo",Integer.toString(position));
                 editor.apply();
 
-                Log.e("TAG", "onClick: "+feedPosts.get(position).getPostid());
-
-                //HashMap<String,Object> hs=new HashMap<>();
                 HashMap<String,Object> nc=new HashMap<>();
                 if(feedPosts.get(position).isIs_already_liked()){
-//                    count--;
-//                    hs.put("likescount",Integer.toString(count));
-//                    dref.child(mpost_id).updateChildren(hs);
                     Log.e("TAG", "onClick: level 2");
                     nc.put(mcurrentuid,null);
                     dref.child(feedPosts.get(position).getPostid()).child("likes").child(mcurrentuid).setValue(null);
 
-
-
                 }
                 else{
                     Log.e("TAG", "onClick: level 6");
-
-                    //nc.put("83","");
                     dref.child(feedPosts.get(position).getPostid()).child("likes").child(mcurrentuid).setValue(mcurrentuid);
                 }
 
@@ -171,14 +162,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
 
     @Override
     public int getItemCount() {
-
-        //return 2;
         return feedPosts.size();
     }
 
     public FeedAdapter(Context context, ArrayList<FeedPost> mfeedPosts,String currentuid) {
         this.context = context;
-        //feedPosts = new ArrayList<>();
         this.feedPosts = mfeedPosts;
         this.mcurrentuid=currentuid;
         Log.e("VIVZ", "FeedAdapter: called COUNT = " + mfeedPosts.size());
