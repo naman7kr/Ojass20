@@ -35,8 +35,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ojass20.nitjsr.in.ojass.Models.Comments;
@@ -90,8 +94,7 @@ public class CommentsActivity extends AppCompatActivity {
                 {
                     String msender=ds.child("sender").getValue().toString();
                     String mmessage=ds.child("message").getValue().toString();
-                    String mtime=ds.child("time").getValue().toString();
-
+                    String mtime=findTimeDifference(ds.child("time").getValue().toString());
                     String m_image_url="";
                     //m_image_url=mauth.getCurrentUser().getPhotoUrl().toString();
 
@@ -116,12 +119,59 @@ public class CommentsActivity extends AppCompatActivity {
         });
     }
 
+    private String findTimeDifference(String time) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss aa", Locale.getDefault());
+        String mTime = sdf.format(new Date());
+
+        try {
+            Date end=sdf.parse(mTime);
+            Date start=sdf.parse(time);
+            long different=end.getTime()-start.getTime();
+
+            long secondsInMilli = 1000;
+            long minutesInMilli = secondsInMilli * 60;
+            long hoursInMilli = minutesInMilli * 60;
+            long daysInMilli = hoursInMilli * 24;
+
+            long elapsedDays = different / daysInMilli;
+            different = different % daysInMilli;
+
+            long elapsedHours = different / hoursInMilli;
+            different = different % hoursInMilli;
+
+            long elapsedMinutes = different / minutesInMilli;
+            different = different % minutesInMilli;
+
+            long elapsedSeconds = different / secondsInMilli;
+
+            if(elapsedDays>0){
+                return Long.toString(elapsedDays)+" days";
+            }
+            else if(elapsedHours>0){
+                return Long.toString(elapsedHours)+" hrs";
+            }
+            else if(elapsedMinutes>0){
+                return Long.toString(elapsedMinutes)+" min";
+            }
+            else
+                return Long.toString(elapsedSeconds)+" sec";
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "23 min";
+    }
+
     private void sendComment() {
         if(validate()){
             HashMap<String,Object> hs=new HashMap<>();
             hs.put("sender",current_user_id);
             hs.put("message",self_comment_text.getText().toString().trim());
-            hs.put("time","2 min");
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss aa", Locale.getDefault());
+            String currentDateandTime = sdf.format(new Date());
+
+            hs.put("time",currentDateandTime);
 
             String push_id=dref.push().getKey().toString();
             dref.child(push_id).setValue(hs).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -182,10 +232,16 @@ public class CommentsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id=item.getItemId();
         if(id==R.id.share_toolbar){
+            send_description_via_intent();
             Toast.makeText(this, "thoda wait kr lo..", Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void send_description_via_intent() {
+        DatabaseReference mref=FirebaseDatabase.getInstance().getReference().child("Feeds").child(current_post_id);
+        //String msg=mref.child("event")
     }
 
     class comments_adapter extends RecyclerView.Adapter<comments_adapter.myviewholder>
