@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_height="match_parent"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,17 +16,17 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/temp"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/temp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Gurugyan"
             android:layout_marginLeft="8dp"
+            android:fontFamily="@font/opensans"
+            android:text="Gurugyan"
             android:textSize="19sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/opensans" />
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -34,25 +34,46 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.github.islamkhsh.CardSliderViewPager
+        <LinearLayout
+            android:id="@+id/gurugyan_pages"
             android:layout_width="match_parent"
-            android:layout_height="600dp"
-            android:id="@+id/gurugyan_viewPager"
-            android:layout_marginTop="12dp"
-            app:cardSlider_smallScaleFactor="0.88"
-            app:cardSlider_otherPagesWidth="18dp"
-            app:cardSlider_pageMargin="18dp"
-            app:cardSlider_cardCornerRadius="4dp"
-            app:auto_slide_time="10"
-            app:cardSlider_indicator="@id/gurugyan_indicator" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="visible">
 
-        <com.github.islamkhsh.CardSliderIndicator
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="640dp"
-            android:layout_centerHorizontal="true"
-            app:indicatorsToShow="3"
-            android:id="@+id/gurugyan_indicator" />
+            <com.github.islamkhsh.CardSliderViewPager
+                android:id="@+id/gurugyan_viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="12dp"
+                android:layout_weight="7"
+                app:auto_slide_time="10"
+                app:cardSlider_cardCornerRadius="4dp"
+                app:cardSlider_indicator="@id/gurugyan_indicator"
+                app:cardSlider_otherPagesWidth="18dp"
+                app:cardSlider_pageMargin="18dp"
+                app:cardSlider_smallScaleFactor="0.88" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <com.github.islamkhsh.CardSliderIndicator
+                    android:id="@+id/gurugyan_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    app:indicatorsToShow="3" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/gurugyan_progress_bar"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_centerInParent="true" />
 
     </RelativeLayout>
 

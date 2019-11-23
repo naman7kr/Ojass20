@@ -7,35 +7,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
+    android:background="@color/white"
     tools:context=".Activities.MainActivity">
+
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <include
-                layout="@layout/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorPrimaryDark" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/feed_recycler_view"
-                android:scrollbars="none"/>
-
-        </LinearLayout>
 
         <FrameLayout
             android:id="@+id/flContent"
@@ -43,74 +22,36 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <ImageView
-                android:id="@+id/pull_down"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="42dp"
-                android:background="@drawable/circle"
-                android:padding="4dp"
-                android:src="@drawable/ic_keyboard_arrow_down_black_24dp"
-                android:visibility="gone" />
-
-
             <RelativeLayout
-                android:id="@+id/bg_circle"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:layout_width="250dp"
-                    android:layout_height="220dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="-150dp"
-                    android:padding="4dp"
-                    android:src="@drawable/border_circle" />
+                android:layout_height="wrap_content">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_marginTop="?attr/actionBarSize"
+                    android:id="@+id/feed_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="none" />
+                <ProgressBar
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_centerInParent="true"
+                    android:id="@+id/recycler_view_progress"/>
             </RelativeLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:gravity="center_horizontal">
-
-                    <ImageView
-                        android:id="@+id/active_circle_left"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="8dp"
-                        android:src="@drawable/circle"
-                        android:visibility="gone" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:gravity="center_horizontal">
-
-                    <ImageView
-                        android:id="@+id/active_circle_right"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="8dp"
-                        android:src="@drawable/circle"
-                        android:visibility="gone" />
-                </LinearLayout>
-            </LinearLayout>
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+
+                <ImageView
+                    android:id="@+id/bg_circle"
+                    android:layout_width="248dp"
+                    android:layout_height="248dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="-125dp"
+                    android:src="@drawable/border_circle" />
+
 
                 <ImageView
                     android:id="@+id/pull_up"
@@ -118,22 +59,126 @@
                     android:layout_height="28dp"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="50dp"
+                    android:layout_marginBottom="109dp"
                     android:background="@drawable/circle"
                     android:padding="4dp"
                     android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
                     android:visibility="visible" />
 
-                <ImageView
-                    android:id="@+id/active_circle"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="48dp"
-                    android:src="@drawable/circle"
-                    android:visibility="gone" />
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="-150dp"
+                    android:background="#ffffff"
+                    android:visibility="gone">
+
+
+                    <ImageView
+                        android:id="@+id/bg_circle1"
+                        android:layout_width="258dp"
+                        android:layout_height="258dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/border_circle"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/center_image"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/circle"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/img1"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/circle"
+                        app:layout_constraintCircle="@+id/center_image"
+                        app:layout_constraintCircleAngle="0"
+                        app:layout_constraintCircleRadius="129dp" />
+
+                    <ImageView
+                        android:id="@+id/img2"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/circle"
+                        app:layout_constraintCircle="@+id/center_image"
+                        app:layout_constraintCircleAngle="60"
+                        app:layout_constraintCircleRadius="129dp" />
+
+                    <ImageView
+                        android:id="@+id/img3"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/circle"
+                        app:layout_constraintCircle="@+id/center_image"
+                        app:layout_constraintCircleAngle="120"
+                        app:layout_constraintCircleRadius="129dp" />
+
+                    <ImageView
+                        android:id="@+id/img4"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/circle"
+                        android:visibility="visible"
+                        app:layout_constraintCircle="@+id/center_image"
+                        app:layout_constraintCircleAngle="180"
+                        app:layout_constraintCircleRadius="129dp" />
+
+                    <ImageView
+                        android:id="@+id/img5"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/circle"
+                        android:visibility="invisible"
+                        app:layout_constraintCircle="@+id/center_image"
+                        app:layout_constraintCircleAngle="240"
+                        app:layout_constraintCircleRadius="129dp" />
+
+                    <ImageView
+                        android:id="@+id/img6"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/circle"
+                        android:visibility="invisible"
+                        app:layout_constraintCircle="@+id/center_image"
+                        app:layout_constraintCircleAngle="300"
+                        app:layout_constraintCircleRadius="129dp" />
+
+                    <ImageView
+                        android:id="@+id/img7"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/circle"
+                        android:visibility="invisible"
+                        app:layout_constraintCircle="@+id/center_image"
+                        app:layout_constraintCircleAngle="360"
+                        app:layout_constraintCircleRadius="129dp" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </RelativeLayout>
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -156,8 +201,56 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.474" />
+
+                <TextView
+                    android:id="@+id/sub_heading"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="OJASS 20"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.964" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark"></LinearLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/pull_down"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="42dp"
+            android:background="@drawable/circle"
+            android:padding="4dp"
+            android:src="@drawable/ic_keyboard_arrow_down_black_24dp"
+            android:visibility="gone" />
+
 
     </FrameLayout>
 
