@@ -169,15 +169,6 @@ public class MainActivity extends AppCompatActivity implements
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        // dummy posts
-//        FeedPost[] posts = {
-//                new FeedPost("NeoDrishti", "Codiyapa", "Coders GET READY! Codiyapa practice session is going to be organized tonight 10:00PM - 12:00AM for MCA and B.Tech first year students to give them a taste of whats coming in the main event.\nHappy Coding!", "http://i.redd.it/aoa42xsj09s31.png"),
-//                new FeedPost("Vishwa CodeGenesis", "Codemania", "Codemania Finals will start tomorrow at sharp 8:00 AM. Teams are required to be present in CC before time with their own laptops. Teams must bring their 25 page reference sheets with them as specified in the rules section.", null),
-//                new FeedPost("NeoDrishti", "SimpySQL", "Simply SQL is about to start! \nRoom No. 304\nTime: 2PM\nRegister here : http://google.com", "http://www.bestmobile.pk/mobile-wallpapers/original/Original_1543075868pexels-photo-1173777.jpeg"),
-//                new FeedPost("NeoDrishti", "Game of Troves", "Game of Troves has been started. \nGo on http://tinyurl.com/neogot19 for registration and submitting solutions", null)
-//        };
-
-        //Log.e("VIVZ", "set");
         mFeedAdapter = new FeedAdapter(this, listposts,currentuid);
         mRecyclerView.setAdapter(mFeedAdapter);
         recyclerview_progress.setVisibility(View.GONE);
