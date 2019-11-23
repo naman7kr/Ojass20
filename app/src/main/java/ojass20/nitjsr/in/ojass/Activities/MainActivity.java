@@ -327,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements
 
         switch (id) {
             case R.id.notifications:
+                startActivity(new Intent(this,ItineraryActivity.class));
                 return true;
             case R.id.profile:
                 startActivity(new Intent(this,ProfileActivity.class));
