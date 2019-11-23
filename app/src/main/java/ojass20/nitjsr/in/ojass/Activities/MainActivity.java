@@ -3,10 +3,12 @@ package ojass20.nitjsr.in.ojass.Activities;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,7 +51,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import ojass20.nitjsr.in.ojass.Models.Comments;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
+import ojass20.nitjsr.in.ojass.Models.Likes;
 import ojass20.nitjsr.in.ojass.R;
 
 public class MainActivity extends AppCompatActivity implements
@@ -75,15 +80,26 @@ public class MainActivity extends AppCompatActivity implements
     private LinearLayoutManager mLinearLayoutManager;
 
     private DatabaseReference dref;
+    private FirebaseAuth mauth;
     private ArrayList<FeedPost> listposts;
+
+    private String currentuid="83";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("PostNo",Integer.toString(0));
+        editor.apply();
+
         mRecyclerView = findViewById(R.id.feed_recycler_view);
         listposts = new ArrayList<>();
+
+        mauth=FirebaseAuth.getInstance();
+        //currentuid=mauth.getCurrentUser().getUid();
 
         dref = FirebaseDatabase.getInstance().getReference().child("Feeds");
         dref.addValueEventListener(new ValueEventListener() {
@@ -92,16 +108,42 @@ public class MainActivity extends AppCompatActivity implements
                 recyclerview_progress.setVisibility(View.VISIBLE);
                 listposts.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    FeedPost post = ds.getValue(FeedPost.class);
+                    //FeedPost post = ds.getValue(FeedPost.class);
+                    String post_id_temp=ds.getKey();
+                    boolean flag=false;
 
-//                    Log.e("vila", "event = "+post.getEvent());
-//                    Log.e("vila", "subevent = "+post.getSubEvent());
-//
+                    ArrayList<Likes> mlikes=new ArrayList<>();
+                    for(DataSnapshot dslike: ds.child("likes").getChildren()){
+                        //Likes like=dslike.getValue(Likes.class);
+                        String temp=dslike.getValue().toString();
+                        Likes like=new Likes(temp);
+                        mlikes.add(like);
+                        if(temp.equals(currentuid)){
+                            flag=true;
+                        }
+                    }
+
+                    ArrayList<Comments> mcomments=new ArrayList<>();
+                    for(DataSnapshot dscomment: ds.child("comments").getChildren()){
+                        Comments comment=dscomment.getValue(Comments.class);
+                        mcomments.add(comment);
+                    }
+
+                    String content=ds.child("content").getValue().toString();
+                    String event_name=ds.child("event").getValue().toString();
+                    String subevent_name=ds.child("subEvent").getValue().toString();
+                    String image_url=ds.child("imageURL").getValue().toString();
+
+
+
+                    FeedPost post=new FeedPost(flag,post_id_temp,content,event_name,image_url,subevent_name,mlikes,mcomments);
+
                     Log.e("vila", post.getImageURL());
                     listposts.add(post);
                 }
                 setUpRecyclerView();
                 Log.e("VIVZ", "onDataChange: listposts count = " + listposts.size());
+                mFeedAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -128,17 +170,21 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
         // dummy posts
-        FeedPost[] posts = {
-                new FeedPost("NeoDrishti", "Codiyapa", "Coders GET READY! Codiyapa practice session is going to be organized tonight 10:00PM - 12:00AM for MCA and B.Tech first year students to give them a taste of whats coming in the main event.\nHappy Coding!", "http://i.redd.it/aoa42xsj09s31.png"),
-                new FeedPost("Vishwa CodeGenesis", "Codemania", "Codemania Finals will start tomorrow at sharp 8:00 AM. Teams are required to be present in CC before time with their own laptops. Teams must bring their 25 page reference sheets with them as specified in the rules section.", null),
-                new FeedPost("NeoDrishti", "SimpySQL", "Simply SQL is about to start! \nRoom No. 304\nTime: 2PM\nRegister here : http://google.com", "http://www.bestmobile.pk/mobile-wallpapers/original/Original_1543075868pexels-photo-1173777.jpeg"),
-                new FeedPost("NeoDrishti", "Game of Troves", "Game of Troves has been started. \nGo on http://tinyurl.com/neogot19 for registration and submitting solutions", null)
-        };
+//        FeedPost[] posts = {
+//                new FeedPost("NeoDrishti", "Codiyapa", "Coders GET READY! Codiyapa practice session is going to be organized tonight 10:00PM - 12:00AM for MCA and B.Tech first year students to give them a taste of whats coming in the main event.\nHappy Coding!", "http://i.redd.it/aoa42xsj09s31.png"),
+//                new FeedPost("Vishwa CodeGenesis", "Codemania", "Codemania Finals will start tomorrow at sharp 8:00 AM. Teams are required to be present in CC before time with their own laptops. Teams must bring their 25 page reference sheets with them as specified in the rules section.", null),
+//                new FeedPost("NeoDrishti", "SimpySQL", "Simply SQL is about to start! \nRoom No. 304\nTime: 2PM\nRegister here : http://google.com", "http://www.bestmobile.pk/mobile-wallpapers/original/Original_1543075868pexels-photo-1173777.jpeg"),
+//                new FeedPost("NeoDrishti", "Game of Troves", "Game of Troves has been started. \nGo on http://tinyurl.com/neogot19 for registration and submitting solutions", null)
+//        };
 
         //Log.e("VIVZ", "set");
-        mFeedAdapter = new FeedAdapter(this, listposts);
+        mFeedAdapter = new FeedAdapter(this, listposts,currentuid);
         mRecyclerView.setAdapter(mFeedAdapter);
         recyclerview_progress.setVisibility(View.GONE);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String numpost = preferences.getString("PostNo", "");
+        mRecyclerView.scrollToPosition(Integer.parseInt(numpost));
     }
 
     private void setUpArrayList() {

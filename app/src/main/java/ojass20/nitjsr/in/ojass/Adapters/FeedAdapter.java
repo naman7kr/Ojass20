@@ -1,7 +1,9 @@
 package ojass20.nitjsr.in.ojass.Adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -135,11 +137,16 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
             @Override
             public void onClick(View v) {
 
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("PostNo",Integer.toString(position));
+                editor.apply();
+
                 Log.e("TAG", "onClick: "+feedPosts.get(position).getPostid());
 
                 //HashMap<String,Object> hs=new HashMap<>();
                 HashMap<String,Object> nc=new HashMap<>();
-                if(is_already_liked){
+                if(feedPosts.get(position).isIs_already_liked()){
 //                    count--;
 //                    hs.put("likescount",Integer.toString(count));
 //                    dref.child(mpost_id).updateChildren(hs);
@@ -165,6 +172,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
     @Override
     public int getItemCount() {
 
+        //return 2;
         return feedPosts.size();
     }
 

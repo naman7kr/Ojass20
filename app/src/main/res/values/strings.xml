@@ -10,6 +10,8 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="upvote">Upvote</string>
+    <string name="like">Like</string>
+    <string name="unlike">Unlike</string>
     <string name="downvote">Downvote</string>
     <string name="comment">Comment</string>
     <string name="share">Share</string>
