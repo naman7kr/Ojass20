@@ -19,6 +19,7 @@
         <activity android:name=".Activities.Help" />
         <activity android:name=".Activities.Events" />
         <activity android:name=".Activities.ProfileActivity" />
+        <activity android:name=".Activities.ItineraryActivity"/>
 
         <uses-library
             android:name="org.apache.http.legacy"
