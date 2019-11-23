@@ -232,10 +232,16 @@ public class CommentsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id=item.getItemId();
         if(id==R.id.share_toolbar){
+            send_description_via_intent();
             Toast.makeText(this, "thoda wait kr lo..", Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void send_description_via_intent() {
+        DatabaseReference mref=FirebaseDatabase.getInstance().getReference().child("Feeds").child(current_post_id);
+        //String msg=mref.child("event")
     }
 
     class comments_adapter extends RecyclerView.Adapter<comments_adapter.myviewholder>

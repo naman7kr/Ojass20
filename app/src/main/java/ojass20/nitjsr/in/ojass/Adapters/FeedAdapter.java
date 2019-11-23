@@ -56,7 +56,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         public LinearLayout feedLayout;
         public TextView subevent_name,like_text,eventname,content;
         public ImageView like_icon,postImage;
-        public LinearLayout like_layout,comment_layout;
+        public LinearLayout like_layout,comment_layout,share_layout;
         RelativeLayout postImageView;
         ProgressBar progressBar;
         public CustomViewHolder(@NonNull View itemView) {
@@ -72,6 +72,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
             like_icon=itemView.findViewById(R.id.like_icon);
             like_layout=itemView.findViewById(R.id.feed_post_upvote);
             comment_layout=itemView.findViewById(R.id.comments_post);
+            share_layout=itemView.findViewById(R.id.feed_post_share);
         }
     }
 
@@ -131,6 +132,21 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
                 Intent intent=new Intent(context, CommentsActivity.class);
                 intent.putExtra("PostId",feedPosts.get(position).getPostid());
                 context.startActivity(intent);
+            }
+        });
+
+        holder.share_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT,feedPosts.get(position).getEvent()+"\n"+
+                        feedPosts.get(position).getSubEvent()+"\n"+
+                        feedPosts.get(position).getContent() );
+                sendIntent.setType("text/plain");
+                context.startActivity(Intent.createChooser(sendIntent,"Share this article via:"));
+                
             }
         });
 
