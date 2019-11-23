@@ -58,6 +58,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import ojass20.nitjsr.in.ojass.Models.Comments;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.Models.Likes;
+import ojass20.nitjsr.in.ojass.Others.OjassApplication;
 import ojass20.nitjsr.in.ojass.R;
 
 public class MainActivity extends AppCompatActivity implements
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements
     private ArrayList<FeedPost> listposts;
 
     private String currentuid="83";
+    private OjassApplication ojassApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -350,6 +352,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void initializeInstanceVariables() {
+        ojassApplication = OjassApplication.getInstance();
+
         recyclerview_progress=findViewById(R.id.recycler_view_progress);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
