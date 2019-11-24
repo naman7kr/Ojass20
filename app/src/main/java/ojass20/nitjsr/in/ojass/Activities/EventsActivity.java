@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import ojass20.nitjsr.in.ojass.R;
 
-public class Events extends AppCompatActivity {
+public class EventsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

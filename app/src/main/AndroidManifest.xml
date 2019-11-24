@@ -18,7 +18,7 @@
         <activity android:name=".Activities.DeveloperActivity"></activity>
         <activity android:name=".Activities.TeamActivity" />
         <activity android:name=".Activities.Help" />
-        <activity android:name=".Activities.Events" />
+        <activity android:name=".Activities.EventsActivity" />
         <activity android:name=".Activities.ProfileActivity" />
         <activity android:name=".Activities.ItineraryActivity"/>
 

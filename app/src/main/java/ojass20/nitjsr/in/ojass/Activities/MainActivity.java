@@ -427,7 +427,7 @@ public class MainActivity extends AppCompatActivity implements
         Log.d("ak47", "selectDrawerItem: " + menuItem.getItemId());
         switch(menuItem.getItemId()) {
             case R.id.events:
-                startActivity(new Intent(MainActivity.this,Events.class));
+                startActivity(new Intent(MainActivity.this,EventsActivity.class));
                 break;
             case R.id.itinerary:
                 startActivity(new Intent(MainActivity.this,ItineraryActivity.class));
