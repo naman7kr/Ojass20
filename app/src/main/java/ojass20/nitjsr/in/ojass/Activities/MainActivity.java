@@ -395,7 +395,7 @@ public class MainActivity extends AppCompatActivity implements
         getSupportActionBar().setHomeButtonEnabled(true);
 
         //Uncomment below once all fragments have been created
-        //setupDrawerContent(mNavigationDrawer);
+        setupDrawerContent(mNavigationDrawer);
 
         //Replacing back arrow with hamburger icon
         mDrawerToggle = setupDrawerToggle();
@@ -424,19 +424,26 @@ public class MainActivity extends AppCompatActivity implements
     public void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment = null;
         Class fragmentClass = null;
-//        switch(menuItem.getItemId()) {
-//            case R.id.nav_first_fragment:
-//                fragmentClass = FirstFragment.class;
-//                break;
-//            case R.id.nav_second_fragment:
-//                fragmentClass = SecondFragment.class;
-//                break;
-//            case R.id.nav_third_fragment:
-//                fragmentClass = ThirdFragment.class;
-//                break;
-//            default:
-//                fragmentClass = FirstFragment.class;
-//        }
+        Log.d("ak47", "selectDrawerItem: " + menuItem.getItemId());
+        switch(menuItem.getItemId()) {
+            case R.id.events:
+                startActivity(new Intent(MainActivity.this,Events.class));
+                break;
+            case R.id.itinerary:
+                startActivity(new Intent(MainActivity.this,ItineraryActivity.class));
+                break;
+            case R.id.help:
+                startActivity(new Intent(MainActivity.this,Help.class));
+                break;
+            case R.id.team:
+                startActivity(new Intent(MainActivity.this,TeamActivity.class));
+                break;
+            case R.id.developers:
+                startActivity(new Intent(MainActivity.this,DeveloperActivity.class));
+                break;
+            case R.id.logout:
+                break;
+        }
 
         try {
             fragment = (Fragment) fragmentClass.newInstance();
@@ -445,15 +452,15 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
-
-        // Highlight the selected item has been done by NavigationView
-        menuItem.setChecked(true);
-        // Set action bar title
-        setTitle(menuItem.getTitle());
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+//
+//        // Highlight the selected item has been done by NavigationView
+//        menuItem.setChecked(true);
+//        // Set action bar title
+//        setTitle(menuItem.getTitle());
         // Close the navigation drawer
-        mDrawer.closeDrawers();
+       mDrawer.closeDrawers();
     }
 
     public static float convertDpToPixel(float dp, Context context) {
