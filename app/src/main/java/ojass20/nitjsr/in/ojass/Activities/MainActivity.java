@@ -427,7 +427,7 @@ public class MainActivity extends AppCompatActivity implements
         Log.d("ak47", "selectDrawerItem: " + menuItem.getItemId());
         switch(menuItem.getItemId()) {
             case R.id.events:
-                startActivity(new Intent(MainActivity.this,EventsActivity.class));
+                startActivity(new Intent(MainActivity.this,EventActivity.class));
                 break;
             case R.id.itinerary:
                 startActivity(new Intent(MainActivity.this,ItineraryActivity.class));
@@ -580,7 +580,7 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onSingleTapUp(MotionEvent e) {
         switch (mInd) {
             case 0:
-                Toast.makeText(MainActivity.this, "Events", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(MainActivity.this, EventActivity.class));
                 break;
             case 1:
                 startActivity(new Intent(MainActivity.this, GurugyanActivity.class));

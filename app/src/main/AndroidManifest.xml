@@ -2,10 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ojass20.nitjsr.in.ojass">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:name=".Others.OjassApplication"
         android:allowBackup="true"
@@ -15,31 +11,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.DeveloperActivity"></activity>
+        <activity android:name=".Activities.EventActivity"></activity>
+        <activity android:name=".Activities.DeveloperActivity" />
         <activity android:name=".Activities.TeamActivity" />
         <activity android:name=".Activities.Help" />
         <activity android:name=".Activities.EventsActivity" />
         <activity android:name=".Activities.ProfileActivity" />
-        <activity android:name=".Activities.ItineraryActivity"/>
-
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />
+        <activity android:name=".Activities.ItineraryActivity" />
 
         <activity android:name=".Activities.MapsActivity" />
+
         <activity android:name=".Activities.SponserActivity" />
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
+
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
@@ -53,6 +40,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.LoginActivity" />
+
         <activity android:name=".Activities.RegistrationPage" />
         <activity android:name=".Activities.GurugyanActivity" />
         <activity android:name=".Activities.MainActivity">
@@ -62,7 +50,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -70,12 +57,26 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
         <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+        <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
     </application>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>
