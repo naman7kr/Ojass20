@@ -51,14 +51,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ojass20.nitjsr.in.ojass.Models.Comments;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.Models.Likes;
-import ojass20.nitjsr.in.ojass.Others.OjassApplication;
+import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
 import ojass20.nitjsr.in.ojass.R;
 
 public class MainActivity extends AppCompatActivity implements

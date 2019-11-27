@@ -1,0 +1,71 @@
+<RelativeLayout
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent" >
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+        >
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/app_bar"
+
+        >
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            android:fitsSystemWindows="true"
+            app:titleEnabled="false"
+            android:id="@+id/collapsing_toolbar_layout"
+            >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@mipmap/akriti"
+                android:scaleType="fitXY"
+                android:transitionName="SubEventImg"
+                android:id="@+id/transition_img"
+                android:alpha=".7"
+
+                />
+
+            <include
+                layout="@layout/toolbar"
+                app:layout_collapseMode="pin"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/toolbar_height"
+                />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:background="#263238"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/sub_rv"
+        android:paddingTop="15dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <FrameLayout
+        android:layout_marginTop="76dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragment_layout"
+
+        />
+
+</RelativeLayout>

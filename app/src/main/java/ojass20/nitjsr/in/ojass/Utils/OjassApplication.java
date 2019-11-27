@@ -1,4 +1,4 @@
-package ojass20.nitjsr.in.ojass.Others;
+package ojass20.nitjsr.in.ojass.Utils;
 
 import android.app.Application;
 

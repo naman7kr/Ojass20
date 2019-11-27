@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        maven { url 'https://plugins.gradle.org/m2/'}
+        maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
         classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.4, 0.99.99]'
@@ -25,7 +25,7 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [
-                onesignal_app_id: 'a1a3776f-af94-474f-af74-f852c5cbc974',
+                onesignal_app_id               : 'a1a3776f-af94-474f-af74-f852c5cbc974',
                 // Project number pulled from dashboard, local value is ignored.
                 onesignal_google_project_number: 'REMOTE'
         ]
@@ -72,5 +72,6 @@ dependencies {
 
     //One Signal
     implementation 'com.onesignal:OneSignal:[3.11.2, 3.99.99]'
+    implementation 'androidx.palette:palette:1.0.0'
 }
 apply plugin: 'com.google.gms.google-services'
