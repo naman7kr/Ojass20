@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="80dp"
     android:layout_height="80dp"
@@ -24,7 +25,7 @@
         android:gravity="center"
         android:maxLines="3"
         android:textColor="@color/white"
-        android:textSize="@dimen/main_events_text"
+        app:autoSizeTextType="uniform"
         />
 
 </RelativeLayout>

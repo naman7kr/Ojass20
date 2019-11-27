@@ -38,6 +38,7 @@
                 />
 
             <include
+                android:layout_marginBottom="50dp"
                 layout="@layout/toolbar"
                 app:layout_collapseMode="pin"
                 android:layout_width="match_parent"
