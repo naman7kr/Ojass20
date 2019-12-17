@@ -24,15 +24,13 @@ import java.util.Iterator;
 
 import ojass20.nitjsr.in.ojass.R;
 
-import static android.support.constraint.Constraints.TAG;
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BottomScrollFragment extends Fragment implements RecyclerViewAdapter.OnNoteListener {
+public class BottomScrollFragment extends Fragment implements DeveloperRecyclerViewAdapter.OnNoteListener {
 
     private ArrayList<String> mNames = new ArrayList<>();
-    RecyclerViewAdapter recyclerViewAdapter;
+    DeveloperRecyclerViewAdapter developerRecyclerViewAdapter;
     private DatabaseReference nameRef;
     FragmentNote fragmentNote;
 
@@ -49,12 +47,12 @@ public class BottomScrollFragment extends Fragment implements RecyclerViewAdapte
         // Inflate the layout for this fragment
         View nameView = inflater.inflate(R.layout.fragment_bottom_scroll, container, false);
         nameRef = FirebaseDatabase.getInstance().getReference().child("Developers");
-//        mNames.add("Ritik");
+        //for retreiving name from database
         retrieveName();
         RecyclerView nameRecyclerView = nameView.findViewById(R.id.nameRecyclerView);
         nameRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
-        recyclerViewAdapter = new RecyclerViewAdapter(mNames,getActivity(),this);
-        nameRecyclerView.setAdapter(recyclerViewAdapter);
+        developerRecyclerViewAdapter = new DeveloperRecyclerViewAdapter(mNames,getActivity(),this);
+        nameRecyclerView.setAdapter(developerRecyclerViewAdapter);
         return nameView;
     }
 
@@ -66,7 +64,7 @@ public class BottomScrollFragment extends Fragment implements RecyclerViewAdapte
                 while (iterator.hasNext()){
                     mNames.add(((DataSnapshot)iterator.next()).getKey());
                 }
-                recyclerViewAdapter.notifyDataSetChanged();
+                developerRecyclerViewAdapter.notifyDataSetChanged();
             }
 
             @Override

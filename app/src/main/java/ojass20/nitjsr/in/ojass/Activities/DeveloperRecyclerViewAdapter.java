@@ -13,14 +13,14 @@ import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ojass20.nitjsr.in.ojass.R;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class DeveloperRecyclerViewAdapter extends RecyclerView.Adapter<DeveloperRecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<String> names = new ArrayList<>();
     private Context mContext;
     private OnNoteListener mOnNoteListener;
     private LayoutInflater layoutInflater;
 
-    public RecyclerViewAdapter(ArrayList<String> names, Context mContext, OnNoteListener OnNoteListener) {
+    public DeveloperRecyclerViewAdapter(ArrayList<String> names, Context mContext, OnNoteListener OnNoteListener) {
         this.names = names;
         this.mContext = mContext;
         this.mOnNoteListener = OnNoteListener;
