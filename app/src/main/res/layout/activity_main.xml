@@ -50,6 +50,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="-125dp"
+                    android:visibility="gone"
                     android:src="@drawable/border_circle" />
 
 
@@ -59,7 +60,7 @@
                     android:layout_height="28dp"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="109dp"
+                    android:layout_marginBottom="32dp"
                     android:background="@drawable/circle"
                     android:padding="4dp"
                     android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
