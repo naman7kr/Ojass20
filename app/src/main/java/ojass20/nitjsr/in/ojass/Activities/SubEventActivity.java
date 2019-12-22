@@ -56,9 +56,7 @@ public class SubEventActivity extends AppCompatActivity {
                 showBottomSheet();
                 bottomSheetOpen = true;
 
-                //Change toolbar
-                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_cancel);
-                toolbar.setBackgroundColor(Color.BLACK);
+
 
             }
         };
@@ -67,6 +65,17 @@ public class SubEventActivity extends AppCompatActivity {
         iv.setImageResource(Constants.eventImg[mainEventPosition]);
 
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onBackPressed() {
+        if(bottomSheetOpen){
+            hideBottomSheet();
+            bottomSheetOpen = false;
+        }else{
+            finishAfterTransition();
+        }
     }
 
     private void manageToolbar() {
@@ -111,12 +120,21 @@ public class SubEventActivity extends AppCompatActivity {
         transaction.add(R.id.fragment_layout,bottomSheet);
         transaction.commit();
 
+        //Change toolbar
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_cancel);
+        toolbar.setBackgroundColor(Color.BLACK);
     }
     private void hideBottomSheet(){
         Fragment f = getSupportFragmentManager().findFragmentById(R.id.fragment_layout);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.no_anim,R.anim.slide_out_bottom);
         transaction.remove(f).commit();
+
+        //change toolbar
+        Drawable backArrow =  getResources().getDrawable(R.drawable.ic_arrow_back);
+        backArrow.setColorFilter(toolbarIconColor, PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(backArrow);
+        toolbar.setBackgroundColor(getResources().getColor(R.color.transparent));
     }
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -125,12 +143,6 @@ public class SubEventActivity extends AppCompatActivity {
             if(bottomSheetOpen){
                 hideBottomSheet();
                 bottomSheetOpen = false;
-
-                //change toolbar
-                Drawable backArrow =  getResources().getDrawable(R.drawable.ic_arrow_back);
-                backArrow.setColorFilter(toolbarIconColor, PorterDuff.Mode.SRC_ATOP);
-                getSupportActionBar().setHomeAsUpIndicator(backArrow);
-                toolbar.setBackgroundColor(getResources().getColor(R.color.transparent));
 
             }else {
                 //go to EventsActivity with transition

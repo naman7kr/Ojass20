@@ -141,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
-                Log.w("VIVZ", "Google sign in failed "+e.getMessage()+" due to "+task.getException());
+                Log.e("VIVZ", "Google sign in failed "+e.getMessage()+" due to "+task.getException());
                 Toast.makeText(this, "Something went wrong!", Toast.LENGTH_SHORT).show();
             }
         }

@@ -17,13 +17,14 @@ import ojass20.nitjsr.in.ojass.R;
 
 public class EventsActivity extends AppCompatActivity implements PinchAlphaInterface {
     private static final int NO_OF_COLUMNS = 4;
+    private static final float INIT_ALPHA = 0.3f;
     ArrayList<EventsDisplayModel> data=new ArrayList<>();
     EventsGridAdapter mAdapter;
     int width;
     float alphaVal=0;
     ZoomLayout zoomLayout;
     private Toolbar toolbar;
-    private static float limitAlpha=1.3248974f;
+    private static float limitAlpha=1.4f;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +50,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
 
         //getting event names and images
         for(int i=0;i<Constants.eventNames.length;i++){
-            data.add(new EventsDisplayModel(Constants.eventImg[i],Constants.eventNames[i],0));
+            data.add(new EventsDisplayModel(Constants.eventImg[i],Constants.eventNames[i],INIT_ALPHA));
         }
 
         mAdapter = new EventsGridAdapter(this,width,data);
@@ -65,7 +66,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
     @Override
     public void ScaleFactorToAlpha(float scaleFactor) {
 //        Log.e("TAG"," "+scaleFactor);
-        alphaVal = (float) ((scaleFactor-1)*(1.0/(limitAlpha-1)));
+        alphaVal = (float) ((scaleFactor-1)*(1.0/(limitAlpha-1)))+INIT_ALPHA;
         if(alphaVal>1){
             alphaVal=1;
         }else if(alphaVal<0){

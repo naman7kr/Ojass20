@@ -2,6 +2,7 @@ package ojass20.nitjsr.in.ojass.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class AboutFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.e("TAG","BOTTOMSHEET");
         View view = inflater.inflate(R.layout.fragment_about,container,false);
         init(view);
 
