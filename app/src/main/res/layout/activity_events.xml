@@ -1,17 +1,17 @@
 <RelativeLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1c313a"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#93390f"
+    >
 
 
     <ojass20.nitjsr.in.ojass.Utils.ZoomLayout
         android:paddingTop="66dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft=".5dp"
-        android:layout_marginRight=".5dp"
         android:id="@+id/events_grid"
         android:focusable="true"
+
         >
     </ojass20.nitjsr.in.ojass.Utils.ZoomLayout>
     <include
