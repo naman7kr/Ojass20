@@ -29,6 +29,9 @@
     <string name="gurugyan_3_description">Highly skilled. Puskas award winner. Won Olympic gold for Brazil. The PSG star will be here on Day 3. Meet him room D-403.</string>
     <string name="action_search">Search Events</string>
     <string name="title_activity_sub_event">SubEventActivity</string>
+    <string name="gotit">Got It</string>
+    <string name="next">Next</string>
+    <string name="restart">Restart</string>
 
 
 </resources>
