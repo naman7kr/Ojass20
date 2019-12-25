@@ -86,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements
     private ImageView mRoundedRectangle;
     private RelativeLayout mRecyclerContainer;
     private ImageView mPlaceholerImage;
+    private RelativeLayout mBottomRecyclerView;
+    private RelativeLayout mCircularRecyclerView;
 
     private RecyclerView mRecyclerView;
     private FeedAdapter mFeedAdapter;
@@ -203,7 +205,8 @@ public class MainActivity extends AppCompatActivity implements
         mPullUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPlaceholerImage.setVisibility(View.VISIBLE);
+//                Log.e(LOG_TAG, "I'm called");
+                mBottomRecyclerView.setVisibility(View.VISIBLE);
                 Blurry.with(getApplicationContext())
                         .radius(20)
                         .capture(mRecyclerContainer)
@@ -222,6 +225,8 @@ public class MainActivity extends AppCompatActivity implements
                 mHeading.animate().alpha(1.0f).setDuration(1000);
                 mPlaceholerImage.animate().alpha(1.0f).setDuration(1000);
                 mRoundedRectangle.animate().alpha(1.0f).setDuration(1000);
+                mBottomRecyclerView.animate().alpha(1.0f).setDuration(1000);
+                mCircularRecyclerView.animate().alpha(1.0f).setDuration(1000);
                 mSubHeading.animate().alpha(1.0f).setDuration(1000);
                 mPullDown.animate().alpha(1.0f).setDuration(1000);
                 mCl.animate().alpha(1.0f).setDuration(1000);
@@ -230,6 +235,9 @@ public class MainActivity extends AppCompatActivity implements
                 mHeading.setVisibility(View.VISIBLE);
                 mSubHeading.setVisibility(View.VISIBLE);
                 mRoundedRectangle.setVisibility(View.VISIBLE);
+                mCircularRecyclerView.setVisibility(View.VISIBLE);
+                mPlaceholerImage.setVisibility(View.VISIBLE);
+
                 mPullUp.animate().alpha(0.0f).setDuration(1000);
                 mRecyclerView.animate().alpha(0.0f).setDuration(1000);
                 mRecyclerView.setVisibility(View.GONE);
@@ -258,12 +266,16 @@ public class MainActivity extends AppCompatActivity implements
                 mHeading.animate().alpha(0.0f).setDuration(1000);
                 mSubHeading.animate().alpha(0.0f).setDuration(1000);
                 mRoundedRectangle.animate().alpha(0.0f).setDuration(1000);
+                mBottomRecyclerView.animate().alpha(0.0f).setDuration(1000);
+                mCircularRecyclerView.animate().alpha(0.0f).setDuration(1000);
                 mCl.animate().alpha(0.0f).setDuration(1000);
                 mCl.setVisibility(View.GONE);
                 mPullDown.setVisibility(View.GONE);
                 mHeading.setVisibility(View.GONE);
                 mSubHeading.setVisibility(View.GONE);
                 mRoundedRectangle.setVisibility(View.GONE);
+                mBottomRecyclerView.setVisibility(View.GONE);
+                mCircularRecyclerView.setVisibility(View.GONE);
                 mToolbar.setTitle(getResources().getString(R.string.feeds));
                 setUpAnimationForImageView(mPullDown);
 
@@ -400,6 +412,8 @@ public class MainActivity extends AppCompatActivity implements
         mRoundedRectangle = findViewById(R.id.rounded_rectangle);
         mRecyclerContainer = findViewById(R.id.recycler_container);
         mPlaceholerImage = findViewById(R.id.placeholer_image_view);
+        mBottomRecyclerView = findViewById(R.id.bottom_recycler_view);
+        mCircularRecyclerView = findViewById(R.id.circular_recycler_view);
 
         for (int i = 0; i < mCircles.size(); i++) {
             final int j = i;

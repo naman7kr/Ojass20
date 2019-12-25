@@ -75,7 +75,9 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:id="@+id/bottom_recycler_view">
 
                 <ImageView
                     android:id="@+id/placeholer_image_view"
@@ -119,7 +121,9 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:id="@+id/circular_recycler_view">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl"
