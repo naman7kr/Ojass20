@@ -109,7 +109,7 @@
                         android:singleLine="true"
                         android:text="HEADING"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="48sp"
+                        android:textSize="40sp"
                         android:visibility="gone" />
 
                 </RelativeLayout>

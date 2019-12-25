@@ -199,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void detectTouchEvents() {
+
         mPullUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -400,6 +401,33 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerContainer = findViewById(R.id.recycler_container);
         mPlaceholerImage = findViewById(R.id.placeholer_image_view);
 
+        for (int i = 0; i < mCircles.size(); i++) {
+            final int j = i;
+            mCircles.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (j != mInd)
+                        return;
+                    switch (j) {
+                        case 0:
+                            startActivity(new Intent(MainActivity.this, EventsActivity.class));
+                            break;
+                        case 1:
+                            startActivity(new Intent(MainActivity.this, GurugyanActivity.class));
+                            break;
+                        case 2:
+                            startActivity(new Intent(MainActivity.this, ItineraryActivity.class));
+                            break;
+                        case 3:
+                            startActivity(new Intent(MainActivity.this, MapsActivity.class));
+                            break;
+                        default:
+                            Log.e(LOG_TAG, "Bhai sahab ye kis line mein aa gye aap?");
+                    }
+                }
+            });
+        }
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = displayMetrics.widthPixels;
@@ -477,15 +505,6 @@ public class MainActivity extends AppCompatActivity implements
             e.printStackTrace();
         }
 
-        // Insert the fragment by replacing any existing fragment
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
-//
-//        // Highlight the selected item has been done by NavigationView
-//        menuItem.setChecked(true);
-//        // Set action bar title
-//        setTitle(menuItem.getTitle());
-        // Close the navigation drawer
         mDrawer.closeDrawers();
     }
 
@@ -609,7 +628,7 @@ public class MainActivity extends AppCompatActivity implements
                 startActivity(new Intent(MainActivity.this, GurugyanActivity.class));
                 break;
             case 2:
-                Toast.makeText(MainActivity.this, "Itinerary", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(MainActivity.this, ItineraryActivity.class));
                 break;
             case 3:
                 startActivity(new Intent(MainActivity.this, MapsActivity.class));
