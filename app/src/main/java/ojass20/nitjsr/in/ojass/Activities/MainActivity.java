@@ -26,6 +26,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import androidx.appcompat.app.AlertDialog;
+
+import jp.wasabeef.blurry.Blurry;
 import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
 import ojass20.nitjsr.in.ojass.Helpers.HomePage;
 
@@ -80,6 +83,9 @@ public class MainActivity extends AppCompatActivity implements
     private ArrayList<ImageView> mCircles;
     private TextView mSubHeading;
     private ProgressBar recyclerview_progress;
+    private ImageView mRoundedRectangle;
+    private RelativeLayout mRecyclerContainer;
+    private ImageView mPlaceholerImage;
 
     private RecyclerView mRecyclerView;
     private FeedAdapter mFeedAdapter;
@@ -96,18 +102,18 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        builder=new AlertDialog.Builder(this);
+        builder = new AlertDialog.Builder(this);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("PostNo",Integer.toString(0));
+        editor.putString("PostNo", Integer.toString(0));
         editor.apply();
 
         mRecyclerView = findViewById(R.id.feed_recycler_view);
         listposts = new ArrayList<>();
 
-        mauth=FirebaseAuth.getInstance();
-        currentuid=mauth.getCurrentUser().getUid();
+        mauth = FirebaseAuth.getInstance();
+        currentuid = mauth.getCurrentUser().getUid();
 
         dref = FirebaseDatabase.getInstance().getReference().child("Feeds");
         dref.addValueEventListener(new ValueEventListener() {
@@ -117,34 +123,33 @@ public class MainActivity extends AppCompatActivity implements
                 listposts.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     //FeedPost post = ds.getValue(FeedPost.class);
-                    String post_id_temp=ds.getKey();
-                    boolean flag=false;
+                    String post_id_temp = ds.getKey();
+                    boolean flag = false;
 
-                    ArrayList<Likes> mlikes=new ArrayList<>();
-                    for(DataSnapshot dslike: ds.child("likes").getChildren()){
+                    ArrayList<Likes> mlikes = new ArrayList<>();
+                    for (DataSnapshot dslike : ds.child("likes").getChildren()) {
                         //Likes like=dslike.getValue(Likes.class);
-                        String temp=dslike.getValue().toString();
-                        Likes like=new Likes(temp);
+                        String temp = dslike.getValue().toString();
+                        Likes like = new Likes(temp);
                         mlikes.add(like);
-                        if(temp.equals(currentuid)){
-                            flag=true;
+                        if (temp.equals(currentuid)) {
+                            flag = true;
                         }
                     }
 
-                    ArrayList<Comments> mcomments=new ArrayList<>();
-                    for(DataSnapshot dscomment: ds.child("comments").getChildren()){
-                        Comments comment=dscomment.getValue(Comments.class);
+                    ArrayList<Comments> mcomments = new ArrayList<>();
+                    for (DataSnapshot dscomment : ds.child("comments").getChildren()) {
+                        Comments comment = dscomment.getValue(Comments.class);
                         mcomments.add(comment);
                     }
 
-                    String content=ds.child("content").getValue().toString();
-                    String event_name=ds.child("event").getValue().toString();
-                    String subevent_name=ds.child("subEvent").getValue().toString();
-                    String image_url=ds.child("imageURL").getValue().toString();
+                    String content = ds.child("content").getValue().toString();
+                    String event_name = ds.child("event").getValue().toString();
+                    String subevent_name = ds.child("subEvent").getValue().toString();
+                    String image_url = ds.child("imageURL").getValue().toString();
 
 
-
-                    FeedPost post=new FeedPost(flag,post_id_temp,content,event_name,image_url,subevent_name,mlikes,mcomments);
+                    FeedPost post = new FeedPost(flag, post_id_temp, content, event_name, image_url, subevent_name, mlikes, mcomments);
 
                     Log.e("vila", post.getImageURL());
                     listposts.add(post);
@@ -177,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        mFeedAdapter = new FeedAdapter(this, listposts,currentuid);
+        mFeedAdapter = new FeedAdapter(this, listposts, currentuid);
         mRecyclerView.setAdapter(mFeedAdapter);
         recyclerview_progress.setVisibility(View.GONE);
 
@@ -197,22 +202,33 @@ public class MainActivity extends AppCompatActivity implements
         mPullUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPlaceholerImage.setVisibility(View.VISIBLE);
+                Blurry.with(getApplicationContext())
+                        .radius(20)
+                        .capture(mRecyclerContainer)
+                        .into(mPlaceholerImage);
+
+                mPlaceholerImage.setVisibility(View.GONE);
                 mHeading.setClickable(true);
                 mPullUp.setEnabled(false);
                 mPullDown.setEnabled(true);
-                mPullDown.setVisibility(View.VISIBLE);
+                //mPullDown.setVisibility(View.VISIBLE);
                 mHeading.setVisibility(View.VISIBLE);
                 mPullDown.setAlpha(0.0f);
                 mHeading.setAllCaps(true);
                 mHeading.setAlpha(0.0f);
                 mHeading.animate().alpha(1.0f).setDuration(1000);
                 mHeading.animate().alpha(1.0f).setDuration(1000);
+                mPlaceholerImage.animate().alpha(1.0f).setDuration(1000);
+                mRoundedRectangle.animate().alpha(1.0f).setDuration(1000);
                 mSubHeading.animate().alpha(1.0f).setDuration(1000);
                 mPullDown.animate().alpha(1.0f).setDuration(1000);
                 mCl.animate().alpha(1.0f).setDuration(1000);
                 mCl.setVisibility(View.VISIBLE);
+                mPlaceholerImage.setVisibility(View.VISIBLE);
                 mHeading.setVisibility(View.VISIBLE);
                 mSubHeading.setVisibility(View.VISIBLE);
+                mRoundedRectangle.setVisibility(View.VISIBLE);
                 mPullUp.animate().alpha(0.0f).setDuration(1000);
                 mRecyclerView.animate().alpha(0.0f).setDuration(1000);
                 mRecyclerView.setVisibility(View.GONE);
@@ -224,10 +240,12 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        mPullDown.setOnClickListener(new View.OnClickListener() {
+        mPlaceholerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //mFlContent.setBackgroundColor(Color.parseColor("#ffffff"));
+                mPlaceholerImage.setImageDrawable(null);
+                mPlaceholerImage.setVisibility(View.GONE);
                 mPullDown.setEnabled(false);
                 mPullUp.setEnabled(true);
                 mPullUp.setVisibility(View.VISIBLE);
@@ -238,15 +256,17 @@ public class MainActivity extends AppCompatActivity implements
                 mPullDown.animate().alpha(0.0f).setDuration(1000);
                 mHeading.animate().alpha(0.0f).setDuration(1000);
                 mSubHeading.animate().alpha(0.0f).setDuration(1000);
+                mRoundedRectangle.animate().alpha(0.0f).setDuration(1000);
                 mCl.animate().alpha(0.0f).setDuration(1000);
                 mCl.setVisibility(View.GONE);
                 mPullDown.setVisibility(View.GONE);
                 mHeading.setVisibility(View.GONE);
                 mSubHeading.setVisibility(View.GONE);
+                mRoundedRectangle.setVisibility(View.GONE);
                 mToolbar.setTitle(getResources().getString(R.string.feeds));
                 setUpAnimationForImageView(mPullDown);
 
-                if(listposts.size()==0){
+                if (listposts.size() == 0) {
                     recyclerview_progress.setVisibility(View.VISIBLE);
                 }
             }
@@ -354,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements
     private void initializeInstanceVariables() {
         ojassApplication = OjassApplication.getInstance();
 
-        recyclerview_progress=findViewById(R.id.recycler_view_progress);
+        recyclerview_progress = findViewById(R.id.recycler_view_progress);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationDrawer = (NavigationView) findViewById(R.id.navigation_view);
@@ -376,6 +396,9 @@ public class MainActivity extends AppCompatActivity implements
         mCircles.add((ImageView) findViewById(R.id.img3));
         mCircles.add((ImageView) findViewById(R.id.img4));
         mSubHeading = findViewById(R.id.sub_heading);
+        mRoundedRectangle = findViewById(R.id.rounded_rectangle);
+        mRecyclerContainer = findViewById(R.id.recycler_container);
+        mPlaceholerImage = findViewById(R.id.placeholer_image_view);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -425,25 +448,25 @@ public class MainActivity extends AppCompatActivity implements
         Fragment fragment = null;
         Class fragmentClass = null;
         Log.d("ak47", "selectDrawerItem: " + menuItem.getItemId());
-        switch(menuItem.getItemId()) {
+        switch (menuItem.getItemId()) {
             case R.id.events:
-                startActivity(new Intent(MainActivity.this,EventsActivity.class));
+                startActivity(new Intent(MainActivity.this, EventsActivity.class));
                 break;
             case R.id.itinerary:
-                startActivity(new Intent(MainActivity.this,ItineraryActivity.class));
+                startActivity(new Intent(MainActivity.this, ItineraryActivity.class));
                 break;
             case R.id.help:
-                startActivity(new Intent(MainActivity.this,Help.class));
+                startActivity(new Intent(MainActivity.this, Help.class));
                 break;
             case R.id.team:
-                startActivity(new Intent(MainActivity.this,TeamActivity.class));
+                startActivity(new Intent(MainActivity.this, TeamActivity.class));
                 break;
             case R.id.developers:
-                startActivity(new Intent(MainActivity.this,DeveloperActivity.class));
+                startActivity(new Intent(MainActivity.this, DeveloperActivity.class));
                 break;
             case R.id.logout:
                 mauth.signOut();
-                startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
                 break;
         }
@@ -463,7 +486,7 @@ public class MainActivity extends AppCompatActivity implements
 //        // Set action bar title
 //        setTitle(menuItem.getTitle());
         // Close the navigation drawer
-       mDrawer.closeDrawers();
+        mDrawer.closeDrawers();
     }
 
     public static float convertDpToPixel(float dp, Context context) {
@@ -483,7 +506,7 @@ public class MainActivity extends AppCompatActivity implements
 
         switch (id) {
             case R.id.notifications:
-                startActivity(new Intent(this,ItineraryActivity.class));
+                startActivity(new Intent(this, ItineraryActivity.class));
                 return true;
             case R.id.profile:
                 startActivity(new Intent(this, ProfileActivity.class));
@@ -494,10 +517,10 @@ public class MainActivity extends AppCompatActivity implements
 
         return super.onOptionsItemSelected(item);
     }
-    public void showList()
-    {
 
-        final ArrayList<String> emer=new ArrayList<>();
+    public void showList() {
+
+        final ArrayList<String> emer = new ArrayList<>();
         emer.add("Emergency");
         emer.add("Police");
         emer.add("Fire");
@@ -510,21 +533,18 @@ public class MainActivity extends AppCompatActivity implements
         emer.add("Ambulance Network (Emergency or Non-Emergency)");
 
 
-        final ArrayList<String> num=new ArrayList<>();
+        final ArrayList<String> num = new ArrayList<>();
 
-            num.add("112");
-            num.add("100");
-            num.add("102");
-            num.add("108");
-            num.add("1906");
-            num.add("1363");
-            num.add("1098");
-            num.add("104");
-            num.add("181");
-            num.add("09343180000");
-
-
-
+        num.add("112");
+        num.add("100");
+        num.add("102");
+        num.add("108");
+        num.add("1906");
+        num.add("1363");
+        num.add("1098");
+        num.add("104");
+        num.add("181");
+        num.add("09343180000");
 
 
         builder.setTitle("Emergency Numbers");
@@ -541,18 +561,18 @@ public class MainActivity extends AppCompatActivity implements
 
             }
         });
-        final Intent intent =new Intent(Intent.ACTION_DIAL);
-        ArrayAdapter<String> adapter=new ArrayAdapter<>(MainActivity.this,android.R.layout.simple_list_item_1,emer);
+        final Intent intent = new Intent(Intent.ACTION_DIAL);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, emer);
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                intent.setData(Uri.parse("tel:"+num.get(which)));
+                intent.setData(Uri.parse("tel:" + num.get(which)));
                 startActivity(intent);
 
             }
         });
 
-        AlertDialog dialog=builder.create();
+        AlertDialog dialog = builder.create();
         dialog.show();
     }
 
