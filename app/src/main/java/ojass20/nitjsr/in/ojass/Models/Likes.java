@@ -1,7 +1,7 @@
 package ojass20.nitjsr.in.ojass.Models;
 
 public class Likes {
-    private String user_id;
+    public String user_id;
 
     public Likes(){
 

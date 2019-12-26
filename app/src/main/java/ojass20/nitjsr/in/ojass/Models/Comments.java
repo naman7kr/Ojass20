@@ -1,10 +1,10 @@
 package ojass20.nitjsr.in.ojass.Models;
 
 public class Comments {
-    private String sender;
-    private String message;
-    private String time;
-    private String sender_image_url;
+    public String sender;
+    public String message;
+    public String time;
+    public String sender_image_url;
 
     public Comments(){
 

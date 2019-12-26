@@ -2,8 +2,8 @@ package ojass20.nitjsr.in.ojass.Models;
 
 public class GurugyanItem implements Comparable{
 
-    String url, title, description;
-    int day;
+    public String url, title, description;
+    public int day;
 
     public GurugyanItem(){
 

@@ -1,7 +1,7 @@
 package ojass20.nitjsr.in.ojass.Models;
 
 public class SubEventsModel {
-    String name;
+    public String name;
 
     public SubEventsModel(String name) {
         this.name = name;

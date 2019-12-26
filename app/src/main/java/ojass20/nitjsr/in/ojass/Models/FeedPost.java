@@ -6,14 +6,14 @@ import java.util.ArrayList;
 
 public class FeedPost {
 
-    private String event;
-    private String subEvent;
-    private String content;
-    private String imageURL;
-    private ArrayList<Likes> likes;
-    private ArrayList<Comments> comments;
-    private String postid;
-    private boolean is_already_liked;
+    public String event;
+    public String subEvent;
+    public String content;
+    public String imageURL;
+    public ArrayList<Likes> likes;
+    public ArrayList<Comments> comments;
+    public String postid;
+    public boolean is_already_liked;
 
     public FeedPost(){
 

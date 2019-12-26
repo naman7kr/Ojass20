@@ -1,9 +1,9 @@
 package ojass20.nitjsr.in.ojass.Models;
 
 public class EventsDisplayModel {
-    int evImg;
-    String evName;
-    float alphaVal;
+    public int evImg;
+    public String evName;
+    public float alphaVal;
     public EventsDisplayModel(int evImg, String evName,float alphaVal) {
         this.evImg = evImg;
         this.evName = evName;
