@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements
     private FirebaseAuth mauth;
     private ArrayList<FeedPost> listposts;
 
-    private String currentuid="83";
+    private String currentuid;
     private OjassApplication ojassApplication;
 
     @Override
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements
         listposts = new ArrayList<>();
 
         mauth=FirebaseAuth.getInstance();
-        //currentuid=mauth.getCurrentUser().getUid();
+        currentuid=mauth.getCurrentUser().getUid();
 
         dref = FirebaseDatabase.getInstance().getReference().child("Feeds");
         dref.addValueEventListener(new ValueEventListener() {
@@ -442,6 +442,9 @@ public class MainActivity extends AppCompatActivity implements
                 startActivity(new Intent(MainActivity.this,DeveloperActivity.class));
                 break;
             case R.id.logout:
+                mauth.signOut();
+                startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                finish();
                 break;
         }
 

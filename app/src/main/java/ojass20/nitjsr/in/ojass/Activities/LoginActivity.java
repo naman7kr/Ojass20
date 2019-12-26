@@ -2,6 +2,7 @@ package ojass20.nitjsr.in.ojass.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,7 +39,7 @@ import ojass20.nitjsr.in.ojass.R;
 
 public class LoginActivity extends AppCompatActivity {
 
-    ImageView google_signin_btn,facebook_signin_btn;
+    CardView google_signin_btn,facebook_signin_btn;
     private GoogleSignInClient mGoogleSignInClient;
     public static final int RC_SIGN_IN = 7;
     private FirebaseAuth mAuth;

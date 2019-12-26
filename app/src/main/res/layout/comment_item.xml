@@ -15,7 +15,7 @@
             android:padding="5dp"
             android:layout_gravity="center"
             android:layout_height="55dp"
-            android:src="@drawable/ic_mood_black_24dp"
+            android:src="@drawable/dp_default"
             />
         <LinearLayout
             android:layout_width="match_parent"

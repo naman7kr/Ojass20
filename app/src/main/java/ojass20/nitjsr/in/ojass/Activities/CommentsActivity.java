@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,14 +61,17 @@ public class CommentsActivity extends AppCompatActivity {
 
     private DatabaseReference dref;
     private FirebaseAuth mauth;
-    private String current_user_id="83";
+    private String current_user_id="Raj";
     private String current_post_id;
+    private String current_user_dp_url="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
-        initilise();
 
+
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.no_anim);
+        initilise();
 
         current_post_id=getIntent().getExtras().get("PostId").toString();
 
@@ -83,7 +87,10 @@ public class CommentsActivity extends AppCompatActivity {
         setSupportActionBar(mtoolbar);
 
         mauth=FirebaseAuth.getInstance();
-        //current_user_id=mauth.getCurrentUser().getUid();
+        current_user_dp_url=mauth.getCurrentUser().getPhotoUrl().toString();
+        setImageSrcCurrentUser();
+        current_user_id=mauth.getCurrentUser().getUid();
+        Log.e( "onCreate: "," level -1 "+current_user_id+" ch "+current_user_dp_url);
         dref= FirebaseDatabase.getInstance().getReference().child("Feeds").child(current_post_id).child("comments");
 
         dref.addValueEventListener(new ValueEventListener() {
@@ -97,6 +104,7 @@ public class CommentsActivity extends AppCompatActivity {
                     String mtime=findTimeDifference(ds.child("time").getValue().toString());
                     String m_image_url="";
                     //m_image_url=mauth.getCurrentUser().getPhotoUrl().toString();
+                    msender="User Name";
 
                     Comments mcomment=new Comments(msender,mmessage,mtime,m_image_url);
                     comment_list.add(mcomment);
@@ -117,6 +125,32 @@ public class CommentsActivity extends AppCompatActivity {
                 sendComment();
             }
         });
+    }
+
+    private void setImageSrcCurrentUser() {
+        Log.e( "setImageSrcCurrentUser","level 1 "+current_user_dp_url);
+        Glide.with(CommentsActivity.this)
+                .load(current_user_dp_url)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        self_dp.setImageResource(R.drawable.dp_default);
+                        Log.e( "setImageSrcCurrentUser","level 2 "+e.getMessage());
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                })
+                .into(self_dp);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.no_anim, R.anim.slide_out_bottom);
     }
 
     private String findTimeDifference(String time) {
@@ -233,7 +267,7 @@ public class CommentsActivity extends AppCompatActivity {
         int id=item.getItemId();
         if(id==R.id.share_toolbar){
             send_description_via_intent();
-            Toast.makeText(this, "thoda wait kr lo..", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Will be shared...", Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -270,7 +304,7 @@ public class CommentsActivity extends AppCompatActivity {
 //                    .listener(new RequestListener<Drawable>() {
 //                        @Override
 //                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//                            holder.sender_pic.setImageResource(R.drawable.ic_mood_black_24dp);
+//                            holder.sender_pic.setImageResource(R.drawable.dp_default);
 //                            return false;
 //                        }
 //
