@@ -1,9 +1,9 @@
 package ojass20.nitjsr.in.ojass.Models;
 
 public class ItinerraryModal {
-    private String name;
-    private String time;
-    private String venue;
+    public String name;
+    public String time;
+    public String venue;
 
     public ItinerraryModal(String name, String time, String venue) {
         this.name = name;
