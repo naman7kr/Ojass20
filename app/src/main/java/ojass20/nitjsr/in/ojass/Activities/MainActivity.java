@@ -46,6 +46,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import androidx.appcompat.app.AlertDialog;
+
+import androidx.fragment.app.FragmentTransaction;
+
+import jp.wasabeef.blurry.Blurry;
 import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
 import ojass20.nitjsr.in.ojass.Fragments.HomeFragment;
 import ojass20.nitjsr.in.ojass.Models.Comments;
@@ -204,14 +209,13 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     }
 
 
-
     private void detectTouchEvents() {
         //pullup button click
         mPullUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // hide mPullUp
-                AlphaAnimation anim = new AlphaAnimation(1.0f,0.0f);
+                AlphaAnimation anim = new AlphaAnimation(1.0f, 0.0f);
                 anim.setDuration(100);
                 anim.setAnimationListener(new Animation.AnimationListener() {
                     @Override
@@ -236,10 +240,11 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             }
         });
     }
+
     @Override
     public void onCancel() {
         //show mPullUp
-        AlphaAnimation anim = new AlphaAnimation(0.0f,1.0f);
+        AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
         anim.setDuration(1000);
         anim.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -263,19 +268,18 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     }
 
 
-
     private void openFragment() {
         HomeFragment homeFrag = new HomeFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_in_bottom,R.anim.no_anim);
-        transaction.add(R.id.home_container,homeFrag);
+        transaction.setCustomAnimations(R.anim.slide_in_bottom, R.anim.no_anim);
+        transaction.add(R.id.home_container, homeFrag);
         transaction.commit();
-        Toast.makeText(ojassApplication, "Click", Toast.LENGTH_SHORT).show();
     }
+
     private void closeFragment() {
         Fragment f = getSupportFragmentManager().findFragmentById(R.id.home_container);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.no_anim,R.anim.slide_out_bottom);
+        transaction.setCustomAnimations(R.anim.no_anim, R.anim.slide_out_bottom);
         transaction.remove(f).commit();
     }
 
@@ -456,7 +460,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
-
 
 
 }
