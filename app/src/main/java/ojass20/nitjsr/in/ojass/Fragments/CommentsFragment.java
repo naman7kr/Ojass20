@@ -219,6 +219,7 @@ public class CommentsFragment extends Fragment {
         (view.findViewById(R.id.comment_back_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                self_comment_text.clearFocus();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setCustomAnimations(R.anim.no_anim, R.anim.slide_out_bottom);
                 transaction.remove(CommentsFragment.this).commit();
