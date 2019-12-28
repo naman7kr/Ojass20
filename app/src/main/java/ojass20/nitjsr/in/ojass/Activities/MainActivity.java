@@ -199,8 +199,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         mPullUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // create fragment
-                openFragment();
                 // hide mPullUp
                 AlphaAnimation anim = new AlphaAnimation(1.0f,0.0f);
                 anim.setDuration(100);
@@ -222,12 +220,13 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                     }
                 });
                 mPullUp.startAnimation(anim);
+                // create fragment
+                openFragment();
             }
         });
     }
     @Override
     public void onCancel() {
-        closeFragment();
         //show mPullUp
         AlphaAnimation anim = new AlphaAnimation(0.0f,1.0f);
         anim.setDuration(1000);
@@ -249,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             }
         });
         mPullUp.startAnimation(anim);
-
+        closeFragment();
     }
 
 

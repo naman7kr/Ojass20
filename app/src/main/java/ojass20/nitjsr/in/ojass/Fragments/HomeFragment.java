@@ -21,6 +21,7 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -53,8 +54,9 @@ public class HomeFragment extends Fragment implements
     private RelativeLayout swipeArea;
     private ConstraintLayout cl;
     private boolean isSwipeRight;
-    private ImageView swipeImage1, swipeImage2;
-    private ArrayList<Integer> seqCircle = new ArrayList<Integer>() {
+    private ImageView swipeImage1,swipeImage2;
+    private TextView txt;
+    private ArrayList<Integer> seqCircle = new ArrayList<Integer>(){
         {
             add(1);
             add(2);
@@ -93,6 +95,7 @@ public class HomeFragment extends Fragment implements
         swipeArea = view.findViewById(R.id.swipe_area);
         swipeImage1 = view.findViewById(R.id.img_swipe1);
         swipeImage2 = view.findViewById(R.id.img_swipe2);
+        txt = view.findViewById(R.id.home_frag_text);
         cl = view.findViewById(R.id.cl);
         c1 = view.findViewById(R.id.img1);
         c2 = view.findViewById(R.id.img2);
@@ -103,7 +106,6 @@ public class HomeFragment extends Fragment implements
         mCircles.add(c3);
         mCircles.add(c4);
         mDetector = new GestureDetectorCompat(getContext(), this);
-
     }
 
     private void onCancel() {
@@ -138,6 +140,7 @@ public class HomeFragment extends Fragment implements
         }
         imgAnimationRight();
         setUpView(counter);
+        setTxtRight();
     }
 
     private void swipeLeft() {
@@ -149,7 +152,14 @@ public class HomeFragment extends Fragment implements
         }
         imgAnimationLeft();
         setUpView(counter);
-        //img animation
+        setTxtLeft();
+
+    }
+    private void setTxtRight(){
+        txt.setText(mItems.get(seqCircle.get(1)-1).getmTitle());
+    }
+    private void setTxtLeft(){
+        txt.setText(mItems.get(seqCircle.get(3)-1).getmTitle());
     }
 
     private void imgAnimationRight() {

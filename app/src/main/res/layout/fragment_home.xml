@@ -33,6 +33,17 @@
                 android:layout_below="@id/cancel_layout"
                 android:layout_marginTop="48dp"
                 android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Events"
+                android:textSize="18sp"
+                android:id="@+id/home_frag_text"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="25dp"
+                android:textColor="@color/white"
+                />
 
                 <ImageView
                     android:id="@+id/img_swipe2"
