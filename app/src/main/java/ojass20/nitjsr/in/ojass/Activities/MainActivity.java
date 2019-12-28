@@ -61,16 +61,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private ActionBarDrawerToggle mDrawerToggle;
     private ImageView mPullUp;
     private AlertDialog.Builder builder;
-    private ImageView mPullDown;
-    private String LOG_TAG = "MAIN";
     private TranslateAnimation mAnimation;
-    private TextView mHeading;
-    private int mInd;
-    private TextView mSubHeading;
     private ProgressBar recyclerview_progress;
-    private ImageView mRoundedRectangle;
-    private RelativeLayout mRecyclerContainer;
-    private ImageView mPlaceholerImage;
+
 
 
     private RecyclerView mRecyclerView;
@@ -89,19 +82,62 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        builder = new AlertDialog.Builder(this);
+        init();
+        initializeInstanceVariables();
+
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("PostNo", Integer.toString(0));
         editor.apply();
 
+        fetchFeedsDataFromFirebase();
+
+        setUpNavigationDrawer();
+        //setUpRecyclerView();
+
+        setUpNavigationDrawer();
+        setUpAnimationForImageView(mPullUp);
+        detectTouchEvents();
+
+
+    }
+    void init(){
+        homeContainer = findViewById(R.id.home_container);
+        recyclerview_progress = findViewById(R.id.recycler_view_progress);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mNavigationDrawer = (NavigationView) findViewById(R.id.navigation_view);
+        mPullUp = findViewById(R.id.pull_up);
         mRecyclerView = findViewById(R.id.feed_recycler_view);
+    }
+    private void initializeInstanceVariables() {
+        builder = new AlertDialog.Builder(this);
+        ojassApplication = OjassApplication.getInstance();
         listposts = new ArrayList<>();
 
         mauth = FirebaseAuth.getInstance();
         currentuid = mauth.getCurrentUser().getUid();
 
+        mAnimation = new TranslateAnimation(
+                TranslateAnimation.ABSOLUTE, 0f,
+                TranslateAnimation.ABSOLUTE, 0f,
+                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
+                TranslateAnimation.RELATIVE_TO_PARENT, 0.005f);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+        float x = (float) Math.sqrt(convertDpToPixel(125, this) * convertDpToPixel(125, this) - convertDpToPixel(41, this) * convertDpToPixel(41, this));
+        float x1 = (float) Math.sqrt(convertDpToPixel(125, this) * convertDpToPixel(125, this) - convertDpToPixel(57, this) * convertDpToPixel(57, this));
+
+        float m1 = width / 2 - x;
+        m1 = m1 - convertDpToPixel(9, this);
+        m1 = m1 + (x - x1);
+        float m2 = m1 + 2 * x1;
+    }
+
+    private void fetchFeedsDataFromFirebase(){
         dref = FirebaseDatabase.getInstance().getReference().child("Feeds");
         dref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -152,18 +188,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             }
         });
 
-        initializeInstanceVariables();
-        setUpNavigationDrawer();
-        //setUpRecyclerView();
-
-
-        setUpNavigationDrawer();
-        setUpAnimationForImageView(mPullUp);
-        detectTouchEvents();
-
-
     }
-
     private void setUpRecyclerView() {
         mRecyclerView.setHasFixedSize(true);
         mLinearLayoutManager = new LinearLayoutManager(this);
@@ -262,38 +287,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         mImageView.setAnimation(mAnimation);
     }
 
-    private void initializeInstanceVariables() {
-        ojassApplication = OjassApplication.getInstance();
-        homeContainer = findViewById(R.id.home_container);
-        recyclerview_progress = findViewById(R.id.recycler_view_progress);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mNavigationDrawer = (NavigationView) findViewById(R.id.navigation_view);
-        mPullUp = findViewById(R.id.pull_up);
 
-        mAnimation = new TranslateAnimation(
-                TranslateAnimation.ABSOLUTE, 0f,
-                TranslateAnimation.ABSOLUTE, 0f,
-                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
-                TranslateAnimation.RELATIVE_TO_PARENT, 0.005f);
-
-        mInd = 0;
-        mSubHeading = findViewById(R.id.sub_heading);
-        mRecyclerContainer = findViewById(R.id.recycler_container);
-        mPlaceholerImage = findViewById(R.id.placeholer_image_view);
-
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = displayMetrics.widthPixels;
-        float x = (float) Math.sqrt(convertDpToPixel(125, this) * convertDpToPixel(125, this) - convertDpToPixel(41, this) * convertDpToPixel(41, this));
-        float x1 = (float) Math.sqrt(convertDpToPixel(125, this) * convertDpToPixel(125, this) - convertDpToPixel(57, this) * convertDpToPixel(57, this));
-
-        float m1 = width / 2 - x;
-        m1 = m1 - convertDpToPixel(9, this);
-        m1 = m1 + (x - x1);
-        float m2 = m1 + 2 * x1;
-    }
 
     private void setUpNavigationDrawer() {
         setSupportActionBar(mToolbar);
