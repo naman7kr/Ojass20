@@ -31,6 +31,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.fragment.app.Fragment;
+
 import ojass20.nitjsr.in.ojass.Activities.EventsActivity;
 import ojass20.nitjsr.in.ojass.Activities.GurugyanActivity;
 import ojass20.nitjsr.in.ojass.Activities.ItineraryActivity;
@@ -47,7 +48,7 @@ public class HomeFragment extends Fragment implements
     private ImageView cancelBtn;
     private ArrayList<HomePage> mItems = new ArrayList<>();
     private int mInd;
-    private ImageView bigCircle,c1,c2,c3,c4;
+    private ImageView bigCircle, c1, c2, c3, c4;
     private ArrayList<ImageView> mCircles = new ArrayList<>();
     private GestureDetectorCompat mDetector;
     private RelativeLayout swipeArea;
@@ -63,28 +64,28 @@ public class HomeFragment extends Fragment implements
             add(4);
         }
     };
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home,container,false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
         init(view);
         onCancel();
         setUpArrayList();
         swipeArea.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(mDetector!=null) {
+                if (mDetector != null) {
                     mDetector.onTouchEvent(event);
                     return true;
                 }
                 return false;
             }
         });
-        setUpView(0,false);
+        setUpView(0);
         detectBottomTabClick();
         return view;
     }
-
 
 
     private void init(View view) {
@@ -96,18 +97,17 @@ public class HomeFragment extends Fragment implements
         swipeImage2 = view.findViewById(R.id.img_swipe2);
         txt = view.findViewById(R.id.home_frag_text);
         cl = view.findViewById(R.id.cl);
-        c1 = view.findViewById(R.id.c1);
-        c2 = view.findViewById(R.id.c2);
-        c3 = view.findViewById(R.id.c3);
-        c4 = view.findViewById(R.id.c4);
+        c1 = view.findViewById(R.id.img1);
+        c2 = view.findViewById(R.id.img2);
+        c3 = view.findViewById(R.id.img3);
+        c4 = view.findViewById(R.id.img4);
         mCircles.add(c1);
         mCircles.add(c2);
         mCircles.add(c3);
         mCircles.add(c4);
-        mDetector = new GestureDetectorCompat(getContext(),this);
-        c1.setScaleX(2);
-        c1.setScaleY(2);
+        mDetector = new GestureDetectorCompat(getContext(), this);
     }
+
     private void onCancel() {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,10 +118,10 @@ public class HomeFragment extends Fragment implements
     }
 
     private void setUpArrayList() {
-        mItems.add(new HomePage("EVENTS", "#FF0000", 0,R.drawable.ic_launcher_background));//red
-        mItems.add(new HomePage("GURUGYAN", "#00FF00", 1,R.drawable.ic_launcher_foreground));//green
-        mItems.add(new HomePage("ITINERARY", "#0000FF", 2,R.drawable.ic_launcher_background));//blue
-        mItems.add(new HomePage("MAPS", "#FFCC00", 3,R.drawable.ic_launcher_foreground));//yellow
+        mItems.add(new HomePage("EVENTS", "#FF0000", 0, R.drawable.ic_launcher_background));//red
+        mItems.add(new HomePage("GURUGYAN", "#00FF00", 1, R.drawable.ic_launcher_foreground));//green
+        mItems.add(new HomePage("ITINERARY", "#0000FF", 2, R.drawable.ic_launcher_background));//blue
+        mItems.add(new HomePage("MAPS", "#FFCC00", 3, R.drawable.ic_launcher_foreground));//yellow
     }
 
     private void detectBottomTabClick() {
@@ -130,30 +130,29 @@ public class HomeFragment extends Fragment implements
         c3.setOnClickListener(this);
         c4.setOnClickListener(this);
     }
-    private void swipeRight(){
-        mInd++;
-        if(mInd==4){
-            mInd = 0;
-        }
-        isSwipeRight=true;
-        imgAnimationRight();
-        setTxtRight();
-        circleZoomAnimationRight();
-        setUpView(-1,isSwipeRight);
-        //setText
 
-    }
-    private void swipeLeft(){
-        mInd--;
-        if(mInd<0){
-            mInd = 3;
+    private void swipeRight() {
+        mInd++;
+        int counter = -1;
+        if (mInd >= mItems.size()) {
+            mInd = 0;
+            counter = -3;
         }
-        isSwipeRight=false;
-        //img animation
+        imgAnimationRight();
+        setUpView(counter);
+        setTxtRight();
+    }
+
+    private void swipeLeft() {
+        mInd--;
+        int counter = 1;
+        if (mInd < 0) {
+            mInd = mItems.size() - 1;
+            counter = 3;
+        }
         imgAnimationLeft();
+        setUpView(counter);
         setTxtLeft();
-        circleZoomAnimationLeft();
-        setUpView(1,isSwipeRight);
 
     }
     private void setTxtRight(){
@@ -162,78 +161,14 @@ public class HomeFragment extends Fragment implements
     private void setTxtLeft(){
         txt.setText(mItems.get(seqCircle.get(3)-1).getmTitle());
     }
-    private void circleZoomAnimationRight(){
-        final ImageView cIn = mCircles.get(seqCircle.get(1)-1);
-        final ImageView cOut = mCircles.get(seqCircle.get(0)-1);
-        cIn.setScaleX(2);
-        cIn.setScaleY(2);
-        ScaleAnimation zoomIn = new ScaleAnimation(0.5f,1,0.5f,1);
-        ScaleAnimation zoomOut = new ScaleAnimation(1,0.5f,1,0.5f);
-        zoomIn.setDuration(ANIM_DURATION);
-        zoomOut.setDuration(ANIM_DURATION);
-        zoomIn.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                cIn.setScaleX(2);
-                cIn.setScaleY(2);
-                cOut.setScaleX(1);
-                cOut.setScaleY(1);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        cIn.startAnimation(zoomIn);
-        cOut.startAnimation(zoomOut);
-    }
-    private void circleZoomAnimationLeft(){
-        final ImageView cIn = mCircles.get(seqCircle.get(3)-1);
-        final ImageView cOut = mCircles.get(seqCircle.get(0)-1);
-        cIn.setScaleX(2);
-        cIn.setScaleY(2);
-        ScaleAnimation zoomIn = new ScaleAnimation(0.5f,1,0.5f,1);
-        ScaleAnimation zoomOut = new ScaleAnimation(1,0.5f,1,0.5f);
-        zoomIn.setDuration(ANIM_DURATION);
-        zoomOut.setDuration(ANIM_DURATION);
-        zoomIn.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                cIn.setScaleX(2);
-                cIn.setScaleY(2);
-                cOut.setScaleX(1);
-                cOut.setScaleY(1);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        cIn.startAnimation(zoomIn);
-        cOut.startAnimation(zoomOut);
-    }
-
-    private void imgAnimationRight(){
-        final int img = mItems.get(seqCircle.get(1)-1).getImg();
+    private void imgAnimationRight() {
+        final int img = mItems.get(seqCircle.get(1) - 1).getmImageId();
         swipeImage2.setImageResource(img);
         //img animation
         //translate swipeImg2 from right to center
-        AnimationSet set1 = translateAnim(0,-200,1,0);
-        AnimationSet set2 = translateAnim(200,0,0,1);
+        AnimationSet set1 = translateAnim(0, -200, 1, 0);
+        AnimationSet set2 = translateAnim(200, 0, 0, 1);
         set1.setDuration(ANIM_DURATION);
         set2.setDuration(ANIM_DURATION);
         set1.setAnimationListener(new Animation.AnimationListener() {
@@ -257,12 +192,13 @@ public class HomeFragment extends Fragment implements
         swipeImage1.startAnimation(set1);
         swipeImage2.startAnimation(set2);
     }
-    private void imgAnimationLeft(){
-        final int img = mItems.get(seqCircle.get(3)-1).getImg();
+
+    private void imgAnimationLeft() {
+        final int img = mItems.get(seqCircle.get(3) - 1).getmImageId();
         swipeImage2.setImageResource(img);
 
-        AnimationSet set1 = translateAnim(0,200,1,0);
-        AnimationSet set2 = translateAnim(-200,0,0,1);
+        AnimationSet set1 = translateAnim(0, 200, 1, 0);
+        AnimationSet set2 = translateAnim(-200, 0, 0, 1);
         set1.setDuration(ANIM_DURATION);
         set2.setDuration(ANIM_DURATION);
         set1.setAnimationListener(new Animation.AnimationListener() {
@@ -286,43 +222,31 @@ public class HomeFragment extends Fragment implements
         swipeImage1.startAnimation(set1);
         swipeImage2.startAnimation(set2);
     }
-    private AnimationSet translateAnim(float fromTr, float toTr,float fromAl, float toAl) {
+
+    private AnimationSet translateAnim(float fromTr, float toTr, float fromAl, float toAl) {
         AnimationSet set = new AnimationSet(true);
-        TranslateAnimation tr = new TranslateAnimation(fromTr,toTr,0,0);
+        TranslateAnimation tr = new TranslateAnimation(fromTr, toTr, 0, 0);
         set.addAnimation(tr);
-        AlphaAnimation al = new AlphaAnimation(fromAl,toAl);
+        AlphaAnimation al = new AlphaAnimation(fromAl, toAl);
         set.addAnimation(al);
         return set;
     }
 
-    public void setUpView(int counter,boolean isSwipeRight) {
-
+    public void setUpView(int counter) {
         ArrayList<ValueAnimator> animators = new ArrayList<>();
-        int flag = 1;
-        for (int i=0;i<seqCircle.size();i++) {
-
-            if(isSwipeRight && i>1){
-                flag = 2;
-            }else if(!isSwipeRight){
-                if(i>0 && i<3){
-                    flag = 2;
-                }else
-                    flag = 1;
-            }
-            mCircles.get(seqCircle.get(i)-1).setColorFilter(Color.parseColor(mItems.get(seqCircle.get(i)-1).getmCircleColor()));
-
-            animators.add(animateView(mCircles.get(seqCircle.get(i)-1), ANIM_DURATION, counter * 60 * flag));
-        }
-        if(counter!=0) {
-            if (isSwipeRight) {
-                seqCircle.add(seqCircle.get(0));
-                seqCircle.remove(0);
+        for (int i = 0; i < mCircles.size(); i++) {
+            mCircles.get(i).setColorFilter(Color.parseColor(mItems.get(i).getmCircleColor()));
+            animators.add(animateView(mCircles.get(i), 500, counter * 60));
+            if (i != mInd) {
+                animators.add(changeRadius(mCircles.get(i), 500, 128));
+                animators.add(changeHeight(mCircles.get(i), 500, 20));
+                animators.add(changeWidth(mCircles.get(i), 500, 20));
             } else {
-                seqCircle.add(0, seqCircle.get(3));
-                seqCircle.remove(4);
+                animators.add(changeRadius(mCircles.get(i), 500, 128));
+                animators.add(changeHeight(mCircles.get(i), 500, 30));
+                animators.add(changeWidth(mCircles.get(i), 500, 30));
             }
         }
-//        Log.e("TAG",seqCircle.toString());
         for (int i = 0; i < animators.size(); i++) {
             ValueAnimator anim = animators.get(i);
             anim.addListener(new Animator.AnimatorListener() {
@@ -333,7 +257,7 @@ public class HomeFragment extends Fragment implements
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mDetector = new GestureDetectorCompat(getContext(),HomeFragment.this);
+                    mDetector = new GestureDetectorCompat(getContext(), HomeFragment.this);
                 }
 
                 @Override
@@ -366,6 +290,58 @@ public class HomeFragment extends Fragment implements
         anim.setInterpolator(new LinearInterpolator());
         return anim;
     }
+
+    private ValueAnimator changeRadius(final ImageView imageView, long duration, int newRadius) {
+        ConstraintLayout.LayoutParams lP = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+        ValueAnimator anim = ValueAnimator.ofInt((int) lP.circleRadius, (int) MainActivity.convertDpToPixel(newRadius, getContext()));
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+                layoutParams.circleRadius = val;
+                imageView.setLayoutParams(layoutParams);
+            }
+        });
+        anim.setDuration(duration);
+        anim.setInterpolator(new LinearInterpolator());
+        return anim;
+    }
+
+    private ValueAnimator changeHeight(final ImageView imageView, long duration, int newHeight) {
+        ConstraintLayout.LayoutParams lP = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+        ValueAnimator anim = ValueAnimator.ofInt((int) lP.height, (int) MainActivity.convertDpToPixel(newHeight, getContext()));
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+                layoutParams.height = val;
+                imageView.setLayoutParams(layoutParams);
+            }
+        });
+        anim.setDuration(duration);
+        anim.setInterpolator(new LinearInterpolator());
+        return anim;
+    }
+
+    private ValueAnimator changeWidth(final ImageView imageView, long duration, int newWidth) {
+        ConstraintLayout.LayoutParams lP = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+        ValueAnimator anim = ValueAnimator.ofInt((int) lP.width, (int) MainActivity.convertDpToPixel(newWidth, getContext()));
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+                layoutParams.width = val;
+                imageView.setLayoutParams(layoutParams);
+            }
+        });
+        anim.setDuration(duration);
+        anim.setInterpolator(new LinearInterpolator());
+        return anim;
+    }
+
     @Override
     public boolean onDown(MotionEvent e) {
         return false;
@@ -380,7 +356,7 @@ public class HomeFragment extends Fragment implements
     public boolean onSingleTapUp(MotionEvent e) {
         float x = e.getX();
         float y = e.getY();
-        if(x>=swipeImage1.getLeft() && x<=swipeImage1.getRight() && y>=swipeImage1.getTop() && y<=swipeImage1.getBottom()) {
+        if (x >= swipeImage1.getLeft() && x <= swipeImage1.getRight() && y >= swipeImage1.getTop() && y <= swipeImage1.getBottom()) {
             switch (mInd) {
                 case 0:
                     startActivity(new Intent(getContext(), EventsActivity.class));
@@ -423,54 +399,54 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onClick(View v) {
-        if(v.getId()==R.id.c1){
-            if(seqCircle.get(0)==1){
+        if (v.getId() == R.id.img1) {
+            if (seqCircle.get(0) == 1) {
                 //no animation
-            }else if(seqCircle.get(1)==1){
+            } else if (seqCircle.get(1) == 1) {
                 //swipe right
                 swipeRight();
 
-            }else {
+            } else {
                 //swipe left
                 swipeLeft();
             }
-        }else if(v.getId()==R.id.c2){
-            if(seqCircle.get(0)==2){
+        } else if (v.getId() == R.id.img2) {
+            if (seqCircle.get(0) == 2) {
                 //no animation
-            }else if(seqCircle.get(1)==2){
+            } else if (seqCircle.get(1) == 2) {
                 //swipe right
                 swipeRight();
 
-            }else {
+            } else {
                 //swipe left
                 swipeLeft();
             }
-        }else if(v.getId()==R.id.c3){
-            if(seqCircle.get(0)==3){
+        } else if (v.getId() == R.id.img3) {
+            if (seqCircle.get(0) == 3) {
                 //no animation
-            }else if(seqCircle.get(1)==3){
+            } else if (seqCircle.get(1) == 3) {
                 //swipe right
                 swipeRight();
 
-            }else {
+            } else {
                 //swipe left
                 swipeLeft();
             }
-        }else if(v.getId()==R.id.c4){
-            if(seqCircle.get(0)==4){
+        } else if (v.getId() == R.id.img4) {
+            if (seqCircle.get(0) == 4) {
                 //no animation
-            }else if(seqCircle.get(1)==4){
+            } else if (seqCircle.get(1) == 4) {
                 //swipe right
                 swipeRight();
 
-            }else {
+            } else {
                 //swipe left
                 swipeLeft();
             }
         }
     }
 
-    public interface HomeFragInterface{
+    public interface HomeFragInterface {
         void onCancel(); // close fragment
     }
 }
