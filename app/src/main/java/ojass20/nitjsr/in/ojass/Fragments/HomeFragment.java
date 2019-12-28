@@ -21,6 +21,7 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class HomeFragment extends Fragment implements
     private ConstraintLayout cl;
     private boolean isSwipeRight;
     private ImageView swipeImage1,swipeImage2;
+    private TextView txt;
     private ArrayList<Integer> seqCircle = new ArrayList<Integer>(){
         {
             add(1);
@@ -92,6 +94,7 @@ public class HomeFragment extends Fragment implements
         swipeArea = view.findViewById(R.id.swipe_area);
         swipeImage1 = view.findViewById(R.id.img_swipe1);
         swipeImage2 = view.findViewById(R.id.img_swipe2);
+        txt = view.findViewById(R.id.home_frag_text);
         cl = view.findViewById(R.id.cl);
         c1 = view.findViewById(R.id.c1);
         c2 = view.findViewById(R.id.c2);
@@ -104,7 +107,6 @@ public class HomeFragment extends Fragment implements
         mDetector = new GestureDetectorCompat(getContext(),this);
         c1.setScaleX(2);
         c1.setScaleY(2);
-
     }
     private void onCancel() {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -135,8 +137,10 @@ public class HomeFragment extends Fragment implements
         }
         isSwipeRight=true;
         imgAnimationRight();
+        setTxtRight();
         circleZoomAnimationRight();
         setUpView(-1,isSwipeRight);
+        //setText
 
     }
     private void swipeLeft(){
@@ -145,13 +149,18 @@ public class HomeFragment extends Fragment implements
             mInd = 3;
         }
         isSwipeRight=false;
+        //img animation
         imgAnimationLeft();
+        setTxtLeft();
         circleZoomAnimationLeft();
         setUpView(1,isSwipeRight);
-        //img animation
 
-
-
+    }
+    private void setTxtRight(){
+        txt.setText(mItems.get(seqCircle.get(1)-1).getmTitle());
+    }
+    private void setTxtLeft(){
+        txt.setText(mItems.get(seqCircle.get(3)-1).getmTitle());
     }
     private void circleZoomAnimationRight(){
         final ImageView cIn = mCircles.get(seqCircle.get(1)-1);
