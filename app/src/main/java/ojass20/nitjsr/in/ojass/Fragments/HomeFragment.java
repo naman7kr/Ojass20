@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.fragment.app.Fragment;
@@ -53,10 +56,9 @@ public class HomeFragment extends Fragment implements
     private GestureDetectorCompat mDetector;
     private RelativeLayout swipeArea;
     private ConstraintLayout cl;
-    private boolean isSwipeRight;
-    private ImageView swipeImage1,swipeImage2;
+    private ImageView swipeImage1, swipeImage2;
     private TextView txt;
-    private ArrayList<Integer> seqCircle = new ArrayList<Integer>(){
+    private ArrayList<Integer> seqCircle = new ArrayList<Integer>() {
         {
             add(1);
             add(2);
@@ -118,10 +120,10 @@ public class HomeFragment extends Fragment implements
     }
 
     private void setUpArrayList() {
-        mItems.add(new HomePage("EVENTS", "#FF0000", 0, R.drawable.ic_launcher_background));//red
-        mItems.add(new HomePage("GURUGYAN", "#00FF00", 1, R.drawable.ic_launcher_foreground));//green
-        mItems.add(new HomePage("ITINERARY", "#0000FF", 2, R.drawable.ic_launcher_background));//blue
-        mItems.add(new HomePage("MAPS", "#FFCC00", 3, R.drawable.ic_launcher_foreground));//yellow
+        mItems.add(new HomePage("Events", "#FF0000", 0, R.drawable.ic_launcher_background));//red
+        mItems.add(new HomePage("Gurugyan", "#00FF00", 1, R.drawable.ic_launcher_foreground));//green
+        mItems.add(new HomePage("Itinerary", "#0000FF", 2, R.drawable.ic_launcher_background));//blue
+        mItems.add(new HomePage("Maps", "#FFCC00", 3, R.drawable.ic_launcher_foreground));//yellow
     }
 
     private void detectBottomTabClick() {
@@ -155,15 +157,17 @@ public class HomeFragment extends Fragment implements
         setTxtLeft();
 
     }
-    private void setTxtRight(){
-        txt.setText(mItems.get(seqCircle.get(1)-1).getmTitle());
+
+    private void setTxtRight() {
+        txt.setText(mItems.get(mInd).getmTitle());
     }
-    private void setTxtLeft(){
-        txt.setText(mItems.get(seqCircle.get(3)-1).getmTitle());
+
+    private void setTxtLeft() {
+        txt.setText(mItems.get(mInd).getmTitle());
     }
 
     private void imgAnimationRight() {
-        final int img = mItems.get(seqCircle.get(1) - 1).getmImageId();
+        final int img = mItems.get(mInd).getmImageId();
         swipeImage2.setImageResource(img);
         //img animation
         //translate swipeImg2 from right to center
@@ -194,7 +198,7 @@ public class HomeFragment extends Fragment implements
     }
 
     private void imgAnimationLeft() {
-        final int img = mItems.get(seqCircle.get(3) - 1).getmImageId();
+        final int img = mItems.get(mInd).getmImageId();
         swipeImage2.setImageResource(img);
 
         AnimationSet set1 = translateAnim(0, 200, 1, 0);
@@ -233,6 +237,13 @@ public class HomeFragment extends Fragment implements
     }
 
     public void setUpView(int counter) {
+        if (counter == 0) {
+            txt.setText(mItems.get(mInd).getmTitle());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                swipeImage1.setImageDrawable(getActivity().getDrawable(mItems.get(mInd).getmImageId()));
+                swipeImage2.setImageDrawable(getActivity().getDrawable(mItems.get(mInd).getmImageId()));
+            }
+        }
         ArrayList<ValueAnimator> animators = new ArrayList<>();
         for (int i = 0; i < mCircles.size(); i++) {
             mCircles.get(i).setColorFilter(Color.parseColor(mItems.get(i).getmCircleColor()));

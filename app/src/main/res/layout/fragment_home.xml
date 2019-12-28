@@ -1,5 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blue"
@@ -29,21 +30,22 @@
                 android:id="@+id/swipe_area"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/bot_nav"
-                android:layout_below="@id/cancel_layout"
                 android:layout_marginTop="48dp"
                 android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Events"
-                android:textSize="18sp"
-                android:id="@+id/home_frag_text"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="25dp"
-                android:textColor="@color/white"
-                />
+
+                <TextView
+                    android:id="@+id/home_frag_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="25dp"
+                    android:fontFamily="@font/opensans"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="Events" />
 
                 <ImageView
                     android:id="@+id/img_swipe2"
@@ -51,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:alpha="0"
-                    android:src="@drawable/ic_launcher_background" />
+                    tools:src="@drawable/ic_launcher_background" />
 
                 <ImageView
                     android:id="@+id/img_swipe1"
@@ -59,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:alpha="1"
-                    android:src="@drawable/ic_launcher_foreground" />
+                    tools:src="@drawable/ic_launcher_foreground" />
             </RelativeLayout>
 
         </RelativeLayout>
