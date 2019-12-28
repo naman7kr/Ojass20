@@ -58,14 +58,6 @@ public class HomeFragment extends Fragment implements
     private ConstraintLayout cl;
     private ImageView swipeImage1, swipeImage2;
     private TextView txt;
-    private ArrayList<Integer> seqCircle = new ArrayList<Integer>() {
-        {
-            add(1);
-            add(2);
-            add(3);
-            add(4);
-        }
-    };
 
     @Nullable
     @Override
