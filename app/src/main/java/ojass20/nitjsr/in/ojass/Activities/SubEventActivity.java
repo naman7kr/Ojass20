@@ -55,9 +55,6 @@ public class SubEventActivity extends AppCompatActivity {
             public void onLayoutClick(View v, int position) {
                 showBottomSheet();
                 bottomSheetOpen = true;
-
-
-
             }
         };
         rView.setAdapter(new SubEventsAdapter(this,getData(),mInterface));

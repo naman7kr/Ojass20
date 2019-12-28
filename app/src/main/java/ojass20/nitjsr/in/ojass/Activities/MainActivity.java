@@ -20,10 +20,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -43,8 +45,10 @@ import java.util.ArrayList;
 
 import androidx.appcompat.app.AlertDialog;
 
+import androidx.fragment.app.FragmentTransaction;
 import jp.wasabeef.blurry.Blurry;
 import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
+import ojass20.nitjsr.in.ojass.Fragments.HomeFragment;
 import ojass20.nitjsr.in.ojass.Helpers.HomePage;
 
 import androidx.annotation.NonNull;
@@ -64,8 +68,7 @@ import ojass20.nitjsr.in.ojass.Models.Likes;
 import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
 import ojass20.nitjsr.in.ojass.R;
 
-public class MainActivity extends AppCompatActivity implements
-        GestureDetector.OnGestureListener {
+public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragInterface {
     private DrawerLayout mDrawer;
     private Toolbar mToolbar;
     private NavigationView mNavigationDrawer;
@@ -76,18 +79,13 @@ public class MainActivity extends AppCompatActivity implements
     private String LOG_TAG = "MAIN";
     private TranslateAnimation mAnimation;
     private TextView mHeading;
-    private GestureDetectorCompat mDetector;
-    private ArrayList<HomePage> mItems;
     private int mInd;
-    private ConstraintLayout mCl;
-    private ArrayList<ImageView> mCircles;
     private TextView mSubHeading;
     private ProgressBar recyclerview_progress;
     private ImageView mRoundedRectangle;
     private RelativeLayout mRecyclerContainer;
     private ImageView mPlaceholerImage;
-    private RelativeLayout mBottomRecyclerView;
-    private RelativeLayout mCircularRecyclerView;
+
 
     private RecyclerView mRecyclerView;
     private FeedAdapter mFeedAdapter;
@@ -99,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private String currentuid;
     private OjassApplication ojassApplication;
+    private FrameLayout homeContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements
         setUpNavigationDrawer();
         //setUpRecyclerView();
 
-        setUpArrayList();
+
         setUpNavigationDrawer();
         setUpAnimationForImageView(mPullUp);
         detectTouchEvents();
@@ -193,187 +192,81 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView.scrollToPosition(Integer.parseInt(numpost));
     }
 
-    private void setUpArrayList() {
-        mItems.add(new HomePage("EVENTS", "#FF0000", 0));
-        mItems.add(new HomePage("GURUGYAN", "#00FF00", 1));
-        mItems.add(new HomePage("ITINERARY", "#0000FF", 2));
-        mItems.add(new HomePage("MAPS", "#FFCC00", 3));
-    }
+
 
     private void detectTouchEvents() {
-
+        //pullup button click
         mPullUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Log.e(LOG_TAG, "I'm called");
-                mBottomRecyclerView.setVisibility(View.VISIBLE);
-                Blurry.with(getApplicationContext())
-                        .radius(20)
-                        .capture(mRecyclerContainer)
-                        .into(mPlaceholerImage);
+                // create fragment
+                openFragment();
+                // hide mPullUp
+                AlphaAnimation anim = new AlphaAnimation(1.0f,0.0f);
+                anim.setDuration(100);
+                anim.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
 
-                mPlaceholerImage.setVisibility(View.GONE);
-                mHeading.setClickable(true);
-                mPullUp.setEnabled(false);
-                mPullDown.setEnabled(true);
-                //mPullDown.setVisibility(View.VISIBLE);
-                mHeading.setVisibility(View.VISIBLE);
-                mPullDown.setAlpha(0.0f);
-                mHeading.setAllCaps(true);
-                mHeading.setAlpha(0.0f);
-                mHeading.animate().alpha(1.0f).setDuration(1000);
-                mHeading.animate().alpha(1.0f).setDuration(1000);
-                mPlaceholerImage.animate().alpha(1.0f).setDuration(1000);
-                mRoundedRectangle.animate().alpha(1.0f).setDuration(1000);
-                mBottomRecyclerView.animate().alpha(1.0f).setDuration(1000);
-                mCircularRecyclerView.animate().alpha(1.0f).setDuration(1000);
-                mSubHeading.animate().alpha(1.0f).setDuration(1000);
-                mPullDown.animate().alpha(1.0f).setDuration(1000);
-                mCl.animate().alpha(1.0f).setDuration(1000);
-                mCl.setVisibility(View.VISIBLE);
-                mPlaceholerImage.setVisibility(View.VISIBLE);
-                mHeading.setVisibility(View.VISIBLE);
-                mSubHeading.setVisibility(View.VISIBLE);
-                mRoundedRectangle.setVisibility(View.VISIBLE);
-                mCircularRecyclerView.setVisibility(View.VISIBLE);
-                mPlaceholerImage.setVisibility(View.VISIBLE);
+                    }
 
-                mPullUp.animate().alpha(0.0f).setDuration(1000);
-                mRecyclerView.animate().alpha(0.0f).setDuration(1000);
-                mRecyclerView.setVisibility(View.GONE);
-                recyclerview_progress.setVisibility(View.GONE);
-                mPullUp.setVisibility(View.GONE);
-                setUpAnimationForImageView(mPullDown);
-                mToolbar.setTitle("");
-                setUpView(0);
-            }
-        });
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        mPullUp.setAlpha(0.0f);
 
-        mPlaceholerImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //mFlContent.setBackgroundColor(Color.parseColor("#ffffff"));
-                mPlaceholerImage.setImageDrawable(null);
-                mPlaceholerImage.setVisibility(View.GONE);
-                mPullDown.setEnabled(false);
-                mPullUp.setEnabled(true);
-                mPullUp.setVisibility(View.VISIBLE);
-                mPullUp.setAlpha(0.0f);
-                mPullUp.animate().alpha(1.0f).setDuration(1000);
-                mRecyclerView.animate().alpha(1.0f).setDuration(1000);
-                mRecyclerView.setVisibility(View.VISIBLE);
-                mPullDown.animate().alpha(0.0f).setDuration(1000);
-                mHeading.animate().alpha(0.0f).setDuration(1000);
-                mSubHeading.animate().alpha(0.0f).setDuration(1000);
-                mRoundedRectangle.animate().alpha(0.0f).setDuration(1000);
-                mBottomRecyclerView.animate().alpha(0.0f).setDuration(1000);
-                mCircularRecyclerView.animate().alpha(0.0f).setDuration(1000);
-                mCl.animate().alpha(0.0f).setDuration(1000);
-                mCl.setVisibility(View.GONE);
-                mPullDown.setVisibility(View.GONE);
-                mHeading.setVisibility(View.GONE);
-                mSubHeading.setVisibility(View.GONE);
-                mRoundedRectangle.setVisibility(View.GONE);
-                mBottomRecyclerView.setVisibility(View.GONE);
-                mCircularRecyclerView.setVisibility(View.GONE);
-                mToolbar.setTitle(getResources().getString(R.string.feeds));
-                setUpAnimationForImageView(mPullDown);
+                    }
 
-                if (listposts.size() == 0) {
-                    recyclerview_progress.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-        mCl.setClickable(false);
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
 
-        mHeading.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mDetector.onTouchEvent(event);
-                return true;
-            }
-        });
-
-        mCl.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mDetector.onTouchEvent(event);
-                return true;
+                    }
+                });
+                mPullUp.startAnimation(anim);
             }
         });
     }
-
-    private void setUpView(int counter) {
-        HomePage homePage = mItems.get(mInd);
-        mHeading.setText(homePage.getmTitle());
-        String mystring = new String("Ojass 20");
-        SpannableString content = new SpannableString(mystring);
-        content.setSpan(new UnderlineSpan(), 0, mystring.length(), 0);
-        mSubHeading.setText(content);
-        ArrayList<ValueAnimator> animators = new ArrayList<>();
-        for (int i = 0; i < mCircles.size(); i++) {
-            mCircles.get(i).setColorFilter(Color.parseColor(mItems.get(i).getmCircleColor()));
-            animators.add(animateView(mCircles.get(i), 500, counter * 60));
-        }
-        for (int i = 0; i < animators.size(); i++)
-            animators.get(i).start();
-    }
-
-    private ValueAnimator animateView(final ImageView imageView, long duration, long angle) {
-        ConstraintLayout.LayoutParams lP = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
-        ValueAnimator anim = ValueAnimator.ofInt((int) lP.circleAngle, (int) lP.circleAngle + (int) angle);
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+    @Override
+    public void onCancel() {
+        closeFragment();
+        //show mPullUp
+        AlphaAnimation anim = new AlphaAnimation(0.0f,1.0f);
+        anim.setDuration(1000);
+        anim.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                int val = (Integer) valueAnimator.getAnimatedValue();
-                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
-                layoutParams.circleAngle = val;
-                imageView.setLayoutParams(layoutParams);
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mPullUp.setAlpha(1.0f);
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
             }
         });
-        anim.setDuration(duration);
-        anim.setInterpolator(new LinearInterpolator());
-        return anim;
+        mPullUp.startAnimation(anim);
+
     }
 
 
-    private void setUpAnimationForTextView(final int code, final long mainTime, String curr) {
-        long tempTime = System.currentTimeMillis();
-        if (tempTime - mainTime > 500) {
-            mHeading.setText(mItems.get(mInd).getmTitle());
-            return;
-        }
-        String temp = " ";
-        for (int i = 0; i < curr.length(); i++) {
-            char ch = curr.charAt(i);
-            if (code == 1) {
-                if (ch == 'Z')
-                    temp = temp + 'A';
-                else {
-                    int u = (int) ch;
-                    u++;
-                    temp = temp + (char) u;
-                }
-            } else {
-                if (ch == 'A')
-                    temp = temp + 'Z';
-                else {
-                    int u = (int) ch;
-                    u--;
-                    temp = temp + (char) u;
-                }
-            }
-        }
-        temp = temp.trim();
-        mHeading.setText(temp);
-        //Log.e(LOG_TAG, temp);
-        final String x = temp;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setUpAnimationForTextView(code, mainTime, x.toUpperCase());
-            }
-        }, 10);
+
+    private void openFragment() {
+        HomeFragment homeFrag = new HomeFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_bottom,R.anim.no_anim);
+        transaction.add(R.id.home_container,homeFrag);
+        transaction.commit();
+        Toast.makeText(ojassApplication, "Click", Toast.LENGTH_SHORT).show();
+    }
+    private void closeFragment() {
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.home_container);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.no_anim,R.anim.slide_out_bottom);
+        transaction.remove(f).commit();
     }
 
     private void setUpAnimationForImageView(ImageView mImageView) {
@@ -386,61 +279,24 @@ public class MainActivity extends AppCompatActivity implements
 
     private void initializeInstanceVariables() {
         ojassApplication = OjassApplication.getInstance();
-
+        homeContainer = findViewById(R.id.home_container);
         recyclerview_progress = findViewById(R.id.recycler_view_progress);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationDrawer = (NavigationView) findViewById(R.id.navigation_view);
         mPullUp = findViewById(R.id.pull_up);
-        mPullDown = findViewById(R.id.pull_down);
+
         mAnimation = new TranslateAnimation(
                 TranslateAnimation.ABSOLUTE, 0f,
                 TranslateAnimation.ABSOLUTE, 0f,
                 TranslateAnimation.RELATIVE_TO_PARENT, 0f,
                 TranslateAnimation.RELATIVE_TO_PARENT, 0.005f);
-        mHeading = (TextView) findViewById(R.id.heading);
-        mItems = new ArrayList<>();
+
         mInd = 0;
-        mDetector = new GestureDetectorCompat(this, this);
-        mCl = findViewById(R.id.cl);
-        mCircles = new ArrayList<>();
-        mCircles.add((ImageView) findViewById(R.id.img1));
-        mCircles.add((ImageView) findViewById(R.id.img2));
-        mCircles.add((ImageView) findViewById(R.id.img3));
-        mCircles.add((ImageView) findViewById(R.id.img4));
         mSubHeading = findViewById(R.id.sub_heading);
-        mRoundedRectangle = findViewById(R.id.rounded_rectangle);
         mRecyclerContainer = findViewById(R.id.recycler_container);
         mPlaceholerImage = findViewById(R.id.placeholer_image_view);
-        mBottomRecyclerView = findViewById(R.id.bottom_recycler_view);
-        mCircularRecyclerView = findViewById(R.id.circular_recycler_view);
 
-        for (int i = 0; i < mCircles.size(); i++) {
-            final int j = i;
-            mCircles.get(i).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (j != mInd)
-                        return;
-                    switch (j) {
-                        case 0:
-                            startActivity(new Intent(MainActivity.this, EventsActivity.class));
-                            break;
-                        case 1:
-                            startActivity(new Intent(MainActivity.this, GurugyanActivity.class));
-                            break;
-                        case 2:
-                            startActivity(new Intent(MainActivity.this, ItineraryActivity.class));
-                            break;
-                        case 3:
-                            startActivity(new Intent(MainActivity.this, MapsActivity.class));
-                            break;
-                        default:
-                            Log.e(LOG_TAG, "Bhai sahab ye kis line mein aa gye aap?");
-                    }
-                }
-            });
-        }
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -622,66 +478,6 @@ public class MainActivity extends AppCompatActivity implements
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    public boolean onDown(MotionEvent e) {
-        return false;
-    }
 
-    @Override
-    public void onShowPress(MotionEvent e) {
 
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent e) {
-        switch (mInd) {
-            case 0:
-                startActivity(new Intent(MainActivity.this, EventsActivity.class));
-                break;
-            case 1:
-                startActivity(new Intent(MainActivity.this, GurugyanActivity.class));
-                break;
-            case 2:
-                startActivity(new Intent(MainActivity.this, ItineraryActivity.class));
-                break;
-            case 3:
-                startActivity(new Intent(MainActivity.this, MapsActivity.class));
-                break;
-            default:
-                Log.e(LOG_TAG, "Bhai sahab ye kis line mein aa gye aap?");
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent e) {
-
-    }
-
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        if (e1.getX() < e2.getX()) {
-            mInd--;
-            if (mInd < 0) {
-                mInd = mItems.size() - 1;
-                setUpView(3);
-            } else
-                setUpView(1);
-            setUpAnimationForTextView(1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
-        } else {
-            mInd++;
-            if (mInd >= mItems.size()) {
-                mInd = 0;
-                setUpView(-3);
-            } else
-                setUpView(-1);
-            setUpAnimationForTextView(-1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
-        }
-        return true;
-    }
 }

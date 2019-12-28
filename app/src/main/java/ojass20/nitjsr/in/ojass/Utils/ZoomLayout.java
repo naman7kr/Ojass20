@@ -233,7 +233,7 @@ public class ZoomLayout extends RecyclerView implements View.OnTouchListener
         // Look for the row.
         for (int i = foundColumn; i < getChildCount(); i += colCount) {
             scanView = getChildAt(i);
-            Log.e("MAPPED X:", " ("+scanView.getTop()+", "+scanView.getBottom()+") "+mappedY);
+            Log.e("MAPPED X:",  " ("+scanView.getTop()+", "+scanView.getBottom()+") "+mappedY);
             Log.e("MAPPED Y:", " ("+scanView.getLeft()+", "+scanView.getRight()+") "+mappedX);
             if ((mappedY >= scanView.getTop()) && (mappedY <= scanView.getBottom())) {
                 expectedView = scanView;

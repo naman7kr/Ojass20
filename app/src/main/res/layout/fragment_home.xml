@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/blue"
+    android:orientation="vertical"
+    >
+<!--cancel    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/cancel_layout"
+        >
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_cancel"
+        android:layout_margin="5dp"
+        android:id="@+id/cancel_frag"
+        />
+    </LinearLayout>
+<!--    swipeArea-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/swipe_area"
+        android:layout_below="@id/cancel_layout"
+        android:layout_above="@+id/bot_nav"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_launcher_background"
+            android:layout_centerInParent="true"
+            android:id="@+id/img_swipe2"
+            android:alpha="0"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_launcher_foreground"
+            android:layout_centerInParent="true"
+            android:id="@+id/img_swipe1"
+            android:alpha="1"
+            />
+    </RelativeLayout>
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:id="@+id/bot_nav"
+            android:layout_alignParentBottom="true"
+            >
+            <ImageView
+                android:id="@+id/bg_circle"
+                android:layout_width="248dp"
+                android:layout_height="248dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="-150dp"
+                android:src="@drawable/border_circle"
+                android:visibility="visible" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="-175dp"
+            android:background="@color/transparent"
+            android:visibility="visible">
+
+
+
+            <ImageView
+                android:id="@+id/center_image"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/circle"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/c1"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/circle"
+                app:layout_constraintCircle="@+id/center_image"
+                app:layout_constraintCircleAngle="0"
+                app:layout_constraintCircleRadius="129dp"
+                tools:ignore="MissingConstraints" />
+
+            <ImageView
+                android:id="@+id/c2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/circle"
+                app:layout_constraintCircle="@+id/center_image"
+                app:layout_constraintCircleAngle="60"
+                app:layout_constraintCircleRadius="129dp"
+                tools:ignore="MissingConstraints" />
+
+            <ImageView
+                android:id="@+id/c3"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/circle"
+                app:layout_constraintCircle="@+id/center_image"
+                app:layout_constraintCircleAngle="180"
+                app:layout_constraintCircleRadius="129dp"
+                tools:ignore="MissingConstraints" />
+
+            <ImageView
+                android:id="@+id/c4"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/circle"
+                android:visibility="visible"
+                app:layout_constraintCircle="@+id/center_image"
+                app:layout_constraintCircleAngle="300"
+                app:layout_constraintCircleRadius="129dp"
+                tools:ignore="MissingConstraints" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        </RelativeLayout>
+    </RelativeLayout>

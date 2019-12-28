@@ -15,273 +15,118 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <FrameLayout
-            android:id="@+id/flContent"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <RelativeLayout
-                android:id="@+id/recycler_container"
+            android:orientation="vertical">
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                >
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/feed_recycler_view"
+                <include
+                    layout="@layout/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="?attr/actionBarSize"
-                    android:scrollbars="none" />
+                    android:layout_height="wrap_content"
 
-                <ProgressBar
-                    android:id="@+id/recycler_view_progress"
-                    android:layout_width="52dp"
-                    android:layout_height="52dp"
-                    android:layout_centerInParent="true" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-
-                <ImageView
-                    android:id="@+id/bg_circle"
-                    android:layout_width="248dp"
-                    android:layout_height="248dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="-125dp"
-                    android:src="@drawable/border_circle"
-                    android:visibility="gone" />
-
-
-                <ImageView
-                    android:id="@+id/pull_up"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="32dp"
-                    android:background="@drawable/circle"
-                    android:padding="4dp"
-                    android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
-                    android:visibility="visible" />
-
-
-            </RelativeLayout>
-
-
-            <RelativeLayout
+                    />
+            <FrameLayout
+                android:id="@+id/flContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
-                android:id="@+id/bottom_recycler_view">
-
-                <ImageView
-                    android:id="@+id/placeholer_image_view"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                <!--ProgressBar-->
+                <RelativeLayout
+                    android:id="@+id/recycler_container"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="visible"></ImageView>
+                    android:layout_height="wrap_content">
 
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/feed_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scrollbars="none" />
+
+                    <ProgressBar
+                        android:id="@+id/recycler_view_progress"
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
+                <!--Pull up button-->
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
                     <ImageView
-                        android:id="@+id/rounded_rectangle"
-                        android:layout_width="match_parent"
-                        android:layout_height="360dp"
+                        android:id="@+id/pull_up"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="-64dp"
-                        android:elevation="16dp"
-                        android:src="@drawable/rounded_rectangle"
-                        android:visibility="gone"></ImageView>
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="32dp"
+                        android:background="@drawable/circle"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
+                        android:visibility="visible" />
 
-                    <TextView
-                        android:id="@+id/heading"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="200dp"
-                        android:elevation="16dp"
-                        android:fontFamily="@font/montserrat"
-                        android:gravity="center"
-                        android:singleLine="true"
-                        android:text="HEADING"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="40sp"
-                        android:visibility="gone" />
 
                 </RelativeLayout>
 
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                android:id="@+id/circular_recycler_view">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl"
+                <!--placeholder img-->
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginBottom="-150dp"
-                    android:background="#ffffff"
-                    android:visibility="gone">
-
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:id="@+id/bottom_recycler_view">
 
                     <ImageView
-                        android:id="@+id/bg_circle1"
-                        android:layout_width="258dp"
-                        android:layout_height="258dp"
+                        android:id="@+id/placeholer_image_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible">
+
+                    </ImageView>
+
+                </RelativeLayout>
+                <!--home fragment-->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/home_container"
+                    />
+
+                <!--ChangeImg-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/sub_heading"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/border_circle"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:layout_marginBottom="32dp"
+                        android:elevation="16dp"
+                        android:fontFamily="@font/opensans"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="OJASS 20"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+                </RelativeLayout>
+            </FrameLayout>
+        </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/center_image"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/circle"
-                        android:visibility="invisible"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
 
-                    <ImageView
-                        android:id="@+id/img1"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/circle"
-                        app:layout_constraintCircle="@+id/center_image"
-                        app:layout_constraintCircleAngle="0"
-                        app:layout_constraintCircleRadius="129dp" />
 
-                    <ImageView
-                        android:id="@+id/img2"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/circle"
-                        app:layout_constraintCircle="@+id/center_image"
-                        app:layout_constraintCircleAngle="60"
-                        app:layout_constraintCircleRadius="129dp" />
-
-                    <ImageView
-                        android:id="@+id/img3"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/circle"
-                        app:layout_constraintCircle="@+id/center_image"
-                        app:layout_constraintCircleAngle="120"
-                        app:layout_constraintCircleRadius="129dp" />
-
-                    <ImageView
-                        android:id="@+id/img4"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/circle"
-                        android:visibility="visible"
-                        app:layout_constraintCircle="@+id/center_image"
-                        app:layout_constraintCircleAngle="180"
-                        app:layout_constraintCircleRadius="129dp" />
-
-                    <ImageView
-                        android:id="@+id/img5"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/circle"
-                        android:visibility="invisible"
-                        app:layout_constraintCircle="@+id/center_image"
-                        app:layout_constraintCircleAngle="240"
-                        app:layout_constraintCircleRadius="129dp" />
-
-                    <ImageView
-                        android:id="@+id/img6"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/circle"
-                        android:visibility="invisible"
-                        app:layout_constraintCircle="@+id/center_image"
-                        app:layout_constraintCircleAngle="300"
-                        app:layout_constraintCircleRadius="129dp" />
-
-                    <ImageView
-                        android:id="@+id/img7"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/circle"
-                        android:visibility="invisible"
-                        app:layout_constraintCircle="@+id/center_image"
-                        app:layout_constraintCircleAngle="360"
-                        app:layout_constraintCircleRadius="129dp" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/sub_heading"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="32dp"
-                    android:elevation="16dp"
-                    android:fontFamily="@font/opensans"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:text="OJASS 20"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
-            </RelativeLayout>
-        </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-            <include
-                layout="@layout/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                />
 
 
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/pull_down"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="42dp"
-            android:background="@drawable/circle"
-            android:padding="4dp"
-            android:src="@drawable/ic_keyboard_arrow_down_black_24dp"
-            android:visibility="gone" />
-
-
     </FrameLayout>
 
     <com.google.android.material.navigation.NavigationView
