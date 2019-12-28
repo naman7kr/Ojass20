@@ -32,7 +32,6 @@
         <activity android:name=".Activities.EventsActivity" />
         <activity android:name=".Activities.ProfileActivity" />
         <activity android:name=".Activities.ItineraryActivity" />
-        <activity android:name=".Activities.CommentsActivity" />
         <activity android:name=".Activities.MapsActivity" />
         <activity android:name=".Activities.SponserActivity" />
 
