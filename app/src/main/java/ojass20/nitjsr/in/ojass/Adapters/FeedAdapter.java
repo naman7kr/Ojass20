@@ -14,34 +14,26 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
-
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
-import ojass20.nitjsr.in.ojass.Activities.CommentsActivity;
+import ojass20.nitjsr.in.ojass.Fragments.CommentsFragment;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
-import ojass20.nitjsr.in.ojass.Models.Likes;
 import ojass20.nitjsr.in.ojass.R;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHolder> {
@@ -51,6 +43,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
     private String mcurrentuid;
     private boolean is_already_liked=false;
     private String mpost_id="";
+
+    private FragmentManager manager;
 
     public static class CustomViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout feedLayout;
@@ -82,6 +76,19 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         LinearLayout feedLayout = (LinearLayout) (LayoutInflater.from(context).inflate(
                 R.layout.feed_item, parent, false));
         return new CustomViewHolder(feedLayout);
+    }
+
+    public FeedAdapter(Context context, FragmentManager manager, ArrayList<FeedPost> mfeedPosts, String currentuid) {
+        this.context = context;
+        this.feedPosts = mfeedPosts;
+        this.mcurrentuid = currentuid;
+        this.manager = manager;
+        Log.e("VIVZ", "FeedAdapter: called COUNT = " + mfeedPosts.size());
+    }
+
+    @Override
+    public int getItemCount() {
+        return feedPosts.size();
     }
 
     @Override
@@ -129,9 +136,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         holder.comment_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context, CommentsActivity.class);
-                intent.putExtra("PostId",feedPosts.get(position).getPostid());
-                context.startActivity(intent);
+                CommentsFragment fragment = new CommentsFragment(context, manager, feedPosts.get(position).getPostid());
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_bottom, R.anim.no_anim);
+                transaction.add(R.id.comments_container, fragment);
+                transaction.commit();
             }
         });
 
@@ -146,7 +155,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
                         feedPosts.get(position).getContent() );
                 sendIntent.setType("text/plain");
                 context.startActivity(Intent.createChooser(sendIntent,"Share this article via:"));
-                
+
             }
         });
 
@@ -174,17 +183,5 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
             }
         });
 
-    }
-
-    @Override
-    public int getItemCount() {
-        return feedPosts.size();
-    }
-
-    public FeedAdapter(Context context, ArrayList<FeedPost> mfeedPosts,String currentuid) {
-        this.context = context;
-        this.feedPosts = mfeedPosts;
-        this.mcurrentuid=currentuid;
-        Log.e("VIVZ", "FeedAdapter: called COUNT = " + mfeedPosts.size());
     }
 }

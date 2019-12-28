@@ -33,6 +33,13 @@
         <item name="android:padding">16dp</item>
     </style>
 
+    <style name="ToolbarSubheading" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/opensans</item>
+        <item name="android:textSize">18.5sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
     <style name="FeedPostEvent" parent="android:Widget.TextView">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">10sp</item>
