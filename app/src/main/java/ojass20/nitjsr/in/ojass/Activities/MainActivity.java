@@ -176,8 +176,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mFeedAdapter.notifyDataSetChanged();
-                mPosterAdapter.notifyDataSetChanged();
+                if(mFeedAdapter!=null)
+                    mFeedAdapter.notifyDataSetChanged();
+                if(mPosterAdapter!=null)
+                    mPosterAdapter.notifyDataSetChanged();
                 refreshLayout.setRefreshing(false);
             }
         });
@@ -393,26 +395,26 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             @Override
             public void onClick(View v) {
                 // hide mPullUp
-                AlphaAnimation anim = new AlphaAnimation(1.0f, 0.0f);
-                anim.setDuration(100);
-                anim.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        mPullUp.setAlpha(0.0f);
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-                mPullUp.startAnimation(anim);
+//                AlphaAnimation anim = new AlphaAnimation(1.0f, 0.0f);
+//                anim.setDuration(100);
+//                anim.setAnimationListener(new Animation.AnimationListener() {
+//                    @Override
+//                    public void onAnimationStart(Animation animation) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onAnimationEnd(Animation animation) {
+//                        mPullUp.setAlpha(0.0f);
+//
+//                    }
+//
+//                    @Override
+//                    public void onAnimationRepeat(Animation animation) {
+//
+//                    }
+//                });
+//                mPullUp.startAnimation(anim);
                 // create fragment
                 openFragment();
             }
@@ -422,26 +424,27 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     @Override
     public void onCancel() {
         //show mPullUp
-        AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
-        anim.setDuration(1000);
-        anim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mPullUp.setAlpha(1.0f);
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        mPullUp.startAnimation(anim);
+//        AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
+//        anim.setDuration(1000);
+//        anim.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                mPullUp.setAlpha(1.0f);
+//                mPullUp.setVisibility(View.VISIBLE);
+//
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
+//        mPullUp.startAnimation(anim);
         closeFragment();
     }
 
