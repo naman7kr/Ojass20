@@ -58,14 +58,6 @@ public class HomeFragment extends Fragment implements
     private ConstraintLayout cl;
     private ImageView swipeImage1, swipeImage2;
     private TextView txt;
-    private ArrayList<Integer> seqCircle = new ArrayList<Integer>() {
-        {
-            add(1);
-            add(2);
-            add(3);
-            add(4);
-        }
-    };
 
     @Nullable
     @Override
@@ -410,51 +402,17 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.img1) {
-            if (seqCircle.get(0) == 1) {
-                //no animation
-            } else if (seqCircle.get(1) == 1) {
-                //swipe right
-                swipeRight();
-
-            } else {
-                //swipe left
-                swipeLeft();
-            }
-        } else if (v.getId() == R.id.img2) {
-            if (seqCircle.get(0) == 2) {
-                //no animation
-            } else if (seqCircle.get(1) == 2) {
-                //swipe right
-                swipeRight();
-
-            } else {
-                //swipe left
-                swipeLeft();
-            }
-        } else if (v.getId() == R.id.img3) {
-            if (seqCircle.get(0) == 3) {
-                //no animation
-            } else if (seqCircle.get(1) == 3) {
-                //swipe right
-                swipeRight();
-
-            } else {
-                //swipe left
-                swipeLeft();
-            }
-        } else if (v.getId() == R.id.img4) {
-            if (seqCircle.get(0) == 4) {
-                //no animation
-            } else if (seqCircle.get(1) == 4) {
-                //swipe right
-                swipeRight();
-
-            } else {
-                //swipe left
-                swipeLeft();
+        int iClicked = -1;
+        for (int i = 0; i < mCircles.size(); i++) {
+            if (v.getId() == mCircles.get(i).getId()) {
+                iClicked = i;
+                break;
             }
         }
+        if (iClicked > mInd)
+            swipeRight();
+        else if (iClicked < mInd)
+            swipeLeft();
     }
 
     public interface HomeFragInterface {
