@@ -105,7 +105,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private CircleIndicator indicator;
     private SwipeRefreshLayout refreshLayout;
     private NestedScrollView scrollView;
-    private boolean mScrollDown=false;
+    private boolean mScrollDown = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,7 +135,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         refresh();
 
     }
-    void init(){
+
+    void init() {
         homeContainer = findViewById(R.id.home_container);
         recyclerview_progress = findViewById(R.id.recycler_view_progress);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -147,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         refreshLayout = findViewById(R.id.swipe_refresh);
         scrollView = findViewById(R.id.nested_scroll_main);
     }
+
     private void initializeInstanceVariables() {
         builder = new AlertDialog.Builder(this);
         ojassApplication = OjassApplication.getInstance();
@@ -172,38 +175,40 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         m1 = m1 + (x - x1);
         float m2 = m1 + 2 * x1;
     }
-    void refresh(){
+
+    void refresh() {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(mFeedAdapter!=null)
+                if (mFeedAdapter != null)
                     mFeedAdapter.notifyDataSetChanged();
-                if(mPosterAdapter!=null)
+                if (mPosterAdapter != null)
                     mPosterAdapter.notifyDataSetChanged();
                 refreshLayout.setRefreshing(false);
             }
         });
     }
-    void hidePullUpArrowOnScroll(){
+
+    void hidePullUpArrowOnScroll() {
         scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (v.getChildAt(v.getChildCount() - 1) != null) {
                     if (scrollY > oldScrollY) {
                         //code to fetch more data for endless scrolling
-                        if(mScrollDown){
+                        if (mScrollDown) {
 //                            Toast.makeText(ojassApplication, "SCroll down", Toast.LENGTH_SHORT).show();
-                            TranslateAnimation tr = new TranslateAnimation(0.0f,0.0f,0,30);
+                            TranslateAnimation tr = new TranslateAnimation(0.0f, 0.0f, 0, 30);
                             tr.setDuration(100);
                             mPullUp.startAnimation(tr);
                             mScrollDown = false;
                             mPullUp.setVisibility(View.INVISIBLE);
                         }
-                    }else if(scrollY<oldScrollY){
-                        if(!mScrollDown){
+                    } else if (scrollY < oldScrollY) {
+                        if (!mScrollDown) {
 //                            Toast.makeText(ojassApplication, "SCroll up", Toast.LENGTH_SHORT).show();
                             mPullUp.setVisibility(View.VISIBLE);
-                            TranslateAnimation tr = new TranslateAnimation(0.0f,0.0f,0,-30);
+                            TranslateAnimation tr = new TranslateAnimation(0.0f, 0.0f, 0, -30);
                             tr.setDuration(100);
                             mPullUp.startAnimation(tr);
                             mScrollDown = true;
@@ -215,7 +220,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         });
 
     }
-    public void setSlider(){
+
+    public void setSlider() {
 
         FirebaseDatabase dataref = FirebaseDatabase.getInstance();
         DatabaseReference imageRef = dataref.getReference(FIREBASE_REF_POSTERIMAGES);
@@ -223,13 +229,13 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         imageRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     try {
                         final int imageCount = (int) dataSnapshot.getChildrenCount();
                         String[] imageUrls = new String[imageCount];
                         String[] clickUrls = new String[imageCount];
                         int currIndex = 0;
-                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                             imageUrls[currIndex] = dataSnapshot1.child(FIREBASE_REF_IMG_SRC).getValue().toString();
                             //clickUrls[currIndex] = dataSnapshot1.child(FIREBASE_REF_IMG_CLICK).getValue().toString();
                             Log.d("TAG", imageUrls[currIndex]);
@@ -239,18 +245,19 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         viewPager.setAdapter(mPosterAdapter);
                         indicator.setViewPager(viewPager);
                         viewPager.setOnPageChangeListener(MainActivity.this);
-                        try{
+                        try {
                             Field mScroller = ViewPager.class.getDeclaredField("mScroller");
                             mScroller.setAccessible(true);
-                            mScroller.set(viewPager, new CustomScroller(viewPager.getContext(),BANNER_TRANSITION_DELAY ));
-                        } catch (Exception e){}
+                            mScroller.set(viewPager, new CustomScroller(viewPager.getContext(), BANNER_TRANSITION_DELAY));
+                        } catch (Exception e) {
+                        }
 
                         handler = new Handler(Looper.getMainLooper());
                         runnable = new Runnable() {
                             @Override
                             public void run() {
                                 int currItem = viewPager.getCurrentItem();
-                                if (currItem == imageCount-1){
+                                if (currItem == imageCount - 1) {
                                     viewPager.setCurrentItem(0);
                                 } else {
                                     viewPager.setCurrentItem(++currItem);
@@ -258,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                             }
                         };
                         handler.postDelayed(runnable, BANNER_DELAY_TIME);
-                    } catch (Exception e){
+                    } catch (Exception e) {
 
                     }
                 }
@@ -273,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        if (firstScroll){
+        if (firstScroll) {
             firstScroll = false;
         } else {
             handler.removeCallbacks(runnable);
@@ -287,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
     @Override
     public void onPageScrollStateChanged(int state) {
-        if (state == ViewPager.SCROLL_STATE_IDLE){
+        if (state == ViewPager.SCROLL_STATE_IDLE) {
             handler.postDelayed(runnable, BANNER_DELAY_TIME);
         }
     }
@@ -322,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         }
     }
 
-    private void fetchFeedsDataFromFirebase(){
+    private void fetchFeedsDataFromFirebase() {
         dref = FirebaseDatabase.getInstance().getReference().child("Feeds");
         dref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -374,6 +381,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         });
 
     }
+
     private void setUpRecyclerView() {
         mRecyclerView.setHasFixedSize(true);
         mLinearLayoutManager = new LinearLayoutManager(this);
@@ -471,7 +479,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         mAnimation.setInterpolator(new LinearInterpolator());
         mImageView.setAnimation(mAnimation);
     }
-
 
 
     private void setUpNavigationDrawer() {
