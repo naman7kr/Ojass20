@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -140,7 +141,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationDrawer = (NavigationView) findViewById(R.id.navigation_view);
+        View headerView = mNavigationDrawer.inflateHeaderView(R.layout.nav_header);
+        headerView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
         mPullUp = findViewById(R.id.pull_up);
+
         mRecyclerView = findViewById(R.id.feed_recycler_view);
         viewPager = findViewById(R.id.viewpager_poster);
         indicator = findViewById(R.id.indicator_slider);
@@ -479,6 +483,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         //Uncomment below once all fragments have been created
         setupDrawerContent(mNavigationDrawer);
 
+        mNavigationDrawer.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
+       // headerView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
         //Replacing back arrow with hamburger icon
         mDrawerToggle = setupDrawerToggle();
         mDrawerToggle.setDrawerIndicatorEnabled(true);
