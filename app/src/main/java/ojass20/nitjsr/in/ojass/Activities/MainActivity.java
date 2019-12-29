@@ -127,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         setUpNavigationDrawer();
         //setUpRecyclerView();
 
-        setUpNavigationDrawer();
         setUpAnimationForImageView(mPullUp);
         detectTouchEvents();
 
@@ -493,7 +492,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         //Uncomment below once all fragments have been created
         setupDrawerContent(mNavigationDrawer);
 
-        mNavigationDrawer.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
+        mNavigationDrawer.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.DARKEN);
        // headerView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
         //Replacing back arrow with hamburger icon
         mDrawerToggle = setupDrawerToggle();
