@@ -139,7 +139,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
                 CommentsFragment fragment = new CommentsFragment(context, manager, feedPosts.get(position).getPostid());
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.setCustomAnimations(R.anim.slide_in_bottom, R.anim.no_anim);
-                transaction.add(R.id.comments_container, fragment);
+                transaction.add(R.id.home_container, fragment);
                 transaction.commit();
             }
         });

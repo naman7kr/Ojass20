@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
@@ -22,6 +25,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +34,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -44,14 +49,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import androidx.appcompat.app.AlertDialog;
 
 import androidx.fragment.app.FragmentTransaction;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager.widget.ViewPager;
 import jp.wasabeef.blurry.Blurry;
+import me.relex.circleindicator.CircleIndicator;
 import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
+import ojass20.nitjsr.in.ojass.Adapters.PosterAdapter;
 import ojass20.nitjsr.in.ojass.Fragments.HomeFragment;
 import ojass20.nitjsr.in.ojass.Models.Comments;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
@@ -59,7 +69,10 @@ import ojass20.nitjsr.in.ojass.Models.Likes;
 import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
 
-public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragInterface {
+import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_IMG_SRC;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_POSTERIMAGES;
+
+public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragInterface, ViewPager.OnPageChangeListener {
     private DrawerLayout mDrawer;
     private Toolbar mToolbar;
     private NavigationView mNavigationDrawer;
@@ -69,10 +82,16 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private TranslateAnimation mAnimation;
     private ProgressBar recyclerview_progress;
 
-
+    //Poster shit
+    private static final int BANNER_DELAY_TIME = 5 * 1000;
+    private static final int BANNER_TRANSITION_DELAY = 1200;
+    private Runnable runnable;
+    private Handler handler;
+    private boolean firstScroll = true;
 
     private RecyclerView mRecyclerView;
     private FeedAdapter mFeedAdapter;
+    private PosterAdapter mPosterAdapter;
     private LinearLayoutManager mLinearLayoutManager;
 
     private DatabaseReference dref;
@@ -82,7 +101,11 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private String currentuid;
     private OjassApplication ojassApplication;
     private FrameLayout homeContainer;
-
+    private ViewPager viewPager;
+    private CircleIndicator indicator;
+    private SwipeRefreshLayout refreshLayout;
+    private NestedScrollView scrollView;
+    private boolean mScrollDown=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         init();
         initializeInstanceVariables();
 
+        setSlider();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
@@ -105,6 +129,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         setUpAnimationForImageView(mPullUp);
         detectTouchEvents();
 
+        hidePullUpArrowOnScroll();
+
+        refresh();
 
     }
     void init(){
@@ -115,6 +142,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         mNavigationDrawer = (NavigationView) findViewById(R.id.navigation_view);
         mPullUp = findViewById(R.id.pull_up);
         mRecyclerView = findViewById(R.id.feed_recycler_view);
+        viewPager = findViewById(R.id.viewpager_poster);
+        indicator = findViewById(R.id.indicator_slider);
+        refreshLayout = findViewById(R.id.swipe_refresh);
+        scrollView = findViewById(R.id.nested_scroll_main);
     }
     private void initializeInstanceVariables() {
         builder = new AlertDialog.Builder(this);
@@ -140,6 +171,153 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         m1 = m1 - convertDpToPixel(9, this);
         m1 = m1 + (x - x1);
         float m2 = m1 + 2 * x1;
+    }
+    void refresh(){
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mFeedAdapter.notifyDataSetChanged();
+                mPosterAdapter.notifyDataSetChanged();
+                refreshLayout.setRefreshing(false);
+            }
+        });
+    }
+    void hidePullUpArrowOnScroll(){
+        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (v.getChildAt(v.getChildCount() - 1) != null) {
+                    if (scrollY > oldScrollY) {
+                        //code to fetch more data for endless scrolling
+                        if(mScrollDown){
+//                            Toast.makeText(ojassApplication, "SCroll down", Toast.LENGTH_SHORT).show();
+                            TranslateAnimation tr = new TranslateAnimation(0.0f,0.0f,0,30);
+                            tr.setDuration(100);
+                            mPullUp.startAnimation(tr);
+                            mScrollDown = false;
+                            mPullUp.setVisibility(View.INVISIBLE);
+                        }
+                    }else if(scrollY<oldScrollY){
+                        if(!mScrollDown){
+//                            Toast.makeText(ojassApplication, "SCroll up", Toast.LENGTH_SHORT).show();
+                            mPullUp.setVisibility(View.VISIBLE);
+                            TranslateAnimation tr = new TranslateAnimation(0.0f,0.0f,0,-30);
+                            tr.setDuration(100);
+                            mPullUp.startAnimation(tr);
+                            mScrollDown = true;
+
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+    public void setSlider(){
+
+        FirebaseDatabase dataref = FirebaseDatabase.getInstance();
+        DatabaseReference imageRef = dataref.getReference(FIREBASE_REF_POSTERIMAGES);
+        imageRef.keepSynced(true);
+        imageRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    try {
+                        final int imageCount = (int) dataSnapshot.getChildrenCount();
+                        String[] imageUrls = new String[imageCount];
+                        String[] clickUrls = new String[imageCount];
+                        int currIndex = 0;
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                            imageUrls[currIndex] = dataSnapshot1.child(FIREBASE_REF_IMG_SRC).getValue().toString();
+                            //clickUrls[currIndex] = dataSnapshot1.child(FIREBASE_REF_IMG_CLICK).getValue().toString();
+                            Log.d("TAG", imageUrls[currIndex]);
+                            currIndex++;
+                        }
+                        mPosterAdapter = new PosterAdapter(getApplicationContext(), imageUrls, clickUrls);
+                        viewPager.setAdapter(mPosterAdapter);
+                        indicator.setViewPager(viewPager);
+                        viewPager.setOnPageChangeListener(MainActivity.this);
+                        try{
+                            Field mScroller = ViewPager.class.getDeclaredField("mScroller");
+                            mScroller.setAccessible(true);
+                            mScroller.set(viewPager, new CustomScroller(viewPager.getContext(),BANNER_TRANSITION_DELAY ));
+                        } catch (Exception e){}
+
+                        handler = new Handler(Looper.getMainLooper());
+                        runnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                int currItem = viewPager.getCurrentItem();
+                                if (currItem == imageCount-1){
+                                    viewPager.setCurrentItem(0);
+                                } else {
+                                    viewPager.setCurrentItem(++currItem);
+                                }
+                            }
+                        };
+                        handler.postDelayed(runnable, BANNER_DELAY_TIME);
+                    } catch (Exception e){
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        if (firstScroll){
+            firstScroll = false;
+        } else {
+            handler.removeCallbacks(runnable);
+        }
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        if (state == ViewPager.SCROLL_STATE_IDLE){
+            handler.postDelayed(runnable, BANNER_DELAY_TIME);
+        }
+    }
+
+    private class CustomScroller extends Scroller {
+
+        private int mDuration;
+
+        public CustomScroller(Context context, int mDuration) {
+            super(context);
+            this.mDuration = mDuration;
+        }
+
+        public CustomScroller(Context context, Interpolator interpolator, int mDuration) {
+            super(context, interpolator);
+            this.mDuration = mDuration;
+        }
+
+        public CustomScroller(Context context, Interpolator interpolator, boolean flywheel, int mDuration) {
+            super(context, interpolator, flywheel);
+            this.mDuration = mDuration;
+        }
+
+        @Override
+        public void startScroll(int startX, int startY, int dx, int dy) {
+            super.startScroll(startX, startY, dx, dy, mDuration);
+        }
+
+        @Override
+        public void startScroll(int startX, int startY, int dx, int dy, int duration) {
+            super.startScroll(startX, startY, dx, dy, mDuration);
+        }
     }
 
     private void fetchFeedsDataFromFirebase(){

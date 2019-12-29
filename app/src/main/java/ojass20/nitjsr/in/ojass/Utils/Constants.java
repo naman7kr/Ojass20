@@ -3,6 +3,9 @@ package ojass20.nitjsr.in.ojass.Utils;
 import ojass20.nitjsr.in.ojass.R;
 
 public class Constants {
+    public static final String FIREBASE_REF_POSTERIMAGES = "PosterImages";
+    public static final String FIREBASE_REF_IMG_SRC = "img_url";
+
     public static final int[] eventImg = new int[]{
             R.mipmap.rise_of_machines,
             R.mipmap.code_genesis,
