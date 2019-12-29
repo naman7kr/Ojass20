@@ -162,10 +162,10 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        app:itemIconTint="@android:color/darker_gray"
         android:background="@android:color/white"
-        app:headerLayout="@layout/nav_header"
         app:itemTextAppearance="@style/MontSerratTextStyle"
-        app:itemTextColor="@color/navigationDrawerText"
+        app:itemTextColor="@android:color/darker_gray"
         app:menu="@menu/navigation_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
