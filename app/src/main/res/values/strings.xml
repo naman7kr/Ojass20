@@ -36,5 +36,23 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string-array name="team_names">
+        <item>Administration</item>
+        <item>Core</item>
+        <item>Plannning &amp; Development</item>
+        <item>Team Coordinator</item>
+        <item>Media Relation</item>
+        <item>Public Relation</item>
+        <item>Event Management</item>
+        <item>Hospitality</item>
+        <item>Corporate</item>
+        <item>Logistics</item>
+        <item>Web Team</item>
+        <item>App Team</item>
+        <item>Creative Team</item>
+        <item>Robotics</item>
+        <item>Decorations</item>
+    </string-array>
+
 
 </resources>
