@@ -43,13 +43,13 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         init();
         //to set Listeners
         setListeners();
-        //to set Team Member's name
-        setName();
+        //to set Team Member's data
+        setData();
         //to set card
         setCard();
     }
 
-    private void setName() {
+    private void setData() {
         list.add(new TeamMember("Member1","something","","","ll","",R.drawable.joker,0));
         list.add(new TeamMember("Member2","something","as","ff","ll","00",R.drawable.joker2,0));
         list.add(new TeamMember("Member3","something","as","ff","ll","00",R.drawable.joker,0));
