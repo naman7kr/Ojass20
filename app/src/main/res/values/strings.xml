@@ -54,5 +54,26 @@
         <item>Decorations</item>
     </string-array>
 
+    <string-array name="noti_channel">
+        <item>OJASS</item>
+        <item>Arthashastra</item>
+        <item>CircuitHouse</item>
+        <item>VishwaCodeGenesis</item>
+        <item>NoGroundZone</item>
+        <item>Paraphernalia</item>
+        <item>Produs</item>
+        <item>SiliconValley</item>
+        <item>RiseOfMachines</item>
+        <item>NSCET</item>
+        <item>NeoDrishti</item>
+        <item>Exposicion</item>
+        <item>DeusXMachina</item>
+        <item>Avartan</item>
+        <item>Armageddon</item>
+        <item>Aakriti</item>
+        <item>Prayas</item>
+        <item>LiveCS</item>
+    </string-array>
+
 
 </resources>

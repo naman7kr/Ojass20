@@ -27,6 +27,5 @@ public class SponserActivity extends AppCompatActivity {
 
         sponserAdapter=new SponserAdapter(list,this);
         recyclerView.setAdapter(sponserAdapter);
-
     }
 }

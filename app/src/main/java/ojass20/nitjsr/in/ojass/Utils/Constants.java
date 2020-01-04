@@ -68,4 +68,5 @@ public class Constants {
             {"Teenpreneur", "TechArt", "ScrapStar"}
 
     };
+    public static final String FIREBASE_REF_NOTIF = "Notifications";
 }

@@ -15,7 +15,8 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.WalkThroughActivity"></activity>
+        <activity android:name=".Activities.NotificationActivity"></activity>
+        <activity android:name=".Activities.WalkThroughActivity" />
         <activity android:name=".Activities.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -59,11 +60,10 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.LoginActivity">
-        </activity>
+        <activity android:name=".Activities.LoginActivity"></activity>
         <activity android:name=".Activities.RegistrationPage" />
         <activity android:name=".Activities.GurugyanActivity" />
-        <activity android:name=".Activities.MainActivity"></activity>
+        <activity android:name=".Activities.MainActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"
