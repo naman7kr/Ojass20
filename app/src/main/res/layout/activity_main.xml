@@ -14,61 +14,65 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:background="@color/colorAccent"
-        >
+        android:orientation="vertical">
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
+
             <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <com.google.android.material.appbar.AppBarLayout
+                    android:id="@+id/app_bar_main"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/app_bar_main">
+                    android:layout_height="wrap_content">
+
                     <include
                         layout="@layout/toolbar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_scrollFlags="scroll|enterAlways|snap"
-                        />
+                        app:layout_scrollFlags="scroll|enterAlways|snap" />
 
                 </com.google.android.material.appbar.AppBarLayout>
 
                 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                    android:id="@+id/swipe_refresh"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/swipe_refresh"
 
                     >
+
                     <androidx.core.widget.NestedScrollView
+                        android:id="@+id/nested_scroll_main"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/nested_scroll_main"
-                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                        >
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             app:layout_behavior="@string/appbar_scrolling_view_behavior"
 
                             >
+
                             <RelativeLayout
+                                android:id="@+id/poster_layout"
                                 android:layout_width="match_parent"
                                 android:layout_height="200dp"
-                                android:id="@+id/poster_layout"
-                                android:layout_marginTop="@dimen/toolbar_height"
-                                >
+                                android:layout_marginTop="@dimen/toolbar_height">
+
                                 <androidx.cardview.widget.CardView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:elevation="2dp"
-                                    >
+                                    android:elevation="2dp">
+
                                     <RelativeLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content">
+
                                         <androidx.viewpager.widget.ViewPager
                                             android:id="@+id/viewpager_poster"
                                             android:layout_width="match_parent"
@@ -79,28 +83,28 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_alignParentBottom="true"
-                                            app:ci_drawable="@android:color/holo_red_dark"
-                                            android:layout_marginBottom="10dp"/>
+                                            android:layout_marginBottom="10dp"
+                                            app:ci_drawable="@android:color/holo_red_dark" />
                                     </RelativeLayout>
                                 </androidx.cardview.widget.CardView>
                             </RelativeLayout>
+
                             <androidx.cardview.widget.CardView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:elevation="2dp"
                                 android:layout_below="@+id/poster_layout"
-                                android:nestedScrollingEnabled="false"
                                 android:layout_marginTop="10dp"
-                                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                                >
+                                android:elevation="2dp"
+                                android:nestedScrollingEnabled="false"
+                                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
                                 <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/feed_recycler_view"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:scrollbars="none"
-                                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
                                     android:nestedScrollingEnabled="false"
-                                    />
+                                    android:scrollbars="none"
+                                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
                             </androidx.cardview.widget.CardView>
                         </RelativeLayout>
                     </androidx.core.widget.NestedScrollView>
@@ -115,8 +119,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                        >
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                         <ProgressBar
                             android:id="@+id/recycler_view_progress"
@@ -149,10 +152,9 @@
 
             <!--home fragment and CommentFragment-->
             <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:id="@+id/home_container"
-                />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </RelativeLayout>
 
     </FrameLayout>
@@ -162,8 +164,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:itemIconTint="@android:color/darker_gray"
         android:background="@android:color/white"
+        app:itemIconTint="@android:color/darker_gray"
         app:itemTextAppearance="@style/MontSerratTextStyle"
         app:itemTextColor="@android:color/darker_gray"
         app:menu="@menu/navigation_menu" />

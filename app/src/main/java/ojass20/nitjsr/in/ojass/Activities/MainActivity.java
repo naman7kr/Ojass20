@@ -61,6 +61,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
+
 import jp.wasabeef.blurry.Blurry;
 import me.relex.circleindicator.CircleIndicator;
 import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
@@ -111,14 +112,14 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private SwipeRefreshLayout refreshLayout;
     private NestedScrollView scrollView;
     private boolean mScrollDown = false;
-    private  boolean isFragOpen=false;
+    private boolean isFragOpen = false;
     private Handler backHandler;
     private int backFlag = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
         init();
         initializeInstanceVariables();
 
@@ -517,7 +518,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         setupDrawerContent(mNavigationDrawer);
 
         mNavigationDrawer.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.DARKEN);
-       // headerView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
+        // headerView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
         //Replacing back arrow with hamburger icon
         mDrawerToggle = setupDrawerToggle();
         mDrawerToggle.setDrawerIndicatorEnabled(true);
@@ -554,7 +555,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 startActivity(new Intent(MainActivity.this, ItineraryActivity.class));
                 break;
             case R.id.sponsor:
-                startActivity(new Intent(MainActivity.this,SponsorActivity.class));
+                startActivity(new Intent(MainActivity.this, SponsorActivity.class));
                 break;
             case R.id.help:
                 startActivity(new Intent(MainActivity.this, Help.class));
@@ -604,12 +605,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             case R.id.notifications:
                 startActivity(new Intent(this, NotificationActivity.class));
                 return true;
-     /**       case R.id.profile:
-                startActivity(new Intent(this, ProfileActivity.class));
-                return true;
-            case R.id.emergency:
-                showList();
-      **/
+            /**       case R.id.profile:
+             startActivity(new Intent(this, ProfileActivity.class));
+             return true;
+             case R.id.emergency:
+             showList();
+             **/
         }
 
         return super.onOptionsItemSelected(item);
@@ -689,13 +690,13 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     @SuppressLint("WrongConstant")
     @Override
     public void onBackPressed() {
-        if(isFragOpen){
-           closeFragment();
-           return;
+        if (isFragOpen) {
+            closeFragment();
+            return;
         }
         backHandler = new Handler();
 
-        if(backFlag==1){
+        if (backFlag == 1) {
             finish();
         }
         backFlag = 1;
@@ -705,6 +706,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             public void run() {
                 backFlag = 0;
             }
-        },3000);
+        }, 3000);
     }
 }

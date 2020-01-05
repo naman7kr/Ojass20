@@ -1,28 +1,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    >
+    android:background="@color/white">
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:paddingTop="66dp"
+        android:id="@+id/events_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/events_grid"
         android:focusable="true"
+        android:paddingTop="66dp"
 
-        >
-    </androidx.recyclerview.widget.RecyclerView>
+        ></androidx.recyclerview.widget.RecyclerView>
+
     <include
         android:id="@+id/events_toolbar"
         layout="@layout/event_toolbar"
         android:background="@color/transparent" />
 
     <FrameLayout
-        android:layout_marginTop="58dp"
+        android:id="@+id/fragment_layout_for_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fragment_layout_for_search"
-        />
+        android:layout_marginTop="58dp" />
 </RelativeLayout>
