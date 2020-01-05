@@ -115,11 +115,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private boolean isFragOpen = false;
     private Handler backHandler;
     private int backFlag = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+//        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
         init();
         initializeInstanceVariables();
 
