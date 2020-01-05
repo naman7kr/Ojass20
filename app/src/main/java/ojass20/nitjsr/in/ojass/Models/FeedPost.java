@@ -4,8 +4,9 @@ import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
-public class FeedPost {
+public class FeedPost implements Comparable{
 
+    String timestamp;
     public String event;
     public String subEvent;
     public String content;
@@ -19,7 +20,7 @@ public class FeedPost {
 
     }
 
-    public FeedPost(boolean is_liked,String mpostid, String content,String event,  String imageURL, String subEvent,
+    public FeedPost(String timestamp, boolean is_liked,String mpostid, String content,String event,  String imageURL, String subEvent,
                     ArrayList<Likes> mlikes,ArrayList<Comments> mcomments) {
         this.is_already_liked=is_liked;
         this.event = event;
@@ -27,12 +28,21 @@ public class FeedPost {
         this.content = content;
         this.imageURL = imageURL;
         this.postid=mpostid;
+        this.timestamp = timestamp;
 
         likes=new ArrayList<>();
         comments=new ArrayList<>();
         this.likes=mlikes;
         this.comments=mcomments;
 
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
     public void setIs_already_liked(boolean is_already_liked) {
@@ -100,4 +110,8 @@ public class FeedPost {
         this.imageURL = imageURL;
     }
 
+    @Override
+    public int compareTo(Object o) {
+        return -(this.timestamp.compareTo(((FeedPost)o).timestamp));
+    }
 }
