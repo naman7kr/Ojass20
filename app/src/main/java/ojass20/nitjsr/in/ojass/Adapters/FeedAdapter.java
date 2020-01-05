@@ -50,7 +50,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
 
     public static class CustomViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout feedLayout;
-        public TextView subevent_name,like_text,eventname,content;
+        public TextView subevent_name,like_text,eventname,content, time;
         public ImageView like_icon,postImage;
         public LinearLayout like_layout,comment_layout,share_layout;
         RelativeLayout postImageView;
@@ -70,6 +70,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
             like_layout=itemView.findViewById(R.id.feed_post_upvote);
             comment_layout=itemView.findViewById(R.id.comments_post);
             share_layout=itemView.findViewById(R.id.feed_post_share);
+            time = itemView.findViewById(R.id.feed_post_time);
         }
     }
 
@@ -104,7 +105,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         holder.postImageView.setVisibility(View.VISIBLE);
         holder.progressBar.setVisibility(View.VISIBLE);
         Log.e("Hey", feedPosts.get(position).getImageURL());
-        if (feedPosts.get(position).getImageURL() == null) {
+        if (feedPosts.get(position).getImageURL() == null || feedPosts.get(position).getImageURL().equals("")) {
             holder.postImageView.setVisibility(View.GONE);
         } else {
             Glide.with(context)
@@ -133,6 +134,40 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
 
         Log.i( "onBindViewHolder: ",is_already_liked+"");
 
+        long post_time = Integer.parseInt(feedPosts.get(position).getTimestamp());
+        long curr_time = System.currentTimeMillis() / 1000;
+        long diff = curr_time - post_time;
+        String suffix, prefix;
+        if(diff < 5){
+            prefix = "just now";
+            suffix = "";
+        }
+        else if(diff < 60){
+            suffix = "s ago";
+            prefix = diff + "";
+        }
+        else if(diff < 3600){
+            suffix = "m ago";
+            prefix = diff / 60 + "";
+        }
+        else if(diff < 86400){
+            suffix = "hr ago";
+            prefix = diff / 3600 + "";
+        }
+        else if(diff < 2628003){
+            suffix = "d ago";
+            prefix = diff / 86400 + "";
+        }
+        else if(diff < 31536000){
+            suffix = "mo ago";
+            prefix = diff / 2628003 + "";
+        }
+        else{
+            suffix = "y ago";
+            prefix = diff / 31536000 + "";
+        }
+
+        holder.time.setText(prefix + suffix);
 
 
         final DatabaseReference dref= FirebaseDatabase.getInstance().getReference().child("Feeds");

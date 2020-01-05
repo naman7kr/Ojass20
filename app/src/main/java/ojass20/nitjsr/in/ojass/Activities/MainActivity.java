@@ -54,6 +54,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -389,12 +390,13 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                     String event_name = ds.child("event").getValue().toString();
                     String subevent_name = ds.child("subEvent").getValue().toString();
                     String image_url = ds.child("imageURL").getValue().toString();
+                    String timestamp = (ds.hasChild("timestamp")) ? ds.child("timestamp").getValue().toString() : "0";
 
-
-                    FeedPost post = new FeedPost(flag, post_id_temp, content, event_name, image_url, subevent_name, mlikes, mcomments);
+                    FeedPost post = new FeedPost(timestamp, flag, post_id_temp, content, event_name, image_url, subevent_name, mlikes, mcomments);
 
                     Log.e("vila", post.getImageURL());
                     listposts.add(post);
+                    Collections.sort(listposts);
                 }
                 setUpRecyclerView();
                 Log.e("VIVZ", "onDataChange: listposts count = " + listposts.size());
