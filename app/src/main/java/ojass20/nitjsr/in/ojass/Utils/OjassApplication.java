@@ -3,6 +3,7 @@ package ojass20.nitjsr.in.ojass.Utils;
 import android.app.Application;
 import android.content.Intent;
 
+import com.google.firebase.database.FirebaseDatabase;
 import com.onesignal.OSNotificationOpenResult;
 import com.onesignal.OneSignal;
 
@@ -24,6 +25,7 @@ public class OjassApplication extends Application {
                 .unsubscribeWhenNotificationsAreDisabled(true)
                 .setNotificationOpenedHandler(new ExampleNotificationOpenedHandler())
                 .init();
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
     public static synchronized OjassApplication getInstance(){
         return mInstance;

@@ -1,6 +1,7 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
 import android.animation.ValueAnimator;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -56,8 +57,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ojass20.nitjsr.in.ojass.Models.Comments;
+import ojass20.nitjsr.in.ojass.Models.CoordinatorsModel;
+import ojass20.nitjsr.in.ojass.Models.EventModel;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.Models.Likes;
+import ojass20.nitjsr.in.ojass.Models.RulesModel;
 import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
 import ojass20.nitjsr.in.ojass.R;
 
@@ -91,6 +95,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private String currentuid;
     private OjassApplication ojassApplication;
+    public ProgressDialog progressDialog;
+    public static ArrayList<EventModel> data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,8 +174,61 @@ public class MainActivity extends AppCompatActivity implements
         setUpNavigationDrawer();
         setUpAnimationForImageView(mPullUp);
         detectTouchEvents();
+        setUpEventData();
 
+    }
 
+    private void setUpEventData() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Events");
+        progressDialog=new ProgressDialog(this);
+        progressDialog.setMessage("Initialising App data...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        data=new ArrayList<>();
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                data.clear();
+                progressDialog.dismiss();
+                try {
+                    for(DataSnapshot ds: dataSnapshot.getChildren()) {
+                        String about=ds.child("about").getValue(String.class);
+                        String branch=ds.child("branch").getValue(String.class);
+                        String details=ds.child("detail").getValue(String.class);
+                        String name=ds.child("name").getValue(String.class);
+                        Long prize1=ds.child("prize").child("first").getValue(Long.class);
+                        Long prize2=ds.child("prize").child("second").getValue(Long.class);
+                        Long prize3=ds.child("prize").child("third").getValue(Long.class);
+                        Long prizeT=ds.child("prize").child("total").getValue(Long.class);
+                        ArrayList<CoordinatorsModel> coordinatorsModelArrayList=new ArrayList<>();
+                        coordinatorsModelArrayList.clear();
+
+                        ArrayList<RulesModel> rulesModelArrayList=new ArrayList<>();
+                        rulesModelArrayList.clear();
+
+                        for(DataSnapshot d:ds.child("coordinators").getChildren()) {
+                            CoordinatorsModel coordinatorsModel=d.getValue(CoordinatorsModel.class);
+                            coordinatorsModelArrayList.add(coordinatorsModel);
+                        }
+
+                        for(DataSnapshot d:ds.child("rules").getChildren()) {
+                            RulesModel rulesModel=d.getValue(RulesModel.class);
+                            rulesModelArrayList.add(rulesModel);
+                        }
+                        data.add(new EventModel(about,branch,details,name,prize1,prize2,prize3,prizeT,coordinatorsModelArrayList,rulesModelArrayList));
+                    }
+                } catch(Exception e){
+                    if (progressDialog.isShowing()) progressDialog.dismiss();
+                    //Toast.makeText(MainActivity.this, "Something went wrong in Events!", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                if (progressDialog.isShowing()) progressDialog.dismiss();
+            }
+        });
     }
 
     private void setUpRecyclerView() {
