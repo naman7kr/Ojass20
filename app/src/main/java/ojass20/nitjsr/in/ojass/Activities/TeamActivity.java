@@ -30,6 +30,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
     TeamMemberAdapter adapter;
     ArrayList<TeamMember> list,teamList;
     int FILTER=0;
+    boolean DEVELOPER=false;
     TeamMember MEMBER=null;
     ImageView profilepic,call,facebook,whatsapp;
     TextView name,designation;
@@ -41,12 +42,30 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_team);
         //to Initialize all class variables
         init();
+        //check for developer page
+        check();
         //to set Listeners
         setListeners();
         //to set Team Member's data
         setData();
         //to set card
         setCard();
+
+
+    }
+
+    private void devloperPage() {
+        DEVELOPER=true;
+        FILTER=11;
+        teamSpinner.setVisibility(View.INVISIBLE);
+        facebook.setImageResource(R.drawable.github);
+        filter();
+    }
+
+    private void check() {
+        if(getIntent().hasExtra("DEV")){
+            devloperPage();
+        }
     }
 
     private void setData() {
@@ -67,7 +86,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         list.add(new TeamMember("Member4","something","as","ff","ll","00",R.drawable.joker2,8));
         list.add(new TeamMember("Member1","something","as","ff","ll","00",R.drawable.joker,9));
         list.add(new TeamMember("Member2","something","as","ff","ll","00",R.drawable.joker2,10));
-        list.add(new TeamMember("Member3","something","as","ff","ll","00",R.drawable.joker,11));
+        list.add(new TeamMember("Member3","something","as","ff","https://github.com/Abhinav-Mani","00",R.drawable.joker,11));
         list.add(new TeamMember("Member4","something","as","ff","ll","00",R.drawable.joker2,12));
 
         list.add(new TeamMember("Member4","something","as","ff","ll","00",R.drawable.joker,13));
@@ -86,6 +105,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void setListeners() {
+        if(!DEVELOPER)
         teamSpinner.setOnItemSelectedListener(this);
         whatsapp.setOnClickListener(this);
         call.setOnClickListener(this);
@@ -120,6 +140,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void filter() {
+        Log.d(TAG, "filter: "+FILTER);
         teamList.clear();
         for(TeamMember member:list){
             if(member.team==FILTER)
@@ -147,6 +168,8 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         {
             case R.id.team_member_facebook:
                 Intent viewIntent = new Intent("android.intent.action.VIEW",Uri.parse(MEMBER.facebook));
+                if(DEVELOPER)
+                    viewIntent=new Intent("android.intent.action.VIEW",Uri.parse(MEMBER.github));
                 startActivity(viewIntent);
                 break;
             case R.id.team_member_call:
