@@ -32,9 +32,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ojass20.nitjsr.in.ojass.Activities.MainActivity;
 import ojass20.nitjsr.in.ojass.Fragments.CommentsFragment;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.R;
+import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHolder> {
 
@@ -43,7 +45,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
     private String mcurrentuid;
     private boolean is_already_liked=false;
     private String mpost_id="";
-
+    public CommentClickInterface clickInterface;
     private FragmentManager manager;
 
     public static class CustomViewHolder extends RecyclerView.ViewHolder {
@@ -53,6 +55,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         public LinearLayout like_layout,comment_layout,share_layout;
         RelativeLayout postImageView;
         ProgressBar progressBar;
+
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
             feedLayout = (LinearLayout) itemView;
@@ -83,6 +86,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         this.feedPosts = mfeedPosts;
         this.mcurrentuid = currentuid;
         this.manager = manager;
+        clickInterface = (CommentClickInterface) context;
         Log.e("VIVZ", "FeedAdapter: called COUNT = " + mfeedPosts.size());
     }
 
@@ -136,11 +140,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         holder.comment_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommentsFragment fragment = new CommentsFragment(context, manager, feedPosts.get(position).getPostid());
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_bottom, R.anim.no_anim);
-                transaction.add(R.id.home_container, fragment);
-                transaction.commit();
+//                clickInterface.onCommentClick(v,feedPosts.get(position));
             }
         });
 
@@ -183,5 +183,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
             }
         });
 
+    }
+    public interface CommentClickInterface{
+        void onCommentClick();
     }
 }

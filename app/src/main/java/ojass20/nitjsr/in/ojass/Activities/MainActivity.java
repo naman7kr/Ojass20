@@ -1,5 +1,6 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -63,17 +64,19 @@ import jp.wasabeef.blurry.Blurry;
 import me.relex.circleindicator.CircleIndicator;
 import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
 import ojass20.nitjsr.in.ojass.Adapters.PosterAdapter;
+import ojass20.nitjsr.in.ojass.Fragments.CommentsFragment;
 import ojass20.nitjsr.in.ojass.Fragments.HomeFragment;
 import ojass20.nitjsr.in.ojass.Models.Comments;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.Models.Likes;
 import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
+import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
 
 import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_IMG_SRC;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_POSTERIMAGES;
 
-public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragInterface, ViewPager.OnPageChangeListener {
+public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragInterface, ViewPager.OnPageChangeListener, FeedAdapter.CommentClickInterface {
     private DrawerLayout mDrawer;
     private Toolbar mToolbar;
     private NavigationView mNavigationDrawer;
@@ -107,6 +110,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private SwipeRefreshLayout refreshLayout;
     private NestedScrollView scrollView;
     private boolean mScrollDown = false;
+    private  boolean isFragOpen=false;
+    private Handler backHandler;
+    private int backFlag = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -302,6 +308,20 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         }
     }
 
+////    @Override
+//    public void onLayoutClick(View v, int position) {
+//
+//    }
+
+    @Override
+    public void onCommentClick() {
+//        CommentsFragment fragment = new CommentsFragment(this, , feedPosts.get(position).getPostid());
+//        FragmentTransaction transaction = manager.beginTransaction();
+//        transaction.setCustomAnimations(R.anim.slide_in_bottom, R.anim.no_anim);
+//        transaction.add(R.id.home_container, fragment);
+//        transaction.commit();
+    }
+
     private class CustomScroller extends Scroller {
 
         private int mDuration;
@@ -466,6 +486,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         transaction.setCustomAnimations(R.anim.slide_in_bottom, R.anim.no_anim);
         transaction.add(R.id.home_container, homeFrag);
         transaction.commit();
+        isFragOpen = true;
     }
 
     private void closeFragment() {
@@ -473,6 +494,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.no_anim, R.anim.slide_out_bottom);
         transaction.remove(f).commit();
+        isFragOpen = false;
     }
 
     private void setUpAnimationForImageView(ImageView mImageView) {
@@ -528,6 +550,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 break;
             case R.id.itinerary:
                 startActivity(new Intent(MainActivity.this, ItineraryActivity.class));
+                break;
+            case R.id.sponsor:
+                startActivity(new Intent(MainActivity.this,SponsorActivity.class));
                 break;
             case R.id.help:
                 startActivity(new Intent(MainActivity.this, Help.class));
@@ -654,5 +679,25 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    @SuppressLint("WrongConstant")
+    @Override
+    public void onBackPressed() {
+        if(isFragOpen){
+           closeFragment();
+           return;
+        }
+        backHandler = new Handler();
 
+        if(backFlag==1){
+            finish();
+        }
+        backFlag = 1;
+        Toast.makeText(ojassApplication, R.string.backPress, 3000).show();
+        backHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                backFlag = 0;
+            }
+        },3000);
+    }
 }

@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -16,16 +14,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import ojass20.nitjsr.in.ojass.Adapters.EventsGridAdapter;
 import ojass20.nitjsr.in.ojass.Fragments.EventBottomSheet;
 import ojass20.nitjsr.in.ojass.Models.EventsDisplayModel;
@@ -41,7 +39,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
     EventsGridAdapter mAdapter;
     int width;
     float alphaVal=0;
-    ZoomLayout zoomLayout;
+    RecyclerView gridLayout;
 
     private Toolbar toolbar;
     private LinearLayout event_search_layout;
@@ -133,7 +131,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
     }
 
     private void setZoomableGridView() {
-        zoomLayout.setLayoutManager(new GridLayoutManager(this,NO_OF_COLUMNS));
+        gridLayout.setLayoutManager(new GridLayoutManager(this,NO_OF_COLUMNS));
 
         //getting width of device
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -146,11 +144,11 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         }
 
         mAdapter = new EventsGridAdapter(this,width,data);
-        zoomLayout.setAdapter(mAdapter);
+        gridLayout.setAdapter(mAdapter);
     }
 
     void init(){
-        zoomLayout = findViewById(R.id.events_grid);
+        gridLayout = findViewById(R.id.events_grid);
         toolbar = findViewById(R.id.events_toolbar);
         setSupportActionBar(toolbar);
         event_search_layout = toolbar.findViewById(R.id.event_search_layout_change);

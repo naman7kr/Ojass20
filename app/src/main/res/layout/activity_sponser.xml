@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/sponserlayout"
     android:orientation="vertical"
-    tools:context=".Activities.SponserActivity">
+    tools:context=".Activities.SponsorActivity">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -18,8 +18,6 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:focusableInTouchMode="true"
-
-
         android:clickable="true"
         android:focusable="true"
         android:layout_marginTop="10dp">

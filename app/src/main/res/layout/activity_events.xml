@@ -5,7 +5,7 @@
     >
 
 
-    <ojass20.nitjsr.in.ojass.Utils.ZoomLayout
+    <androidx.recyclerview.widget.RecyclerView
         android:paddingTop="66dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,7 +13,7 @@
         android:focusable="true"
 
         >
-    </ojass20.nitjsr.in.ojass.Utils.ZoomLayout>
+    </androidx.recyclerview.widget.RecyclerView>
     <include
         layout="@layout/event_toolbar"
         android:id="@+id/events_toolbar"

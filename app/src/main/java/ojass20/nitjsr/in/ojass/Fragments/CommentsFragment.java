@@ -2,6 +2,7 @@ package ojass20.nitjsr.in.ojass.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,7 +115,21 @@ public class CommentsFragment extends Fragment {
             }
         });
 
+        onBackPress(container);
         return view;
+    }
+
+    private void onBackPress(View container) {
+        container.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == KeyEvent.KEYCODE_BACK){
+                    closeFragment();
+                    return  true;
+                }
+                return false;
+            }
+        });
     }
 
 
@@ -219,14 +234,17 @@ public class CommentsFragment extends Fragment {
         (view.findViewById(R.id.comment_back_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                self_comment_text.clearFocus();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.setCustomAnimations(R.anim.no_anim, R.anim.slide_out_bottom);
-                transaction.remove(CommentsFragment.this).commit();
+                closeFragment();
             }
         });
     }
 
+    void closeFragment(){
+        self_comment_text.clearFocus();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.no_anim, R.anim.slide_out_bottom);
+        transaction.remove(CommentsFragment.this).commit();
+    }
     private void send_description_via_intent() {
         DatabaseReference mref = FirebaseDatabase.getInstance().getReference().child("Feeds").child(current_post_id);
     }

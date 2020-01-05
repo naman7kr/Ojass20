@@ -35,7 +35,7 @@
         <activity android:name=".Activities.ProfileActivity" />
         <activity android:name=".Activities.ItineraryActivity" />
         <activity android:name=".Activities.MapsActivity" />
-        <activity android:name=".Activities.SponserActivity" />
+        <activity android:name=".Activities.SponsorActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"

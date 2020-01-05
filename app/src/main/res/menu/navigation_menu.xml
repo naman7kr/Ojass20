@@ -13,9 +13,9 @@
             android:title="@string/itinerary" />
 
         <item
-            android:id="@+id/help"
-            android:icon="@drawable/ic_live_help_black_24dp"
-            android:title="@string/help" />
+            android:id="@+id/sponsor"
+            android:icon="@drawable/ic_event_available_black_24dp"
+            android:title="@string/sponsor" />
 
         <item
             android:id="@+id/team"
@@ -27,6 +27,11 @@
             android:id="@+id/developers"
             android:icon="@drawable/ic_android_black_24dp"
             android:title="@string/developers" />
+
+        <item
+            android:id="@+id/help"
+            android:icon="@drawable/ic_live_help_black_24dp"
+            android:title="@string/help" />
 
         <item
             android:id="@+id/logout"
