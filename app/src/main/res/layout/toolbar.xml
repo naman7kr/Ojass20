@@ -8,6 +8,7 @@
         android:minHeight="?attr/actionBarSize"
         app:theme="@style/AppTheme"
         app:title="@string/feeds"
+        app:titleTextColor="@color/white"
         app:titleTextAppearance="@style/OpenSansTextStyle"
         app:layout_scrollFlags="scroll|enterAlways|snap"
     />

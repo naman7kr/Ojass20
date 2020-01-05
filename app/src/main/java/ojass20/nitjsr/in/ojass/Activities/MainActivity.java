@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -157,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         indicator = findViewById(R.id.indicator_slider);
         refreshLayout = findViewById(R.id.swipe_refresh);
         scrollView = findViewById(R.id.nested_scroll_main);
+
     }
 
     private void initializeInstanceVariables() {
@@ -568,6 +570,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
                 break;
+
+            case R.id.navemergency:
+                showList();
+                break;
         }
 
         try {
@@ -598,11 +604,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             case R.id.notifications:
                 startActivity(new Intent(this, NotificationActivity.class));
                 return true;
-            case R.id.profile:
+     /**       case R.id.profile:
                 startActivity(new Intent(this, ProfileActivity.class));
                 return true;
             case R.id.emergency:
                 showList();
+      **/
         }
 
         return super.onOptionsItemSelected(item);
