@@ -19,11 +19,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import ojass20.nitjsr.in.ojass.Adapters.EventsGridAdapter;
 import ojass20.nitjsr.in.ojass.Fragments.EventBottomSheet;
 import ojass20.nitjsr.in.ojass.Models.EventsDisplayModel;
@@ -35,7 +37,7 @@ import ojass20.nitjsr.in.ojass.R;
 public class EventsActivity extends AppCompatActivity implements PinchAlphaInterface {
     private static final int NO_OF_COLUMNS = 4;
     private static final float INIT_ALPHA = 0.3f;
-    ArrayList<EventsDisplayModel> data=new ArrayList<>();
+    ArrayList<EventsDisplayModel> data = new ArrayList<>();
     EventsGridAdapter mAdapter;
     int width;
     float alphaVal=0;
@@ -48,11 +50,12 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
 
     private MenuItem search_menu_item;
 
-    private static float limitAlpha=1.4f;
-    private static boolean bottomSheetOpen=false;
+    private static float limitAlpha = 1.4f;
+    private static boolean bottomSheetOpen = false;
     private static int toolbarIconColor = Color.BLACK;
 
     String[] fruits = {"Apple", "Banana", "Cherry", "Date", "Grape", "Kiwi", "Mango", "Pear"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +65,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         getSupportActionBar().setTitle("Events");
 
         setZoomableGridView();
+        bottomSheetOpen = false;
 
         events_search_back_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +84,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         });
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                (this,android.R.layout.select_dialog_item, fruits);
+                (this, android.R.layout.select_dialog_item, fruits);
 
         event_search_text.setThreshold(0);
         event_search_text.setAdapter(adapter);
@@ -97,12 +101,11 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
     }
 
     public void showBottomSheet() {
-        bottomSheetOpen=true;
-
+        bottomSheetOpen = true;
         EventBottomSheet bottomSheet = new EventBottomSheet();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_in_bottom,R.anim.no_anim);
-        transaction.add(R.id.fragment_layout_for_search,bottomSheet);
+        transaction.setCustomAnimations(R.anim.slide_in_bottom, R.anim.no_anim);
+        transaction.add(R.id.fragment_layout_for_search, bottomSheet);
         transaction.commit();
 
         //Change toolbar
@@ -113,12 +116,13 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         toolbar.setTitle(event_search_text.getText().toString());
         event_search_text.setText("");
     }
-    private void hideBottomSheet(){
+
+    private void hideBottomSheet() {
         bottomSheetOpen = false;
 
         Fragment f = getSupportFragmentManager().findFragmentById(R.id.fragment_layout_for_search);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.no_anim,R.anim.slide_out_bottom);
+        transaction.setCustomAnimations(R.anim.no_anim, R.anim.slide_out_bottom);
         transaction.remove(f).commit();
 
         //change toolbar
@@ -139,8 +143,8 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         width = displayMetrics.widthPixels;
 
         //getting event names and images
-        for(int i=0;i<Constants.eventNames.length;i++){
-            data.add(new EventsDisplayModel(Constants.eventImg[i],Constants.eventNames[i],INIT_ALPHA));
+        for (int i = 0; i < Constants.eventNames.length; i++) {
+            data.add(new EventsDisplayModel(Constants.eventImg[i], Constants.eventNames[i], INIT_ALPHA));
         }
 
         mAdapter = new EventsGridAdapter(this,width,data);
@@ -160,23 +164,23 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
     @Override
     public void ScaleFactorToAlpha(float scaleFactor) {
 //        Log.e("TAG"," "+scaleFactor);
-        alphaVal = (float) ((scaleFactor-1)*(1.0/(limitAlpha-1)))+INIT_ALPHA;
-        if(alphaVal>1){
-            alphaVal=1;
-        }else if(alphaVal<0){
-            alphaVal=0;
+        alphaVal = (float) ((scaleFactor - 1) * (1.0 / (limitAlpha - 1))) + INIT_ALPHA;
+        if (alphaVal > 1) {
+            alphaVal = 1;
+        } else if (alphaVal < 0) {
+            alphaVal = 0;
         }
         data.clear();
 //        Log.e("TAG"," "+alphaVal);
-        for(int i=0;i<Constants.eventNames.length;i++){
-            data.add(new EventsDisplayModel(Constants.eventImg[i],Constants.eventNames[i],alphaVal));
+        for (int i = 0; i < Constants.eventNames.length; i++) {
+            data.add(new EventsDisplayModel(Constants.eventImg[i], Constants.eventNames[i], alphaVal));
         }
         mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.events_menu,menu);
+        getMenuInflater().inflate(R.menu.events_menu, menu);
         //TODO: implement search
         final MenuItem searchItem = menu.findItem(R.id.search_events);
         search_menu_item = searchItem;
@@ -196,16 +200,14 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
 
     @Override
     public void onBackPressed() {
-        if(bottomSheetOpen){
+        if (bottomSheetOpen) {
             hideBottomSheet();
             search_menu_item.setVisible(true);
-            Log.e("onBackPressed: ","level 23" );
-        }
-        else if(event_search_layout.getVisibility() == View.VISIBLE){
+            Log.e("onBackPressed: ", "level 23");
+        } else if (event_search_layout.getVisibility() == View.VISIBLE) {
             event_search_layout.setVisibility(View.GONE);
             search_menu_item.setVisible(true);
-        }
-        else{
+        } else {
             //finishAfterTransition();
             super.onBackPressed();
         }
@@ -213,11 +215,11 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
-            if(bottomSheetOpen){
+        if (item.getItemId() == android.R.id.home) {
+            if (bottomSheetOpen) {
                 hideBottomSheet();
                 search_menu_item.setVisible(true);
-            }else {
+            } else {
                 //go to EventsActivity with transition
                 //finishAfterTransition();
             }
@@ -226,12 +228,12 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         return super.onOptionsItemSelected(item);
     }
 
-    public void showKeyboard(){
+    public void showKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
-    public void closeKeyboard(){
+    public void closeKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
