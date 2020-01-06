@@ -44,6 +44,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -81,6 +82,7 @@ import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_POSTERIMAGES;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragInterface, ViewPager.OnPageChangeListener, FeedAdapter.CommentClickInterface {
     private DrawerLayout mDrawer;
+    private View mDrwawerHeaderView;
     private Toolbar mToolbar;
     private NavigationView mNavigationDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -152,8 +154,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationDrawer = (NavigationView) findViewById(R.id.navigation_view);
-        View headerView = mNavigationDrawer.inflateHeaderView(R.layout.nav_header);
-        headerView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
+
+        mDrwawerHeaderView = mNavigationDrawer.inflateHeaderView(R.layout.nav_header);
         mPullUp = findViewById(R.id.pull_up);
 
         mRecyclerView = findViewById(R.id.feed_recycler_view);
@@ -517,6 +519,17 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        TextView profile_name = mDrwawerHeaderView.findViewById(R.id.user_profile_name);
+        profile_name.setText(mauth.getCurrentUser().getDisplayName());
+        ImageView profile_picture = mDrwawerHeaderView.findViewById(R.id.user_profile_picture);
+        if(mauth.getCurrentUser().getPhotoUrl() != null){
+            profile_picture.setImageDrawable(null);
+            Glide.with(this).load(mauth.getCurrentUser().getPhotoUrl()).into(profile_picture);
+        }
+
+        mDrwawerHeaderView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
+
+
         //Uncomment below once all fragments have been created
         setupDrawerContent(mNavigationDrawer);
 
@@ -541,7 +554,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         selectDrawerItem(menuItem);
-                        return true;
+                        return false;
                     }
                 });
     }
@@ -576,7 +589,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
                 break;
-
             case R.id.navemergency:
                 showList();
                 break;
