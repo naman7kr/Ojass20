@@ -75,5 +75,7 @@ dependencies {
     implementation 'com.onesignal:OneSignal:[3.11.2, 3.99.99]'
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'com.google.android.play:core:1.6.4'
+
+    implementation 'jp.wasabeef:blurry:3.0.0'
 }
 apply plugin: 'com.google.gms.google-services'

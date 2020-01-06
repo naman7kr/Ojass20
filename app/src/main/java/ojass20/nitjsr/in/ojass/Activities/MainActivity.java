@@ -2,36 +2,52 @@ package ojass20.nitjsr.in.ojass.Activities;
 
 import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,23 +55,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import androidx.appcompat.app.AlertDialog;
+
+import androidx.fragment.app.FragmentTransaction;
+
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager.widget.ViewPager;
+
+import me.relex.circleindicator.CircleIndicator;
 import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
-import ojass20.nitjsr.in.ojass.Helpers.HomePage;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.view.GestureDetectorCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import ojass20.nitjsr.in.ojass.Adapters.PosterAdapter;
+import ojass20.nitjsr.in.ojass.Fragments.CommentsFragment;
+import ojass20.nitjsr.in.ojass.Fragments.HomeFragment;
 import ojass20.nitjsr.in.ojass.Models.Comments;
 import ojass20.nitjsr.in.ojass.Models.CoordinatorsModel;
 import ojass20.nitjsr.in.ojass.Models.EventModel;
@@ -64,29 +79,33 @@ import ojass20.nitjsr.in.ojass.Models.Likes;
 import ojass20.nitjsr.in.ojass.Models.RulesModel;
 import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
 import ojass20.nitjsr.in.ojass.R;
+import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
+import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
 
-public class MainActivity extends AppCompatActivity implements
-        GestureDetector.OnGestureListener {
+import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_IMG_SRC;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_POSTERIMAGES;
+
+public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragInterface, ViewPager.OnPageChangeListener, FeedAdapter.CommentClickInterface {
+    private static final String LOG_TAG = "Main";
     private DrawerLayout mDrawer;
     private Toolbar mToolbar;
     private NavigationView mNavigationDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
     private ImageView mPullUp;
     private AlertDialog.Builder builder;
-    private ImageView mPullDown;
-    private String LOG_TAG = "MAIN";
     private TranslateAnimation mAnimation;
-    private TextView mHeading;
-    private GestureDetectorCompat mDetector;
-    private ArrayList<HomePage> mItems;
-    private int mInd;
-    private ConstraintLayout mCl;
-    private ArrayList<ImageView> mCircles;
-    private TextView mSubHeading;
     private ProgressBar recyclerview_progress;
+
+    //Poster shit
+    private static final int BANNER_DELAY_TIME = 5 * 1000;
+    private static final int BANNER_TRANSITION_DELAY = 1200;
+    private Runnable runnable;
+    private Handler handler;
+    private boolean firstScroll = true;
 
     private RecyclerView mRecyclerView;
     private FeedAdapter mFeedAdapter;
+    private PosterAdapter mPosterAdapter;
     private LinearLayoutManager mLinearLayoutManager;
 
     private DatabaseReference dref;
@@ -97,24 +116,257 @@ public class MainActivity extends AppCompatActivity implements
     private OjassApplication ojassApplication;
     public ProgressDialog progressDialog;
     public static ArrayList<EventModel> data;
+    private FrameLayout homeContainer;
+    private ViewPager viewPager;
+    private CircleIndicator indicator;
+    private SwipeRefreshLayout refreshLayout;
+    private NestedScrollView scrollView;
+    private boolean mScrollDown = false;
+    private boolean isFragOpen = false;
+    private Handler backHandler;
+    private int backFlag = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        builder=new AlertDialog.Builder(this);
+//        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+        init();
+        initializeInstanceVariables();
+
+        setSlider();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("PostNo",Integer.toString(0));
+        editor.putString("PostNo", Integer.toString(0));
         editor.apply();
 
+        fetchFeedsDataFromFirebase();
+
+        setUpNavigationDrawer();
+        //setUpRecyclerView();
+
+        setUpAnimationForImageView(mPullUp);
+        detectTouchEvents();
+
+        hidePullUpArrowOnScroll();
+
+        refresh();
+
+    }
+
+    void init() {
+        homeContainer = findViewById(R.id.home_container);
+        recyclerview_progress = findViewById(R.id.recycler_view_progress);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mNavigationDrawer = (NavigationView) findViewById(R.id.navigation_view);
+        View headerView = mNavigationDrawer.inflateHeaderView(R.layout.nav_header);
+        headerView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
+        mPullUp = findViewById(R.id.pull_up);
+
         mRecyclerView = findViewById(R.id.feed_recycler_view);
+        viewPager = findViewById(R.id.viewpager_poster);
+        indicator = findViewById(R.id.indicator_slider);
+        refreshLayout = findViewById(R.id.swipe_refresh);
+        scrollView = findViewById(R.id.nested_scroll_main);
+
+    }
+
+    private void initializeInstanceVariables() {
+        builder = new AlertDialog.Builder(this);
+        ojassApplication = OjassApplication.getInstance();
         listposts = new ArrayList<>();
 
-        mauth=FirebaseAuth.getInstance();
-        currentuid=mauth.getCurrentUser().getUid();
+        mauth = FirebaseAuth.getInstance();
+        currentuid = mauth.getCurrentUser().getUid();
 
+        mAnimation = new TranslateAnimation(
+                TranslateAnimation.ABSOLUTE, 0f,
+                TranslateAnimation.ABSOLUTE, 0f,
+                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
+                TranslateAnimation.RELATIVE_TO_PARENT, 0.005f);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+        float x = (float) Math.sqrt(convertDpToPixel(125, this) * convertDpToPixel(125, this) - convertDpToPixel(41, this) * convertDpToPixel(41, this));
+        float x1 = (float) Math.sqrt(convertDpToPixel(125, this) * convertDpToPixel(125, this) - convertDpToPixel(57, this) * convertDpToPixel(57, this));
+
+        float m1 = width / 2 - x;
+        m1 = m1 - convertDpToPixel(9, this);
+        m1 = m1 + (x - x1);
+        float m2 = m1 + 2 * x1;
+    }
+
+    void refresh() {
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (mFeedAdapter != null)
+                    mFeedAdapter.notifyDataSetChanged();
+                if (mPosterAdapter != null)
+                    mPosterAdapter.notifyDataSetChanged();
+                refreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
+    void hidePullUpArrowOnScroll() {
+        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (v.getChildAt(v.getChildCount() - 1) != null) {
+                    if (scrollY > oldScrollY) {
+                        //code to fetch more data for endless scrolling
+                        if (mScrollDown) {
+//                            Toast.makeText(ojassApplication, "SCroll down", Toast.LENGTH_SHORT).show();
+                            TranslateAnimation tr = new TranslateAnimation(0.0f, 0.0f, 0, 30);
+                            tr.setDuration(100);
+                            mPullUp.startAnimation(tr);
+                            mScrollDown = false;
+                            mPullUp.setVisibility(View.INVISIBLE);
+                        }
+                    } else if (scrollY < oldScrollY) {
+                        if (!mScrollDown) {
+//                            Toast.makeText(ojassApplication, "SCroll up", Toast.LENGTH_SHORT).show();
+                            mPullUp.setVisibility(View.VISIBLE);
+                            TranslateAnimation tr = new TranslateAnimation(0.0f, 0.0f, 0, -30);
+                            tr.setDuration(100);
+                            mPullUp.startAnimation(tr);
+                            mScrollDown = true;
+
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+
+    public void setSlider() {
+
+        FirebaseDatabase dataref = FirebaseDatabase.getInstance();
+        DatabaseReference imageRef = dataref.getReference(FIREBASE_REF_POSTERIMAGES);
+        imageRef.keepSynced(true);
+        imageRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    try {
+                        final int imageCount = (int) dataSnapshot.getChildrenCount();
+                        String[] imageUrls = new String[imageCount];
+                        String[] clickUrls = new String[imageCount];
+                        int currIndex = 0;
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                            imageUrls[currIndex] = dataSnapshot1.child(FIREBASE_REF_IMG_SRC).getValue().toString();
+                            //clickUrls[currIndex] = dataSnapshot1.child(FIREBASE_REF_IMG_CLICK).getValue().toString();
+                            Log.d("TAG", imageUrls[currIndex]);
+                            currIndex++;
+                        }
+                        mPosterAdapter = new PosterAdapter(getApplicationContext(), imageUrls, clickUrls);
+                        viewPager.setAdapter(mPosterAdapter);
+                        indicator.setViewPager(viewPager);
+                        viewPager.setOnPageChangeListener(MainActivity.this);
+                        try {
+                            Field mScroller = ViewPager.class.getDeclaredField("mScroller");
+                            mScroller.setAccessible(true);
+                            mScroller.set(viewPager, new CustomScroller(viewPager.getContext(), BANNER_TRANSITION_DELAY));
+                        } catch (Exception e) {
+                        }
+
+                        handler = new Handler(Looper.getMainLooper());
+                        runnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                int currItem = viewPager.getCurrentItem();
+                                if (currItem == imageCount - 1) {
+                                    viewPager.setCurrentItem(0);
+                                } else {
+                                    viewPager.setCurrentItem(++currItem);
+                                }
+                            }
+                        };
+                        handler.postDelayed(runnable, BANNER_DELAY_TIME);
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        if (firstScroll) {
+            firstScroll = false;
+        } else {
+            handler.removeCallbacks(runnable);
+        }
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        if (state == ViewPager.SCROLL_STATE_IDLE) {
+            handler.postDelayed(runnable, BANNER_DELAY_TIME);
+        }
+    }
+
+////    @Override
+//    public void onLayoutClick(View v, int position) {
+//
+//    }
+
+    @Override
+    public void onCommentClick() {
+//        CommentsFragment fragment = new CommentsFragment(this, , feedPosts.get(position).getPostid());
+//        FragmentTransaction transaction = manager.beginTransaction();
+//        transaction.setCustomAnimations(R.anim.slide_in_bottom, R.anim.no_anim);
+//        transaction.add(R.id.home_container, fragment);
+//        transaction.commit();
+    }
+
+    private class CustomScroller extends Scroller {
+
+        private int mDuration;
+
+        public CustomScroller(Context context, int mDuration) {
+            super(context);
+            this.mDuration = mDuration;
+        }
+
+        public CustomScroller(Context context, Interpolator interpolator, int mDuration) {
+            super(context, interpolator);
+            this.mDuration = mDuration;
+        }
+
+        public CustomScroller(Context context, Interpolator interpolator, boolean flywheel, int mDuration) {
+            super(context, interpolator, flywheel);
+            this.mDuration = mDuration;
+        }
+
+        @Override
+        public void startScroll(int startX, int startY, int dx, int dy) {
+            super.startScroll(startX, startY, dx, dy, mDuration);
+        }
+
+        @Override
+        public void startScroll(int startX, int startY, int dx, int dy, int duration) {
+            super.startScroll(startX, startY, dx, dy, mDuration);
+        }
+    }
+
+    private void fetchFeedsDataFromFirebase() {
         dref = FirebaseDatabase.getInstance().getReference().child("Feeds");
         dref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -123,37 +375,37 @@ public class MainActivity extends AppCompatActivity implements
                 listposts.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     //FeedPost post = ds.getValue(FeedPost.class);
-                    String post_id_temp=ds.getKey();
-                    boolean flag=false;
+                    String post_id_temp = ds.getKey();
+                    boolean flag = false;
 
-                    ArrayList<Likes> mlikes=new ArrayList<>();
-                    for(DataSnapshot dslike: ds.child("likes").getChildren()){
+                    ArrayList<Likes> mlikes = new ArrayList<>();
+                    for (DataSnapshot dslike : ds.child("likes").getChildren()) {
                         //Likes like=dslike.getValue(Likes.class);
-                        String temp=dslike.getValue().toString();
-                        Likes like=new Likes(temp);
+                        String temp = dslike.getValue().toString();
+                        Likes like = new Likes(temp);
                         mlikes.add(like);
-                        if(temp.equals(currentuid)){
-                            flag=true;
+                        if (temp.equals(currentuid)) {
+                            flag = true;
                         }
                     }
 
-                    ArrayList<Comments> mcomments=new ArrayList<>();
-                    for(DataSnapshot dscomment: ds.child("comments").getChildren()){
-                        Comments comment=dscomment.getValue(Comments.class);
+                    ArrayList<Comments> mcomments = new ArrayList<>();
+                    for (DataSnapshot dscomment : ds.child("comments").getChildren()) {
+                        Comments comment = dscomment.getValue(Comments.class);
                         mcomments.add(comment);
                     }
 
-                    String content=ds.child("content").getValue().toString();
-                    String event_name=ds.child("event").getValue().toString();
-                    String subevent_name=ds.child("subEvent").getValue().toString();
-                    String image_url=ds.child("imageURL").getValue().toString();
+                    String content = ds.child("content").getValue().toString();
+                    String event_name = ds.child("event").getValue().toString();
+                    String subevent_name = ds.child("subEvent").getValue().toString();
+                    String image_url = ds.child("imageURL").getValue().toString();
+                    String timestamp = (ds.hasChild("timestamp")) ? ds.child("timestamp").getValue().toString() : "0";
 
-
-
-                    FeedPost post=new FeedPost(flag,post_id_temp,content,event_name,image_url,subevent_name,mlikes,mcomments);
+                    FeedPost post = new FeedPost(timestamp, flag, post_id_temp, content, event_name, image_url, subevent_name, mlikes, mcomments);
 
                     Log.e("vila", post.getImageURL());
                     listposts.add(post);
+                    Collections.sort(listposts);
                 }
                 setUpRecyclerView();
                 Log.e("VIVZ", "onDataChange: listposts count = " + listposts.size());
@@ -170,7 +422,7 @@ public class MainActivity extends AppCompatActivity implements
         setUpNavigationDrawer();
         //setUpRecyclerView();
 
-        setUpArrayList();
+//        setUpArrayList();
         setUpNavigationDrawer();
         setUpAnimationForImageView(mPullUp);
         detectTouchEvents();
@@ -180,12 +432,12 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setUpEventData() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Events");
-        progressDialog=new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Initialising App data...");
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        data=new ArrayList<>();
+        data = new ArrayList<>();
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -193,37 +445,38 @@ public class MainActivity extends AppCompatActivity implements
                 data.clear();
                 progressDialog.dismiss();
                 try {
-                    for(DataSnapshot ds: dataSnapshot.getChildren()) {
-                        String about=ds.child("about").getValue(String.class);
-                        String branch=ds.child("branch").getValue(String.class);
-                        String details=ds.child("detail").getValue(String.class);
-                        String name=ds.child("name").getValue(String.class);
-                        Long prize1=ds.child("prize").child("first").getValue(Long.class);
-                        Long prize2=ds.child("prize").child("second").getValue(Long.class);
-                        Long prize3=ds.child("prize").child("third").getValue(Long.class);
-                        Long prizeT=ds.child("prize").child("total").getValue(Long.class);
-                        ArrayList<CoordinatorsModel> coordinatorsModelArrayList=new ArrayList<>();
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        String about = ds.child("about").getValue(String.class);
+                        String branch = ds.child("branch").getValue(String.class);
+                        String details = ds.child("detail").getValue(String.class);
+                        String name = ds.child("name").getValue(String.class);
+                        Long prize1 = ds.child("prize").child("first").getValue(Long.class);
+                        Long prize2 = ds.child("prize").child("second").getValue(Long.class);
+                        Long prize3 = ds.child("prize").child("third").getValue(Long.class);
+                        Long prizeT = ds.child("prize").child("total").getValue(Long.class);
+                        ArrayList<CoordinatorsModel> coordinatorsModelArrayList = new ArrayList<>();
                         coordinatorsModelArrayList.clear();
 
-                        ArrayList<RulesModel> rulesModelArrayList=new ArrayList<>();
+                        ArrayList<RulesModel> rulesModelArrayList = new ArrayList<>();
                         rulesModelArrayList.clear();
 
-                        for(DataSnapshot d:ds.child("coordinators").getChildren()) {
-                            CoordinatorsModel coordinatorsModel=d.getValue(CoordinatorsModel.class);
+                        for (DataSnapshot d : ds.child("coordinators").getChildren()) {
+                            CoordinatorsModel coordinatorsModel = d.getValue(CoordinatorsModel.class);
                             coordinatorsModelArrayList.add(coordinatorsModel);
                         }
 
-                        for(DataSnapshot d:ds.child("rules").getChildren()) {
-                            RulesModel rulesModel=d.getValue(RulesModel.class);
+                        for (DataSnapshot d : ds.child("rules").getChildren()) {
+                            RulesModel rulesModel = d.getValue(RulesModel.class);
                             rulesModelArrayList.add(rulesModel);
                         }
-                        data.add(new EventModel(about,branch,details,name,prize1,prize2,prize3,prizeT,coordinatorsModelArrayList,rulesModelArrayList));
+                        data.add(new EventModel(about, branch, details, name, prize1, prize2, prize3, prizeT, coordinatorsModelArrayList, rulesModelArrayList));
                     }
-                } catch(Exception e){
+                } catch (Exception e) {
                     if (progressDialog.isShowing()) progressDialog.dismiss();
                     //Toast.makeText(MainActivity.this, "Something went wrong in Events!", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 if (progressDialog.isShowing()) progressDialog.dismiss();
@@ -236,7 +489,7 @@ public class MainActivity extends AppCompatActivity implements
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        mFeedAdapter = new FeedAdapter(this, listposts,currentuid);
+        mFeedAdapter = new FeedAdapter(this, getSupportFragmentManager(), listposts, currentuid);
         mRecyclerView.setAdapter(mFeedAdapter);
         recyclerview_progress.setVisibility(View.GONE);
 
@@ -245,161 +498,82 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView.scrollToPosition(Integer.parseInt(numpost));
     }
 
-    private void setUpArrayList() {
-        mItems.add(new HomePage("EVENTS", "#FF0000", 0));
-        mItems.add(new HomePage("GURUGYAN", "#00FF00", 1));
-        mItems.add(new HomePage("ITINERARY", "#0000FF", 2));
-        mItems.add(new HomePage("MAPS", "#FFCC00", 3));
-    }
 
     private void detectTouchEvents() {
+        //pullup button click
         mPullUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mHeading.setClickable(true);
-                mPullUp.setEnabled(false);
-                mPullDown.setEnabled(true);
-                mPullDown.setVisibility(View.VISIBLE);
-                mHeading.setVisibility(View.VISIBLE);
-                mPullDown.setAlpha(0.0f);
-                mHeading.setAllCaps(true);
-                mHeading.setAlpha(0.0f);
-                mHeading.animate().alpha(1.0f).setDuration(1000);
-                mHeading.animate().alpha(1.0f).setDuration(1000);
-                mSubHeading.animate().alpha(1.0f).setDuration(1000);
-                mPullDown.animate().alpha(1.0f).setDuration(1000);
-                mCl.animate().alpha(1.0f).setDuration(1000);
-                mCl.setVisibility(View.VISIBLE);
-                mHeading.setVisibility(View.VISIBLE);
-                mSubHeading.setVisibility(View.VISIBLE);
-                mPullUp.animate().alpha(0.0f).setDuration(1000);
-                mRecyclerView.animate().alpha(0.0f).setDuration(1000);
-                mRecyclerView.setVisibility(View.GONE);
-                recyclerview_progress.setVisibility(View.GONE);
-                mPullUp.setVisibility(View.GONE);
-                setUpAnimationForImageView(mPullDown);
-                mToolbar.setTitle("");
-                setUpView(0);
-            }
-        });
-
-        mPullDown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //mFlContent.setBackgroundColor(Color.parseColor("#ffffff"));
-                mPullDown.setEnabled(false);
-                mPullUp.setEnabled(true);
-                mPullUp.setVisibility(View.VISIBLE);
-                mPullUp.setAlpha(0.0f);
-                mPullUp.animate().alpha(1.0f).setDuration(1000);
-                mRecyclerView.animate().alpha(1.0f).setDuration(1000);
-                mRecyclerView.setVisibility(View.VISIBLE);
-                mPullDown.animate().alpha(0.0f).setDuration(1000);
-                mHeading.animate().alpha(0.0f).setDuration(1000);
-                mSubHeading.animate().alpha(0.0f).setDuration(1000);
-                mCl.animate().alpha(0.0f).setDuration(1000);
-                mCl.setVisibility(View.GONE);
-                mPullDown.setVisibility(View.GONE);
-                mHeading.setVisibility(View.GONE);
-                mSubHeading.setVisibility(View.GONE);
-                mToolbar.setTitle(getResources().getString(R.string.feeds));
-                setUpAnimationForImageView(mPullDown);
-
-                if(listposts.size()==0){
-                    recyclerview_progress.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-        mCl.setClickable(false);
-
-        mHeading.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mDetector.onTouchEvent(event);
-                return true;
-            }
-        });
-
-        mCl.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mDetector.onTouchEvent(event);
-                return true;
+                // hide mPullUp
+//                AlphaAnimation anim = new AlphaAnimation(1.0f, 0.0f);
+//                anim.setDuration(100);
+//                anim.setAnimationListener(new Animation.AnimationListener() {
+//                    @Override
+//                    public void onAnimationStart(Animation animation) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onAnimationEnd(Animation animation) {
+//                        mPullUp.setAlpha(0.0f);
+//
+//                    }
+//
+//                    @Override
+//                    public void onAnimationRepeat(Animation animation) {
+//
+//                    }
+//                });
+//                mPullUp.startAnimation(anim);
+                // create fragment
+                openFragment();
             }
         });
     }
 
-    private void setUpView(int counter) {
-        HomePage homePage = mItems.get(mInd);
-        mHeading.setText(homePage.getmTitle());
-        String mystring = new String("Ojass 20");
-        SpannableString content = new SpannableString(mystring);
-        content.setSpan(new UnderlineSpan(), 0, mystring.length(), 0);
-        mSubHeading.setText(content);
-        ArrayList<ValueAnimator> animators = new ArrayList<>();
-        for (int i = 0; i < mCircles.size(); i++) {
-            mCircles.get(i).setColorFilter(Color.parseColor(mItems.get(i).getmCircleColor()));
-            animators.add(animateView(mCircles.get(i), 500, counter * 60));
-        }
-        for (int i = 0; i < animators.size(); i++)
-            animators.get(i).start();
-    }
-
-    private ValueAnimator animateView(final ImageView imageView, long duration, long angle) {
-        ConstraintLayout.LayoutParams lP = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
-        ValueAnimator anim = ValueAnimator.ofInt((int) lP.circleAngle, (int) lP.circleAngle + (int) angle);
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                int val = (Integer) valueAnimator.getAnimatedValue();
-                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
-                layoutParams.circleAngle = val;
-                imageView.setLayoutParams(layoutParams);
-            }
-        });
-        anim.setDuration(duration);
-        anim.setInterpolator(new LinearInterpolator());
-        return anim;
+    @Override
+    public void onCancel() {
+        //show mPullUp
+//        AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
+//        anim.setDuration(1000);
+//        anim.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                mPullUp.setAlpha(1.0f);
+//                mPullUp.setVisibility(View.VISIBLE);
+//
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
+//        mPullUp.startAnimation(anim);
+        closeFragment();
     }
 
 
-    private void setUpAnimationForTextView(final int code, final long mainTime, String curr) {
-        long tempTime = System.currentTimeMillis();
-        if (tempTime - mainTime > 500) {
-            mHeading.setText(mItems.get(mInd).getmTitle());
-            return;
-        }
-        String temp = " ";
-        for (int i = 0; i < curr.length(); i++) {
-            char ch = curr.charAt(i);
-            if (code == 1) {
-                if (ch == 'Z')
-                    temp = temp + 'A';
-                else {
-                    int u = (int) ch;
-                    u++;
-                    temp = temp + (char) u;
-                }
-            } else {
-                if (ch == 'A')
-                    temp = temp + 'Z';
-                else {
-                    int u = (int) ch;
-                    u--;
-                    temp = temp + (char) u;
-                }
-            }
-        }
-        temp = temp.trim();
-        mHeading.setText(temp);
-        //Log.e(LOG_TAG, temp);
-        final String x = temp;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setUpAnimationForTextView(code, mainTime, x.toUpperCase());
-            }
-        }, 10);
+    private void openFragment() {
+        HomeFragment homeFrag = new HomeFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_bottom, R.anim.no_anim);
+        transaction.add(R.id.home_container, homeFrag);
+        transaction.commit();
+        isFragOpen = true;
+    }
+
+    private void closeFragment() {
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.home_container);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.no_anim, R.anim.slide_out_bottom);
+        transaction.remove(f).commit();
+        isFragOpen = false;
     }
 
     private void setUpAnimationForImageView(ImageView mImageView) {
@@ -410,43 +584,6 @@ public class MainActivity extends AppCompatActivity implements
         mImageView.setAnimation(mAnimation);
     }
 
-    private void initializeInstanceVariables() {
-        ojassApplication = OjassApplication.getInstance();
-
-        recyclerview_progress=findViewById(R.id.recycler_view_progress);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mNavigationDrawer = (NavigationView) findViewById(R.id.navigation_view);
-        mPullUp = findViewById(R.id.pull_up);
-        mPullDown = findViewById(R.id.pull_down);
-        mAnimation = new TranslateAnimation(
-                TranslateAnimation.ABSOLUTE, 0f,
-                TranslateAnimation.ABSOLUTE, 0f,
-                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
-                TranslateAnimation.RELATIVE_TO_PARENT, 0.005f);
-        mHeading = (TextView) findViewById(R.id.heading);
-        mItems = new ArrayList<>();
-        mInd = 0;
-        mDetector = new GestureDetectorCompat(this, this);
-        mCl = findViewById(R.id.cl);
-        mCircles = new ArrayList<>();
-        mCircles.add((ImageView) findViewById(R.id.img1));
-        mCircles.add((ImageView) findViewById(R.id.img2));
-        mCircles.add((ImageView) findViewById(R.id.img3));
-        mCircles.add((ImageView) findViewById(R.id.img4));
-        mSubHeading = findViewById(R.id.sub_heading);
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = displayMetrics.widthPixels;
-        float x = (float) Math.sqrt(convertDpToPixel(125, this) * convertDpToPixel(125, this) - convertDpToPixel(41, this) * convertDpToPixel(41, this));
-        float x1 = (float) Math.sqrt(convertDpToPixel(125, this) * convertDpToPixel(125, this) - convertDpToPixel(57, this) * convertDpToPixel(57, this));
-
-        float m1 = width / 2 - x;
-        m1 = m1 - convertDpToPixel(9, this);
-        m1 = m1 + (x - x1);
-        float m2 = m1 + 2 * x1;
-    }
 
     private void setUpNavigationDrawer() {
         setSupportActionBar(mToolbar);
@@ -456,6 +593,8 @@ public class MainActivity extends AppCompatActivity implements
         //Uncomment below once all fragments have been created
         setupDrawerContent(mNavigationDrawer);
 
+        mNavigationDrawer.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.DARKEN);
+        // headerView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
         //Replacing back arrow with hamburger icon
         mDrawerToggle = setupDrawerToggle();
         mDrawerToggle.setDrawerIndicatorEnabled(true);
@@ -484,26 +623,35 @@ public class MainActivity extends AppCompatActivity implements
         Fragment fragment = null;
         Class fragmentClass = null;
         Log.d("ak47", "selectDrawerItem: " + menuItem.getItemId());
-        switch(menuItem.getItemId()) {
+        switch (menuItem.getItemId()) {
             case R.id.events:
-                startActivity(new Intent(MainActivity.this,EventsActivity.class));
+                startActivity(new Intent(MainActivity.this, EventsActivity.class));
                 break;
             case R.id.itinerary:
-                startActivity(new Intent(MainActivity.this,ItineraryActivity.class));
+                startActivity(new Intent(MainActivity.this, ItineraryActivity.class));
+                break;
+            case R.id.sponsor:
+                startActivity(new Intent(MainActivity.this, SponsorActivity.class));
                 break;
             case R.id.help:
-                startActivity(new Intent(MainActivity.this,Help.class));
+                startActivity(new Intent(MainActivity.this, Help.class));
                 break;
             case R.id.team:
-                startActivity(new Intent(MainActivity.this,TeamActivity.class));
+                startActivity(new Intent(MainActivity.this, TeamActivity.class));
                 break;
             case R.id.developers:
-                startActivity(new Intent(MainActivity.this,DeveloperActivity.class));
+                Intent intent = new Intent(MainActivity.this, TeamActivity.class);
+                intent.putExtra("DEV", "DEV");
+                startActivity(intent);
                 break;
             case R.id.logout:
                 mauth.signOut();
-                startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
+                break;
+
+            case R.id.navemergency:
+                showList();
                 break;
         }
 
@@ -513,16 +661,7 @@ public class MainActivity extends AppCompatActivity implements
             e.printStackTrace();
         }
 
-        // Insert the fragment by replacing any existing fragment
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
-//
-//        // Highlight the selected item has been done by NavigationView
-//        menuItem.setChecked(true);
-//        // Set action bar title
-//        setTitle(menuItem.getTitle());
-        // Close the navigation drawer
-       mDrawer.closeDrawers();
+        mDrawer.closeDrawers();
     }
 
     public static float convertDpToPixel(float dp, Context context) {
@@ -544,19 +683,20 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.notifications:
                 startActivity(new Intent(this, NotificationActivity.class));
                 return true;
-            case R.id.profile:
-                startActivity(new Intent(this, ProfileActivity.class));
-                return true;
-            case R.id.emergency:
-                showList();
+            /**       case R.id.profile:
+             startActivity(new Intent(this, ProfileActivity.class));
+             return true;
+             case R.id.emergency:
+             showList();
+             **/
         }
 
         return super.onOptionsItemSelected(item);
     }
-    public void showList()
-    {
 
-        final ArrayList<String> emer=new ArrayList<>();
+    public void showList() {
+
+        final ArrayList<String> emer = new ArrayList<>();
         emer.add("Emergency");
         emer.add("Police");
         emer.add("Fire");
@@ -569,21 +709,18 @@ public class MainActivity extends AppCompatActivity implements
         emer.add("Ambulance Network (Emergency or Non-Emergency)");
 
 
-        final ArrayList<String> num=new ArrayList<>();
+        final ArrayList<String> num = new ArrayList<>();
 
-            num.add("112");
-            num.add("100");
-            num.add("102");
-            num.add("108");
-            num.add("1906");
-            num.add("1363");
-            num.add("1098");
-            num.add("104");
-            num.add("181");
-            num.add("09343180000");
-
-
-
+        num.add("112");
+        num.add("100");
+        num.add("102");
+        num.add("108");
+        num.add("1906");
+        num.add("1363");
+        num.add("1098");
+        num.add("104");
+        num.add("181");
+        num.add("09343180000");
 
 
         builder.setTitle("Emergency Numbers");
@@ -600,18 +737,18 @@ public class MainActivity extends AppCompatActivity implements
 
             }
         });
-        final Intent intent =new Intent(Intent.ACTION_DIAL);
-        ArrayAdapter<String> adapter=new ArrayAdapter<>(MainActivity.this,android.R.layout.simple_list_item_1,emer);
+        final Intent intent = new Intent(Intent.ACTION_DIAL);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, emer);
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                intent.setData(Uri.parse("tel:"+num.get(which)));
+                intent.setData(Uri.parse("tel:" + num.get(which)));
                 startActivity(intent);
 
             }
         });
 
-        AlertDialog dialog=builder.create();
+        AlertDialog dialog = builder.create();
         dialog.show();
     }
 
@@ -628,66 +765,55 @@ public class MainActivity extends AppCompatActivity implements
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    public boolean onDown(MotionEvent e) {
-        return false;
-    }
-
-    @Override
-    public void onShowPress(MotionEvent e) {
-
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent e) {
-        switch (mInd) {
-            case 0:
-                startActivity(new Intent(MainActivity.this, EventsActivity.class));
-                break;
-            case 1:
-                startActivity(new Intent(MainActivity.this, GurugyanActivity.class));
-                break;
-            case 2:
-                startActivity(new Intent(this,ItineraryActivity.class));
-                break;
-            case 3:
-                startActivity(new Intent(MainActivity.this, MapsActivity.class));
-                break;
-            default:
-                Log.e(LOG_TAG, "Bhai sahab ye kis line mein aa gye aap?");
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent e) {
-
-    }
-
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        if (e1.getX() < e2.getX()) {
-            mInd--;
-            if (mInd < 0) {
-                mInd = mItems.size() - 1;
-                setUpView(3);
-            } else
-                setUpView(1);
-            setUpAnimationForTextView(1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
-        } else {
-            mInd++;
-            if (mInd >= mItems.size()) {
-                mInd = 0;
-                setUpView(-3);
-            } else
-                setUpView(-1);
-            setUpAnimationForTextView(-1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
-        }
-        return true;
-    }
+//    @SuppressLint("WrongConstant")
+//    @Override
+//
+//    public boolean onDown(MotionEvent e) {
+//        return false;
+//    }
+//
+//    @Override
+//    public void onShowPress(MotionEvent e) {
+//
+//    }
+//
+//    @Override
+//    public boolean onSingleTapUp(MotionEvent e) {
+////        switch (mInd) {
+////            case 0:
+////                startActivity(new Intent(MainActivity.this, EventsActivity.class));
+////                break;
+////            case 1:
+////                startActivity(new Intent(MainActivity.this, GurugyanActivity.class));
+////                break;
+////            case 2:
+////                startActivity(new Intent(this, ItineraryActivity.class));
+////                break;
+////            case 3:
+////                startActivity(new Intent(MainActivity.this, MapsActivity.class));
+////                break;
+////            default:
+////                Log.e(LOG_TAG, "Bhai sahab ye kis line mein aa gye aap?");
+////                public void onBackPressed () {
+////                if (isFragOpen) {
+////                    closeFragment();
+////                    return true;
+////                }
+////                backHandler = new Handler();
+////
+////                if (backFlag == 1) {
+////                    finish();
+////                }
+////                backFlag = 1;
+////                Toast.makeText(ojassApplication, R.string.backPress, 3000).show();
+////                backHandler.postDelayed(new Runnable() {
+////                    @Override
+////                    public void run() {
+////                        backFlag = 0;
+////                    }
+////                }, 3000);
+////            }
+////        }
+//        return true;
+//    }
 }

@@ -14,245 +14,148 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorAccent"
         android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/flContent"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_height="match_parent">
 
-            <RelativeLayout
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_marginTop="?attr/actionBarSize"
-                    android:id="@+id/feed_recycler_view"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.appbar.AppBarLayout
+                    android:id="@+id/app_bar_main"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <include
+                        layout="@layout/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_scrollFlags="scroll|enterAlways|snap" />
+
+                </com.google.android.material.appbar.AppBarLayout>
+
+                <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                    android:id="@+id/swipe_refresh"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scrollbars="none" />
-                <ProgressBar
-                    android:layout_width="52dp"
-                    android:layout_height="52dp"
-                    android:layout_centerInParent="true"
-                    android:id="@+id/recycler_view_progress"/>
-            </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                    >
 
+                    <androidx.core.widget.NestedScrollView
+                        android:id="@+id/nested_scroll_main"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-                <ImageView
-                    android:id="@+id/bg_circle"
-                    android:layout_width="248dp"
-                    android:layout_height="248dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="-125dp"
-                    android:visibility="gone"
-                    android:src="@drawable/border_circle" />
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:layout_behavior="@string/appbar_scrolling_view_behavior"
 
+                            >
 
-                <ImageView
-                    android:id="@+id/pull_up"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="32dp"
-                    android:background="@drawable/circle_splash"
-                    android:padding="4dp"
-                    android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
-                    android:visibility="visible" />
+                            <RelativeLayout
+                                android:id="@+id/poster_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="200dp"
+                                android:layout_marginTop="@dimen/toolbar_height">
 
+                                <androidx.cardview.widget.CardView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:elevation="2dp">
 
-            </RelativeLayout>
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                                        <androidx.viewpager.widget.ViewPager
+                                            android:id="@+id/viewpager_poster"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl"
+                                        <me.relex.circleindicator.CircleIndicator
+                                            android:id="@+id/indicator_slider"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_alignParentBottom="true"
+                                            android:layout_marginBottom="10dp"
+                                            app:ci_drawable="@android:color/holo_red_dark" />
+                                    </RelativeLayout>
+                                </androidx.cardview.widget.CardView>
+                            </RelativeLayout>
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_below="@+id/poster_layout"
+                                android:layout_marginTop="10dp"
+                                android:elevation="2dp"
+                                android:nestedScrollingEnabled="false"
+                                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/feed_recycler_view"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:nestedScrollingEnabled="false"
+                                    android:scrollbars="none"
+                                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                            </androidx.cardview.widget.CardView>
+                        </RelativeLayout>
+                    </androidx.core.widget.NestedScrollView>
+                </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginBottom="-150dp"
-                    android:background="#ffffff"
-                    android:visibility="gone">
+                    android:layout_height="match_parent">
+                    <!--ProgressBar-->
+                    <RelativeLayout
+                        android:id="@+id/recycler_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                        <ProgressBar
+                            android:id="@+id/recycler_view_progress"
+                            android:layout_width="52dp"
+                            android:layout_height="52dp"
+                            android:layout_centerInParent="true" />
+                    </RelativeLayout>
+                    <!--Pull up button-->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/pull_up"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="32dp"
+                            android:background="@drawable/circle"
+                            android:padding="4dp"
+                            android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
+                            android:visibility="visible" />
 
 
-                    <ImageView
-                        android:id="@+id/bg_circle1"
-                        android:layout_width="258dp"
-                        android:layout_height="258dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/border_circle"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                    </RelativeLayout>
+                </RelativeLayout>
 
-                    <ImageView
-                        android:id="@+id/center_image"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/circle_splash"
-                        android:visibility="invisible"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-                    <ImageView
-                        android:id="@+id/img1"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/circle_splash"
-                        app:layout_constraintCircle="@+id/center_image"
-                        app:layout_constraintCircleAngle="0"
-                        app:layout_constraintCircleRadius="129dp" />
-
-                    <ImageView
-                        android:id="@+id/img2"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/circle_splash"
-                        app:layout_constraintCircle="@+id/center_image"
-                        app:layout_constraintCircleAngle="60"
-                        app:layout_constraintCircleRadius="129dp" />
-
-                    <ImageView
-                        android:id="@+id/img3"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/circle_splash"
-                        app:layout_constraintCircle="@+id/center_image"
-                        app:layout_constraintCircleAngle="120"
-                        app:layout_constraintCircleRadius="129dp" />
-
-                    <ImageView
-                        android:id="@+id/img4"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/circle_splash"
-                        android:visibility="visible"
-                        app:layout_constraintCircle="@+id/center_image"
-                        app:layout_constraintCircleAngle="180"
-                        app:layout_constraintCircleRadius="129dp" />
-
-                    <ImageView
-                        android:id="@+id/img5"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/circle_splash"
-                        android:visibility="invisible"
-                        app:layout_constraintCircle="@+id/center_image"
-                        app:layout_constraintCircleAngle="240"
-                        app:layout_constraintCircleRadius="129dp" />
-
-                    <ImageView
-                        android:id="@+id/img6"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/circle_splash"
-                        android:visibility="invisible"
-                        app:layout_constraintCircle="@+id/center_image"
-                        app:layout_constraintCircleAngle="300"
-                        app:layout_constraintCircleRadius="129dp" />
-
-                    <ImageView
-                        android:id="@+id/img7"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/circle_splash"
-                        android:visibility="invisible"
-                        app:layout_constraintCircle="@+id/center_image"
-                        app:layout_constraintCircleAngle="360"
-                        app:layout_constraintCircleRadius="129dp" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </RelativeLayout>
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <!--home fragment and CommentFragment-->
+            <FrameLayout
+                android:id="@+id/home_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/heading"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:text="HEADING"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="48sp"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.474" />
-
-                <TextView
-                    android:id="@+id/sub_heading"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/opensans"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:text="OJASS 20"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.964" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/white"
-            >
-
-            <include
-                layout="@layout/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                />
-
-
-
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/pull_down"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="42dp"
-            android:background="@drawable/circle_splash"
-            android:padding="4dp"
-            android:src="@drawable/ic_keyboard_arrow_down_black_24dp"
-            android:visibility="gone" />
-
+                android:layout_height="match_parent" />
+        </RelativeLayout>
 
     </FrameLayout>
 
@@ -262,10 +165,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@android:color/white"
-        app:headerLayout="@layout/nav_header"
+        app:itemIconTint="@android:color/darker_gray"
         app:itemTextAppearance="@style/MontSerratTextStyle"
-        app:itemTextColor="@color/navigationDrawerText"
+        app:itemTextColor="@android:color/darker_gray"
         app:menu="@menu/navigation_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
-

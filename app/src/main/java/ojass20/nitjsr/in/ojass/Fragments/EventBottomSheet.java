@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
+
 import ojass20.nitjsr.in.ojass.Adapters.ViewPagerAdapter;
 import ojass20.nitjsr.in.ojass.R;
 
@@ -23,6 +24,8 @@ public class EventBottomSheet extends Fragment {
     BottomSheetBehavior bottomSheetBehavior;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    ViewPagerAdapter adapter;
+
     public static EventBottomSheet newInstance() {
         return new EventBottomSheet();
     }
@@ -31,22 +34,27 @@ public class EventBottomSheet extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.event_info_layout,container,false);
-        viewPager =  view.findViewById(R.id.viewpager);
+        View view = inflater.inflate(R.layout.event_info_layout, container, false);
+        viewPager = view.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
-        tabLayout =  view.findViewById(R.id.tabs);
+        tabLayout = view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        Log.e("this", "I'm lost");
         return view;
     }
 
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getFragmentManager());
+        Log.e("Hey", "i'm called");
+        adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new AboutFragment(), "About");
         adapter.addFragment(new DetailsFragment(), "Details");
         adapter.addFragment(new RulesFragment(), "Rules");
         adapter.addFragment(new CoordianatorFragment(), "Coordinator");
         adapter.addFragment(new PrizeFragment(), "Prize");
         viewPager.setAdapter(adapter);
+        adapter = null;
     }
+
+
 }

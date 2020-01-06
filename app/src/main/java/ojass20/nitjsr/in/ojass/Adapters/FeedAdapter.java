@@ -14,35 +14,29 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
-
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
-import ojass20.nitjsr.in.ojass.Activities.CommentsActivity;
+import ojass20.nitjsr.in.ojass.Activities.MainActivity;
+import ojass20.nitjsr.in.ojass.Fragments.CommentsFragment;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
-import ojass20.nitjsr.in.ojass.Models.Likes;
 import ojass20.nitjsr.in.ojass.R;
+import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHolder> {
 
@@ -51,14 +45,17 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
     private String mcurrentuid;
     private boolean is_already_liked=false;
     private String mpost_id="";
+    public CommentClickInterface clickInterface;
+    private FragmentManager manager;
 
     public static class CustomViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout feedLayout;
-        public TextView subevent_name,like_text,eventname,content;
+        public TextView subevent_name,like_text,eventname,content, time;
         public ImageView like_icon,postImage;
         public LinearLayout like_layout,comment_layout,share_layout;
         RelativeLayout postImageView;
         ProgressBar progressBar;
+
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
             feedLayout = (LinearLayout) itemView;
@@ -73,6 +70,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
             like_layout=itemView.findViewById(R.id.feed_post_upvote);
             comment_layout=itemView.findViewById(R.id.comments_post);
             share_layout=itemView.findViewById(R.id.feed_post_share);
+            time = itemView.findViewById(R.id.feed_post_time);
         }
     }
 
@@ -84,6 +82,20 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         return new CustomViewHolder(feedLayout);
     }
 
+    public FeedAdapter(Context context, FragmentManager manager, ArrayList<FeedPost> mfeedPosts, String currentuid) {
+        this.context = context;
+        this.feedPosts = mfeedPosts;
+        this.mcurrentuid = currentuid;
+        this.manager = manager;
+        clickInterface = (CommentClickInterface) context;
+        Log.e("VIVZ", "FeedAdapter: called COUNT = " + mfeedPosts.size());
+    }
+
+    @Override
+    public int getItemCount() {
+        return feedPosts.size();
+    }
+
     @Override
     public void onBindViewHolder(@NonNull final CustomViewHolder holder, final int position) {
         holder.eventname.setText(feedPosts.get(position).getEvent());
@@ -93,7 +105,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         holder.postImageView.setVisibility(View.VISIBLE);
         holder.progressBar.setVisibility(View.VISIBLE);
         Log.e("Hey", feedPosts.get(position).getImageURL());
-        if (feedPosts.get(position).getImageURL() == null) {
+        if (feedPosts.get(position).getImageURL() == null || feedPosts.get(position).getImageURL().equals("")) {
             holder.postImageView.setVisibility(View.GONE);
         } else {
             Glide.with(context)
@@ -122,6 +134,40 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
 
         Log.i( "onBindViewHolder: ",is_already_liked+"");
 
+        long post_time = Integer.parseInt(feedPosts.get(position).getTimestamp());
+        long curr_time = System.currentTimeMillis() / 1000;
+        long diff = curr_time - post_time;
+        String suffix, prefix;
+        if(diff < 5){
+            prefix = "just now";
+            suffix = "";
+        }
+        else if(diff < 60){
+            suffix = "s ago";
+            prefix = diff + "";
+        }
+        else if(diff < 3600){
+            suffix = "m ago";
+            prefix = diff / 60 + "";
+        }
+        else if(diff < 86400){
+            suffix = "hr ago";
+            prefix = diff / 3600 + "";
+        }
+        else if(diff < 2628003){
+            suffix = "d ago";
+            prefix = diff / 86400 + "";
+        }
+        else if(diff < 31536000){
+            suffix = "mo ago";
+            prefix = diff / 2628003 + "";
+        }
+        else{
+            suffix = "y ago";
+            prefix = diff / 31536000 + "";
+        }
+
+        holder.time.setText(prefix + suffix);
 
 
         final DatabaseReference dref= FirebaseDatabase.getInstance().getReference().child("Feeds");
@@ -129,9 +175,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         holder.comment_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context, CommentsActivity.class);
-                intent.putExtra("PostId",feedPosts.get(position).getPostid());
-                context.startActivity(intent);
+//                clickInterface.onCommentClick(v,feedPosts.get(position));
             }
         });
 
@@ -146,7 +190,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
                         feedPosts.get(position).getContent() );
                 sendIntent.setType("text/plain");
                 context.startActivity(Intent.createChooser(sendIntent,"Share this article via:"));
-                
+
             }
         });
 
@@ -175,16 +219,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         });
 
     }
-
-    @Override
-    public int getItemCount() {
-        return feedPosts.size();
-    }
-
-    public FeedAdapter(Context context, ArrayList<FeedPost> mfeedPosts,String currentuid) {
-        this.context = context;
-        this.feedPosts = mfeedPosts;
-        this.mcurrentuid=currentuid;
-        Log.e("VIVZ", "FeedAdapter: called COUNT = " + mfeedPosts.size());
+    public interface CommentClickInterface{
+        void onCommentClick();
     }
 }

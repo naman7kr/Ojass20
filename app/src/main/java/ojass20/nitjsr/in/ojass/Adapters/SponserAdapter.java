@@ -59,7 +59,7 @@ public class SponserAdapter extends RecyclerView.Adapter<SponserAdapter.ViewHold
             super(itemView);
             sponser_pic=itemView.findViewById(R.id.single_sponser_image);
             sponser_name=itemView.findViewById(R.id.single_sponser_name);
-            frameLayout=itemView.findViewById(R.id.sponserlayout);
+
         }
     }
 }

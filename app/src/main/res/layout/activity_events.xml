@@ -1,22 +1,26 @@
-<RelativeLayout android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#93390f"
-    >
+    android:background="@color/white">
 
 
-    <ojass20.nitjsr.in.ojass.Utils.ZoomLayout
-        android:paddingTop="66dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/events_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/events_grid"
         android:focusable="true"
+        android:paddingTop="66dp"
 
-        >
-    </ojass20.nitjsr.in.ojass.Utils.ZoomLayout>
+        ></androidx.recyclerview.widget.RecyclerView>
+
     <include
-        layout="@layout/toolbar"
         android:id="@+id/events_toolbar"
-        android:background="@color/transparent"
-        />
+        layout="@layout/event_toolbar"
+        android:background="@color/transparent" />
+
+    <FrameLayout
+        android:id="@+id/fragment_layout_for_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="58dp" />
 </RelativeLayout>
