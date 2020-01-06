@@ -1,5 +1,7 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
+import android.animation.ValueAnimator;
+import android.app.ProgressDialog;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +18,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -63,15 +66,18 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
-import jp.wasabeef.blurry.Blurry;
 import me.relex.circleindicator.CircleIndicator;
 import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
 import ojass20.nitjsr.in.ojass.Adapters.PosterAdapter;
 import ojass20.nitjsr.in.ojass.Fragments.CommentsFragment;
 import ojass20.nitjsr.in.ojass.Fragments.HomeFragment;
 import ojass20.nitjsr.in.ojass.Models.Comments;
+import ojass20.nitjsr.in.ojass.Models.CoordinatorsModel;
+import ojass20.nitjsr.in.ojass.Models.EventModel;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.Models.Likes;
+import ojass20.nitjsr.in.ojass.Models.RulesModel;
+import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
 import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
 import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
@@ -80,6 +86,7 @@ import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_IMG_SRC;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_POSTERIMAGES;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragInterface, ViewPager.OnPageChangeListener, FeedAdapter.CommentClickInterface {
+    private static final String LOG_TAG = "Main";
     private DrawerLayout mDrawer;
     private Toolbar mToolbar;
     private NavigationView mNavigationDrawer;
@@ -107,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
     private String currentuid;
     private OjassApplication ojassApplication;
+    public ProgressDialog progressDialog;
+    public static ArrayList<EventModel> data;
     private FrameLayout homeContainer;
     private ViewPager viewPager;
     private CircleIndicator indicator;
@@ -409,6 +418,70 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             }
         });
 
+        initializeInstanceVariables();
+        setUpNavigationDrawer();
+        //setUpRecyclerView();
+
+//        setUpArrayList();
+        setUpNavigationDrawer();
+        setUpAnimationForImageView(mPullUp);
+        detectTouchEvents();
+        setUpEventData();
+
+    }
+
+    private void setUpEventData() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Events");
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Initialising App data...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        data = new ArrayList<>();
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                data.clear();
+                progressDialog.dismiss();
+                try {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        String about = ds.child("about").getValue(String.class);
+                        String branch = ds.child("branch").getValue(String.class);
+                        String details = ds.child("detail").getValue(String.class);
+                        String name = ds.child("name").getValue(String.class);
+                        Long prize1 = ds.child("prize").child("first").getValue(Long.class);
+                        Long prize2 = ds.child("prize").child("second").getValue(Long.class);
+                        Long prize3 = ds.child("prize").child("third").getValue(Long.class);
+                        Long prizeT = ds.child("prize").child("total").getValue(Long.class);
+                        ArrayList<CoordinatorsModel> coordinatorsModelArrayList = new ArrayList<>();
+                        coordinatorsModelArrayList.clear();
+
+                        ArrayList<RulesModel> rulesModelArrayList = new ArrayList<>();
+                        rulesModelArrayList.clear();
+
+                        for (DataSnapshot d : ds.child("coordinators").getChildren()) {
+                            CoordinatorsModel coordinatorsModel = d.getValue(CoordinatorsModel.class);
+                            coordinatorsModelArrayList.add(coordinatorsModel);
+                        }
+
+                        for (DataSnapshot d : ds.child("rules").getChildren()) {
+                            RulesModel rulesModel = d.getValue(RulesModel.class);
+                            rulesModelArrayList.add(rulesModel);
+                        }
+                        data.add(new EventModel(about, branch, details, name, prize1, prize2, prize3, prizeT, coordinatorsModelArrayList, rulesModelArrayList));
+                    }
+                } catch (Exception e) {
+                    if (progressDialog.isShowing()) progressDialog.dismiss();
+                    //Toast.makeText(MainActivity.this, "Something went wrong in Events!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                if (progressDialog.isShowing()) progressDialog.dismiss();
+            }
+        });
     }
 
     private void setUpRecyclerView() {
@@ -692,25 +765,55 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    @SuppressLint("WrongConstant")
-    @Override
-    public void onBackPressed() {
-        if (isFragOpen) {
-            closeFragment();
-            return;
-        }
-        backHandler = new Handler();
-
-        if (backFlag == 1) {
-            finish();
-        }
-        backFlag = 1;
-        Toast.makeText(ojassApplication, R.string.backPress, 3000).show();
-        backHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                backFlag = 0;
-            }
-        }, 3000);
-    }
+//    @SuppressLint("WrongConstant")
+//    @Override
+//
+//    public boolean onDown(MotionEvent e) {
+//        return false;
+//    }
+//
+//    @Override
+//    public void onShowPress(MotionEvent e) {
+//
+//    }
+//
+//    @Override
+//    public boolean onSingleTapUp(MotionEvent e) {
+////        switch (mInd) {
+////            case 0:
+////                startActivity(new Intent(MainActivity.this, EventsActivity.class));
+////                break;
+////            case 1:
+////                startActivity(new Intent(MainActivity.this, GurugyanActivity.class));
+////                break;
+////            case 2:
+////                startActivity(new Intent(this, ItineraryActivity.class));
+////                break;
+////            case 3:
+////                startActivity(new Intent(MainActivity.this, MapsActivity.class));
+////                break;
+////            default:
+////                Log.e(LOG_TAG, "Bhai sahab ye kis line mein aa gye aap?");
+////                public void onBackPressed () {
+////                if (isFragOpen) {
+////                    closeFragment();
+////                    return true;
+////                }
+////                backHandler = new Handler();
+////
+////                if (backFlag == 1) {
+////                    finish();
+////                }
+////                backFlag = 1;
+////                Toast.makeText(ojassApplication, R.string.backPress, 3000).show();
+////                backHandler.postDelayed(new Runnable() {
+////                    @Override
+////                    public void run() {
+////                        backFlag = 0;
+////                    }
+////                }, 3000);
+////            }
+////        }
+//        return true;
+//    }
 }
