@@ -538,6 +538,16 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             Glide.with(this).load(mauth.getCurrentUser().getPhotoUrl()).into(profile_picture);
         }
 
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            }
+        };
+
+        profile_name.setOnClickListener(onClickListener);
+        profile_picture.setOnClickListener(onClickListener);
+
         mDrwawerHeaderView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
 
 
