@@ -28,7 +28,8 @@ public class ProfileActivity extends AppCompatActivity {
     private LinearLayout mEventsInterested, mMyEvents, mMerchandise, mQR, mDevelopers;
     private static final String LOG_TAG = "Profile";
     private RelativeLayout mDetailsLayout;
-    ArrayList<ValueAnimator> mAnimators;
+    private ArrayList<ValueAnimator> mAnimators;
+    private ArrayList<Integer> mAngles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +37,12 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         initializeInstanceVariables();
-        animate();
-
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                animate();
+            }
+        }, 100);
     }
 
     private void initializeInstanceVariables() {
@@ -48,27 +53,32 @@ public class ProfileActivity extends AppCompatActivity {
         mDevelopers = findViewById(R.id.dev);
         mDetailsLayout = findViewById(R.id.details);
         mAnimators = new ArrayList<>();
+        mAngles = new ArrayList<>();
     }
 
     private void animate() {
-        mAnimators.add(animateView(mEventsInterested, 1000));
-        mAnimators.add(animateView(mMyEvents, 1000));
-        mAnimators.add(animateView(mMerchandise, 1000));
-        mAnimators.add(animateView(mQR, 1000));
-        mAnimators.add(animateView(mDevelopers, 1000));
+        mAngles.add(33);
+        mAngles.add(65);
+        mAngles.add(89);
+        mAngles.add(118);
+        mAngles.add(145);
 
-        for (int i = 0; i < mAnimators.size(); i++)
-            mAnimators.get(i).start();
+        mAnimators.add(animateView(mEventsInterested, 1000, 0));
+        mAnimators.add(animateView(mMyEvents, 1000, 1));
+        mAnimators.add(animateView(mMerchandise, 1000, 2));
+        mAnimators.add(animateView(mQR, 1000, 3));
+        mAnimators.add(animateView(mDevelopers, 1000, 4));
+
+        recursiveAnimate(0);
 
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         mDetailsLayout.startAnimation(animation);
         animation.setFillAfter(true);
     }
 
-    private ValueAnimator animateView(final LinearLayout linearLayout, long duration) {
+    private ValueAnimator animateView(final LinearLayout linearLayout, long duration, int index) {
         ConstraintLayout.LayoutParams lP = (ConstraintLayout.LayoutParams) linearLayout.getLayoutParams();
-        int angle = (int) lP.circleAngle;
-        ValueAnimator anim = ValueAnimator.ofInt(210, angle);
+        ValueAnimator anim = ValueAnimator.ofInt(210, mAngles.get(index));
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -81,5 +91,17 @@ public class ProfileActivity extends AppCompatActivity {
         anim.setDuration(duration);
         anim.setInterpolator(new AccelerateDecelerateInterpolator());
         return anim;
+    }
+
+    private void recursiveAnimate(final int index) {
+        if (index >= mAnimators.size())
+            return;
+        mAnimators.get(index).start();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                recursiveAnimate(index + 1);
+            }
+        }, 200);
     }
 }

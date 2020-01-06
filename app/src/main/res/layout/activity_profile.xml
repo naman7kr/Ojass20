@@ -140,7 +140,7 @@
                 android:hapticFeedbackEnabled="true"
                 android:orientation="vertical"
                 app:layout_constraintCircle="@+id/center_image"
-                app:layout_constraintCircleAngle="33"
+                app:layout_constraintCircleAngle="210"
                 app:layout_constraintCircleRadius="240dp">
 
                 <ImageView
@@ -173,7 +173,7 @@
                 android:hapticFeedbackEnabled="true"
                 android:orientation="vertical"
                 app:layout_constraintCircle="@+id/center_image"
-                app:layout_constraintCircleAngle="65"
+                app:layout_constraintCircleAngle="210"
                 app:layout_constraintCircleRadius="240dp">
 
                 <ImageView
@@ -206,7 +206,7 @@
                 android:hapticFeedbackEnabled="true"
                 android:orientation="vertical"
                 app:layout_constraintCircle="@+id/center_image"
-                app:layout_constraintCircleAngle="89"
+                app:layout_constraintCircleAngle="210"
                 app:layout_constraintCircleRadius="240dp">
 
                 <ImageView
@@ -239,7 +239,7 @@
                 android:hapticFeedbackEnabled="true"
                 android:orientation="vertical"
                 app:layout_constraintCircle="@+id/center_image"
-                app:layout_constraintCircleAngle="118"
+                app:layout_constraintCircleAngle="210"
                 app:layout_constraintCircleRadius="240dp">
 
                 <ImageView
@@ -272,7 +272,7 @@
                 android:hapticFeedbackEnabled="true"
                 android:orientation="vertical"
                 app:layout_constraintCircle="@+id/center_image"
-                app:layout_constraintCircleAngle="145"
+                app:layout_constraintCircleAngle="210"
                 app:layout_constraintCircleRadius="240dp">
 
                 <ImageView
