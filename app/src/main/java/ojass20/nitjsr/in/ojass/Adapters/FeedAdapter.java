@@ -48,6 +48,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
     public CommentClickInterface clickInterface;
     private FragmentManager manager;
 
+    private MainActivity mainActivity;
+
     public static class CustomViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout feedLayout;
         public TextView subevent_name,like_text,eventname,content, time;
@@ -82,11 +84,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         return new CustomViewHolder(feedLayout);
     }
 
-    public FeedAdapter(Context context, FragmentManager manager, ArrayList<FeedPost> mfeedPosts, String currentuid) {
+    public FeedAdapter(Context context, FragmentManager manager, ArrayList<FeedPost> mfeedPosts, String currentuid, MainActivity mainActivity) {
         this.context = context;
         this.feedPosts = mfeedPosts;
         this.mcurrentuid = currentuid;
         this.manager = manager;
+        this.mainActivity = mainActivity;
         clickInterface = (CommentClickInterface) context;
         Log.e("VIVZ", "FeedAdapter: called COUNT = " + mfeedPosts.size());
     }
@@ -175,7 +178,14 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         holder.comment_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                clickInterface.onCommentClick(v,feedPosts.get(position));
+
+                mainActivity.setIsCommentsFragmentOpen();
+                CommentsFragment fragment = new CommentsFragment(context, manager,
+                        feedPosts.get(position).getPostid(), mainActivity);
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_bottom,R.anim.no_anim);
+                transaction.add(R.id.home_container,fragment);
+                transaction.commit();
             }
         });
 

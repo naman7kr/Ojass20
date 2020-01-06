@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private FeedAdapter mFeedAdapter;
     private PosterAdapter mPosterAdapter;
     private LinearLayoutManager mLinearLayoutManager;
+    private Boolean isCommentsFragmentOpen;
 
     private DatabaseReference dref;
     private FirebaseAuth mauth;
@@ -170,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         builder = new AlertDialog.Builder(this);
         ojassApplication = OjassApplication.getInstance();
         listposts = new ArrayList<>();
+        isCommentsFragmentOpen = false;
 
         mauth = FirebaseAuth.getInstance();
         currentuid = mauth.getCurrentUser().getUid();
@@ -235,6 +237,14 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             }
         });
 
+    }
+    
+    public void setIsCommentsFragmentOpen(){
+        isCommentsFragmentOpen = true;
+    }
+    
+    public void unsetIsCommentsFragmentOpen(){
+        isCommentsFragmentOpen = false;
     }
 
     public void setSlider() {
@@ -418,7 +428,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        mFeedAdapter = new FeedAdapter(this, getSupportFragmentManager(), listposts, currentuid);
+        mFeedAdapter = new FeedAdapter(this, getSupportFragmentManager(), listposts, currentuid, this);
         mRecyclerView.setAdapter(mFeedAdapter);
         recyclerview_progress.setVisibility(View.GONE);
 
@@ -503,6 +513,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         transaction.setCustomAnimations(R.anim.no_anim, R.anim.slide_out_bottom);
         transaction.remove(f).commit();
         isFragOpen = false;
+        isCommentsFragmentOpen = false;
     }
 
     private void setUpAnimationForImageView(ImageView mImageView) {
@@ -707,7 +718,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     @SuppressLint("WrongConstant")
     @Override
     public void onBackPressed() {
-        if (isFragOpen) {
+        Log.d("hoe-hoe-hoe", ""+isCommentsFragmentOpen);
+        if (isFragOpen || isCommentsFragmentOpen) {
             closeFragment();
             return;
         }
