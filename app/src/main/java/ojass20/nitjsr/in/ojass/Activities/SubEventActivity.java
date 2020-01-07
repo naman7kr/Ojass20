@@ -105,6 +105,7 @@ public class SubEventActivity extends AppCompatActivity {
 
 
         mFab.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
                 if (isOpen) {
