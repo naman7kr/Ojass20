@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,6 +32,8 @@ public class ProfileActivity extends AppCompatActivity {
     private RelativeLayout mDetailsLayout;
     private ArrayList<ValueAnimator> mAnimators;
     private ArrayList<Integer> mAngles;
+    private ArrayList<ImageView> mImageViews;
+    private ImageView mBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,14 @@ public class ProfileActivity extends AppCompatActivity {
                 animate();
             }
         }, 100);
+
+        mBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+                finish();
+            }
+        });
     }
 
     private void initializeInstanceVariables() {
@@ -54,6 +66,8 @@ public class ProfileActivity extends AppCompatActivity {
         mDetailsLayout = findViewById(R.id.details);
         mAnimators = new ArrayList<>();
         mAngles = new ArrayList<>();
+        mImageViews = new ArrayList<>();
+        mBack = findViewById(R.id.back_arrow);
     }
 
     private void animate() {
@@ -70,6 +84,18 @@ public class ProfileActivity extends AppCompatActivity {
         mAnimators.add(animateView(mDevelopers, 1000, 4));
 
         recursiveAnimate(0);
+
+        mImageViews.add((ImageView) findViewById(R.id.events_iv));
+        mImageViews.add((ImageView) findViewById(R.id.merch_iv));
+        mImageViews.add((ImageView) findViewById(R.id.qr_iv));
+        mImageViews.add((ImageView) findViewById(R.id.comp_iv));
+        mImageViews.add((ImageView) findViewById(R.id.dev_iv));
+
+        TranslateAnimation tr = new TranslateAnimation(0.0f, 0.0f, 0, 30);
+        tr.setDuration(100);
+
+        for (int i = 0; i < mImageViews.size(); i++)
+            mImageViews.get(i).startAnimation(tr);
 
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         mDetailsLayout.startAnimation(animation);
