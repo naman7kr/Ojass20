@@ -24,48 +24,50 @@ public class Constants {
             R.mipmap.nscet,
             R.mipmap.csgolive,
             R.mipmap.exposicion,
+            R.mipmap.school_events,
             R.mipmap.school_events
     };
     public static final String eventNames[] = new String[]{
             "Rise of Machines",
-            "Vishwa CodeGenesis",
+            "Vishwa Code Genesis",
             "Circuit House",
             "Silicon Valley",
-            "ArthaShastra",
+            "Arthashastra",
             "Aakriti",
             "Deus-X-Machina",
             "Produs",
             "Paraphernalia",
-            "NeoDrishti",
-            "Avartan",
+            "Neo Drishti",
+            "Aavartan",
             "Armageddon",
             "Prayas",
             "No Ground Zone",
             "NSCET",
-            "LiveCS",
+            "Live CS",
             "Exposicion",
-            "School Events"
+            "School Events",
+            "Checkered Flag"
     };
     public static final String[][] SubEventsList = new String[][]{
-            {"GURUTWA", "iANSYST", "Auto Quiz", "BOX-CIPHER", "CORPORATE BYTES","Junk Yard Wars"},
-            {"Codemania", "Hack-De-Science", "Code-o-Soccer", "Comp Geeks", "Sudo-Code", "Imitation Games"},
-            {"High Voltage Concepts", "Elixir of Electricity", "ELECTROSPECTION", "Electro Scribble", "MAT-SIM", "Electro-Q", "Pro-Lo-Co"},
-            {"TUKVILLA", "Jigyasa", "CODESENSE", "ANALOG HUNTER", "DIGIZONE", "NETKRAFT", "EMBETRIX"},
-            {"Toddler to Tycoon", "Prabandh Yojana", "Let's StartUp", "Bizzathlon", "Wolf of Dalal Street", "Teenpreneur", "Corporate Roadies"},
-            {"Acumen", "Sanrachna", "Archmadeease", "Exempler", "Pipe-o-Mania", "Metropolis"},
-            {"360 Mania", "Tachyon", "Battleship", "Kurukshetra", "MAC FIFA", "Shapeshifter"},
-            {"Industrial Tycoon","DronaGyan" ,"Utpreaks", "Crack the Case", "M&I Quiz"},
-            {"Light, Camera, Ojass !", "Sci-Fi", "Mad-Ad", "Lens View", "Director's Cut"},
-            {"Codiyapa", "Game of Troves", "Scratch Easy", "SimplySql", "Tame the pyhton"},
+            {"Mech-Trivia","GURUTWA", "iANSYST", "BOX-CIPHER", "CORPORATE BYTES","Junkyard Wars","Prakshepan"},
+            {"Codemania", "Hack-De-Science", "Code-o-Soccer", "Comp Geeks", "Sudo-Code", "Imitation Game"},
+            {"High Voltage Concepts", "Elixir of Electricity", "ELECTROSPECTION", "Electro Scribble", "MAT-SIM", "Electro-Q","Who Am I?"},
+            {"TUKVILLA", "Jigyasa", "CODESENSE", "NETKRAFT", "EMBETRIX","Electonics Frenzy","Tech Today"},
+            {"Toddler to Tycoon(TTT)", "Prabandh Yojana", "Let's Start Up", "Bizzathlon", "Corporate Roadies"},
+            {"Acumen", "Sanrachna", "Exempler", "Pipe-o-Mania", "Metropolis","DEXTEROUS"},
+            {"360 Mania", "Tachyon", "Battleship", "Kurukshetra", "MAC FIFA", "Shapeshifter","BOT-A MAZE","Hurdles Hunter"},
+            {"Industrial Tycoon","DronaGyan" ,"Utpreksh", "Crack the Case", "M&I Quiz","DronGyan"},
+            {"Light, Camera, Ojass!", "Mad-Ad", "Lens View","Film Chaupaal","Jumbo Films"},
+            {"Codiyapa", "Game of Troves", "Tame the Python","Code Relay","Capture the Flag"},
             {"Spectra", "Agnikund", "Metal Trivia", "Innovision", "Knock out"},
-            {"FIFA 18", "" +
-                    "Counter Strike- Global Offensive", "NFS Most Wanted", "LUDO King", "PUBG"},
-            {"Jagriti", "Samvedna", "Pratibimb"},
+            {"FIFA 18", "Counter Strike- Global Offensive", "NFS Most Wanted", "LUDO King", "PUBG Mobile","POKEMON GO"},
+            {"Pratibimb","PARAKRAM"},
             {"Touch Down the plane", "MICAV"},
             {"NSCET"},
             {"LiveCS"},
             {"Exposicion"},
-            {"Teenpreneur", "TechArt", "ScrapStar"}
+            {"Teenpreneur","The Wiz Craft"},
+            {"DISASSEMBLE","SOLIDWORKS","GO ELECTRIC"}
 
     };
     public static final String FIREBASE_REF_NOTIF = "Notifications";
