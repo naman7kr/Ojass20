@@ -46,6 +46,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import ojass20.nitjsr.in.ojass.Adapters.SubEventsAdapter;
 import ojass20.nitjsr.in.ojass.Fragments.EventBottomSheet;
+import ojass20.nitjsr.in.ojass.Models.BranchHeadModal;
 import ojass20.nitjsr.in.ojass.Models.SubEventsModel;
 import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.Constants;
@@ -70,6 +71,7 @@ public class SubEventActivity extends AppCompatActivity {
     private ArrayList<ImageView> mProfile;
     private ArrayList<ImageView> mWhatsapp;
     private ArrayList<ImageView> mCall;
+    private ArrayList<TextView> mName;
     private TextView mAbout, mHeading;
     private View mDivider1, mDivider2;
 
@@ -139,19 +141,19 @@ public class SubEventActivity extends AppCompatActivity {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(SubEventActivity.this, R.style.CustomAlertDialog);
                 ViewGroup viewGroup = findViewById(android.R.id.content);
                 View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_layout, viewGroup, false);
+                ArrayList<BranchHeadModal> bhNames = MainActivity.branchData.get(Constants.eventNames[mainEventPosition]).getBranchHead();
                 dialogView.setMinimumWidth((int) (displayRectangle.width() / 1.5f * 1f));
-                dialogView.setMinimumHeight((int) (displayRectangle.height() / 1.2f * 1f));
+                dialogView.setMinimumHeight((int) (displayRectangle.height() / 5f * 1f));
                 builder.setView(dialogView);
                 final AlertDialog alertDialog = builder.create();
                 mLL = new ArrayList<>();
                 mProfile = new ArrayList<>();
                 mCall = new ArrayList<>();
                 mWhatsapp = new ArrayList<>();
+                mName = new ArrayList<>();
                 mHeading = dialogView.findViewById(R.id.heading);
                 String s = "Event Heads";
                 mHeading.setText(s);
-
-                Log.e("this", "" + MainActivity.branchData.size());
 
                 mLL.add((LinearLayout) dialogView.findViewById(R.id.one));
                 mLL.add((LinearLayout) dialogView.findViewById(R.id.two));
@@ -165,16 +167,34 @@ public class SubEventActivity extends AppCompatActivity {
                 mWhatsapp.add((ImageView) dialogView.findViewById(R.id.whatsapp2));
                 mWhatsapp.add((ImageView) dialogView.findViewById(R.id.whatsapp3));
 
+                mName.add((TextView) dialogView.findViewById(R.id.name1));
+                mName.add((TextView) dialogView.findViewById(R.id.name2));
+                mName.add((TextView) dialogView.findViewById(R.id.name3));
+
                 mCall.add((ImageView) dialogView.findViewById(R.id.call1));
                 mCall.add((ImageView) dialogView.findViewById(R.id.call2));
                 mCall.add((ImageView) dialogView.findViewById(R.id.call3));
 
                 mDivider1 = dialogView.findViewById(R.id.divider1);
                 mDivider2 = dialogView.findViewById(R.id.divider2);
-
-                mLL.get(0).setVisibility(View.VISIBLE);
-                mLL.get(1).setVisibility(View.VISIBLE);
-                mDivider1.setVisibility(View.VISIBLE);
+                if (bhNames.size() == 1) {
+                    mLL.get(0).setVisibility(View.VISIBLE);
+                    mName.get(0).setText(bhNames.get(0).getName());
+                } else if (bhNames.size() == 2) {
+                    mLL.get(0).setVisibility(View.VISIBLE);
+                    mLL.get(1).setVisibility(View.VISIBLE);
+                    mName.get(0).setText(bhNames.get(0).getName());
+                    mName.get(1).setText(bhNames.get(1).getName());
+                    mDivider1.setVisibility(View.VISIBLE);
+                } else {
+                    mLL.get(0).setVisibility(View.VISIBLE);
+                    mLL.get(1).setVisibility(View.VISIBLE);
+                    mLL.get(2).setVisibility(View.VISIBLE);
+                    mDivider2.setVisibility(View.VISIBLE);
+                    mName.get(0).setText(bhNames.get(0).getName());
+                    mName.get(1).setText(bhNames.get(1).getName());
+                    mName.get(2).setText(bhNames.get(2).getName());
+                }
                 alertDialog.show();
             }
         });
@@ -299,16 +319,16 @@ public class SubEventActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    public void getPostion(int pos){
-        for(int i=0;i<MainActivity.data.size();i++){
+
+    public void getPostion(int pos) {
+        for (int i = 0; i < MainActivity.data.size(); i++) {
             String event = Constants.SubEventsList[mainEventPosition][pos].trim();
-            try{
-                if(event.equalsIgnoreCase(MainActivity.data.get(i).getName().trim())){
+            try {
+                if (event.equalsIgnoreCase(MainActivity.data.get(i).getName().trim())) {
                     position = i;
                     break;
                 }
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 Toast.makeText(this, MainActivity.data.get(i).getBranch(), Toast.LENGTH_SHORT).show();
             }
 
