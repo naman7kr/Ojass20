@@ -729,9 +729,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
                 break;
-            case R.id.navemergency:
-                showList();
-                break;
         }
 
         try {
@@ -762,6 +759,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             case R.id.notifications:
                 startActivity(new Intent(this, NotificationActivity.class));
                 return true;
+            case R.id.emergency:
+                showList();
+                return true;
             /**       case R.id.profile:
              startActivity(new Intent(this, ProfileActivity.class));
              return true;
@@ -780,12 +780,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         emer.add("Police");
         emer.add("Fire");
         emer.add("Ambulance");
-        emer.add("Gas Leakage");
-        emer.add("Tourist-Helpline");
-        emer.add("Child-Helpline");
-        emer.add("Blood-Requirement");
+        //emer.add("Gas Leakage");
+        //emer.add("Tourist-Helpline");
+        //emer.add("Child-Helpline");
+        //emer.add("Blood-Requirement");
         emer.add("Women-Helpline");
-        emer.add("Ambulance Network (Emergency or Non-Emergency)");
+        //emer.add("Ambulance Network (Emergency or Non-Emergency)");
 
 
         final ArrayList<String> num = new ArrayList<>();
@@ -794,12 +794,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         num.add("100");
         num.add("102");
         num.add("108");
-        num.add("1906");
-        num.add("1363");
-        num.add("1098");
-        num.add("104");
+        //num.add("1906");
+        //num.add("1363");
+        //num.add("1098");
+        //num.add("104");
         num.add("181");
-        num.add("09343180000");
+        //num.add("09343180000");
 
 
         builder.setTitle("Emergency Numbers");
