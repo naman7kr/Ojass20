@@ -710,6 +710,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             case R.id.sponsor:
                 startActivity(new Intent(MainActivity.this, SponsorActivity.class));
                 break;
+            case R.id.faqs:
+                startActivity(new Intent(MainActivity.this, FaqActivity.class));
+                break;
             case R.id.help:
                 startActivity(new Intent(MainActivity.this, Help.class));
                 break;
