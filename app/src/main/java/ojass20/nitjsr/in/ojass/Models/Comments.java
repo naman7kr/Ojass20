@@ -1,50 +1,60 @@
 package ojass20.nitjsr.in.ojass.Models;
 
 public class Comments {
-    public String sender;
+    public String senderId;
     public String message;
     public String time;
-    public String sender_image_url;
+    public String senderImageUrl;
+    public String senderUserName;
 
     public Comments(){
 
     }
-    public Comments(String sender, String message,String time,String sender_pic_url) {
-        this.sender = sender;
+    public Comments(String senderId, String message,String time,String senderUserName, String senderImageUrl) {
+        this.senderId = senderId;
         this.message = message;
         this.time=time;
-        this.sender_image_url=sender_pic_url;
+        this.senderImageUrl=senderImageUrl;
+        this.senderUserName=senderUserName;
     }
 
-    public void setSender_image_url(String sender_image_url) {
-        this.sender_image_url = sender_image_url;
-    }
-
-    public String getSender_image_url() {
-        return sender_image_url;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
     }
 
     public void setMessage(String message) {
         this.message = message;
     }
 
-    public String getSender() {
-        return sender;
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public void setSenderImageUrl(String senderImageUrl) {
+        this.senderImageUrl = senderImageUrl;
+    }
+
+    public void setSenderUserName(String senderUserName) {
+        this.senderUserName = senderUserName;
+    }
+
+    public String getSenderId() {
+        return senderId;
     }
 
     public String getMessage() {
         return message;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public String getSenderImageUrl() {
+        return senderImageUrl;
+    }
+
+    public String getSenderUserName() {
+        return senderUserName;
     }
 }

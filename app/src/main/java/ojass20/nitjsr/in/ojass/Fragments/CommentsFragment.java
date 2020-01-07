@@ -1,7 +1,9 @@
 package ojass20.nitjsr.in.ojass.Fragments;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -19,6 +22,11 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,6 +68,7 @@ public class CommentsFragment extends Fragment {
     private FirebaseAuth mauth;
     private String current_user_id;
     private String current_post_id;
+    private boolean flag=false;
 
     private MainActivity mainActivity;
 
@@ -85,9 +94,26 @@ public class CommentsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_comments, container, false);
         initialize(view);
 
-        comment_list = new ArrayList<>();
 
         mauth = FirebaseAuth.getInstance();
+        Glide.with(this)
+                .load(mauth.getCurrentUser().getPhotoUrl().toString())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        self_dp.setImageResource(R.drawable.ic_mood_black_24dp);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                })
+                .into(self_dp);
+
+        comment_list = new ArrayList<>();
+
         dref = FirebaseDatabase.getInstance().getReference().child("Feeds").child(current_post_id).child("comments");
         current_user_id = mauth.getCurrentUser().getDisplayName();
 
@@ -96,14 +122,19 @@ public class CommentsFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 comment_list.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String msender = ds.child("sender").getValue().toString();
+                    String msenderid = ds.child("senderId").getValue().toString();
+                    String msendername = ds.child("senderUserName").getValue().toString();
+                    String msenderurl = ds.child("senderImageUrl").getValue().toString();
+
                     String mmessage = ds.child("message").getValue().toString();
                     String mtime = findTimeDifference(ds.child("time").getValue().toString());
-                    String m_image_url = "";
+                    //findImageUrl(msenderid,mmessage,mtime,msendername, msenderurl);
 
-                    Comments mcomment = new Comments(msender, mmessage, mtime, m_image_url);
+                    Comments mcomment = new Comments(msenderid, mmessage, mtime,msendername, msenderurl);
                     comment_list.add(mcomment);
+
                 }
+                flag=true;
                 setuprecyclerview();
             }
 
@@ -123,6 +154,36 @@ public class CommentsFragment extends Fragment {
         //onBackPress(container);
         return view;
     }
+
+//    private void findImageUrl(final String msenderid, final String mmsg, final String mtime, final String msendername, final String msenderurl) {
+//
+//        DatabaseReference mref = FirebaseDatabase.getInstance().getReference("Users");
+//        mref.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for(DataSnapshot ds : dataSnapshot.getChildren()){
+//                    Log.e("1 onDataChange: ",msenderid);
+//                    Log.e("2onDataChange: ",ds.getKey());
+//                    if(ds.getKey().equals(msenderid)) {
+//                        Log.e("3 onDataChange: ","level23");
+//                        String ans = ds.child("photoUrl").getValue().toString();
+//                        Comments mcomment = new Comments(msenderid, mmsg, mtime,ans);
+//                        comment_list.add(mcomment);
+//                        if(flag) {
+//                            setuprecyclerview();
+//                        }
+//                        Log.e("4 onDataChange: "," count of comments "+comment_list.size());
+//                        break;
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 
     private void onBackPress(View container) {
         container.setOnKeyListener(new View.OnKeyListener() {
@@ -184,13 +245,15 @@ public class CommentsFragment extends Fragment {
     private void sendComment() {
         if (validate()) {
             HashMap<String, Object> hs = new HashMap<>();
-            hs.put("sender", current_user_id);
+            hs.put("senderId", mauth.getCurrentUser().getUid());
             hs.put("message", self_comment_text.getText().toString().trim());
 
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss aa", Locale.getDefault());
             String currentDateandTime = sdf.format(new Date());
 
             hs.put("time", currentDateandTime);
+            hs.put("senderImageUrl", mauth.getCurrentUser().getPhotoUrl().toString());
+            hs.put("senderUserName", mauth.getCurrentUser().getDisplayName());
 
             String push_id = dref.push().getKey().toString();
             dref.child(push_id).setValue(hs).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -271,25 +334,25 @@ public class CommentsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull final comments_adapter.myviewholder holder, int position) {
-            holder.username.setText(mdatalist.get(position).getSender());
+            holder.username.setText(mdatalist.get(position).getSenderUserName());
             holder.time.setText(mdatalist.get(position).getTime());
             holder.content.setText(mdatalist.get(position).getMessage());
 
-//            Glide.with(context)
-//                    .load(mdatalist.get(position).getSender_image_url())
-//                    .listener(new RequestListener<Drawable>() {
-//                        @Override
-//                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//                            holder.sender_pic.setImageResource(R.drawable.ic_mood_black_24dp);
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-//                            return false;
-//                        }
-//                    })
-//                    .into(holder.sender_pic);
+            Glide.with(context)
+                    .load(mdatalist.get(position).getSenderImageUrl())
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            holder.sender_pic.setImageResource(R.drawable.ic_mood_black_24dp);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            return false;
+                        }
+                    })
+                    .into(holder.sender_pic);
 
         }
 
