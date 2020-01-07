@@ -2,13 +2,7 @@
     <string name="app_name">Ojass</string>
     <string name="feeds">Feeds</string>
     <string name="comments">Comments</string>
-    <string name="events">EVENTS</string>
-    <string name="itinerary">ITINERARY</string>
-    <string name="help"><![CDATA[HELP & SUPPORT]]></string>
-    <string name="team">THE TEAM</string>
-    <string name="developers">DEVELOPERS</string>
     <string name="faqs">FAQs</string>
-    <string name="logout">LOG OUT</string>
     <string name="events">Events</string>
     <string name="itinerary">Itinerary</string>
     <string name="help"><![CDATA[Help & Support]]></string>
@@ -84,6 +78,5 @@
         <item>Prayas</item>
         <item>LiveCS</item>
     </string-array>
-
 
 </resources>
