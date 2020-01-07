@@ -88,7 +88,6 @@ public class SubEventActivity extends AppCompatActivity {
             public void onLayoutClick(View v, int position) {
                 showBottomSheet();
                 bottomSheetOpen = true;
-
                 getPostion(position);
             }
         };
@@ -134,8 +133,8 @@ public class SubEventActivity extends AppCompatActivity {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(SubEventActivity.this, R.style.CustomAlertDialog);
                 ViewGroup viewGroup = findViewById(android.R.id.content);
                 View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_layout, viewGroup, false);
-                dialogView.setMinimumWidth((int) (displayRectangle.width()/1.5f * 1f));
-                dialogView.setMinimumHeight((int) (displayRectangle.height()/1.2f * 1f));
+                dialogView.setMinimumWidth((int) (displayRectangle.width() / 1.5f * 1f));
+                dialogView.setMinimumHeight((int) (displayRectangle.height() / 1.2f * 1f));
                 builder.setView(dialogView);
                 final AlertDialog alertDialog = builder.create();
                 mLL = new ArrayList<>();
@@ -145,6 +144,8 @@ public class SubEventActivity extends AppCompatActivity {
                 mHeading = dialogView.findViewById(R.id.heading);
                 String s = "Event Heads";
                 mHeading.setText(s);
+
+                Log.e("this", "" + MainActivity.branchData.size());
 
                 mLL.add((LinearLayout) dialogView.findViewById(R.id.one));
                 mLL.add((LinearLayout) dialogView.findViewById(R.id.two));
@@ -164,6 +165,10 @@ public class SubEventActivity extends AppCompatActivity {
 
                 mDivider1 = dialogView.findViewById(R.id.divider1);
                 mDivider2 = dialogView.findViewById(R.id.divider2);
+
+                mLL.get(0).setVisibility(View.VISIBLE);
+                mLL.get(1).setVisibility(View.VISIBLE);
+                mDivider1.setVisibility(View.VISIBLE);
                 alertDialog.show();
             }
         });
@@ -184,8 +189,9 @@ public class SubEventActivity extends AppCompatActivity {
                 mAbout = dialogView.findViewById(R.id.about_data);
                 mAbout.setVisibility(View.VISIBLE);
                 mHeading = dialogView.findViewById(R.id.heading);
-                String s = "About the event";
+                String s = "About " + Constants.eventNames[mainEventPosition];
                 mHeading.setText(s);
+                mAbout.setText(MainActivity.branchData.get(Constants.eventNames[mainEventPosition]).getAbout());
                 alertDialog.show();
             }
         });
