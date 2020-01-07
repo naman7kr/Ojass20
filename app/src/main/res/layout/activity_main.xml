@@ -165,8 +165,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@android:color/white"
-        app:itemIconTint="@android:color/darker_gray"
-        app:itemTextAppearance="@style/MontSerratTextStyle"
+        app:itemIconTint="@android:color/white"
+        app:itemTextAppearance="@style/NavItemsStyle"
         app:itemTextColor="@android:color/darker_gray"
         app:menu="@menu/navigation_menu" />
 
