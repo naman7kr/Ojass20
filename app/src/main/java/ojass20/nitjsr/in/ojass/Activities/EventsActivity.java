@@ -36,7 +36,7 @@ import ojass20.nitjsr.in.ojass.R;
 
 public class EventsActivity extends AppCompatActivity implements PinchAlphaInterface {
     private static final int NO_OF_COLUMNS = 4;
-    private static final float INIT_ALPHA = 0.3f;
+    private static final float INIT_ALPHA = 0.6f;
     ArrayList<EventsDisplayModel> data = new ArrayList<>();
     EventsGridAdapter mAdapter;
     int width;
