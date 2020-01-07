@@ -7,6 +7,7 @@
     <string name="help"><![CDATA[HELP & SUPPORT]]></string>
     <string name="team">THE TEAM</string>
     <string name="developers">DEVELOPERS</string>
+    <string name="faqs">FAQs</string>
     <string name="logout">LOG OUT</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
@@ -76,7 +77,6 @@
         <item>Prayas</item>
         <item>LiveCS</item>
     </string-array>
-
 
 
 </resources>
