@@ -17,15 +17,15 @@
         android:orderInCategory="200"
         app:showAsAction="always"></item>
 
-    <!--
+
      <item
         android:id="@+id/emergency"
-        android:title="EMERGENCY"
-        android:icon="@drawable/emergency"
+        android:title="Emergency"
+        android:icon="@drawable/ic_emergency"
         app:showAsAction="always"
         >
 
     </item>
--->
+
 
 </menu>
