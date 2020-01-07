@@ -72,6 +72,8 @@ import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
 import ojass20.nitjsr.in.ojass.Adapters.PosterAdapter;
 import ojass20.nitjsr.in.ojass.Fragments.CommentsFragment;
 import ojass20.nitjsr.in.ojass.Fragments.HomeFragment;
+import ojass20.nitjsr.in.ojass.Models.BranchHeadModal;
+import ojass20.nitjsr.in.ojass.Models.BranchModal;
 import ojass20.nitjsr.in.ojass.Models.Comments;
 import ojass20.nitjsr.in.ojass.Models.CoordinatorsModel;
 import ojass20.nitjsr.in.ojass.Models.EventModel;
@@ -119,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private OjassApplication ojassApplication;
     public ProgressDialog progressDialog;
     public static ArrayList<EventModel> data;
+    public static ArrayList<BranchModal> branchData;
     private FrameLayout homeContainer;
     private ViewPager viewPager;
     private CircleIndicator indicator;
@@ -128,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private boolean isFragOpen = false;
     private Handler backHandler;
     private int backFlag = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +147,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("PostNo", Integer.toString(0));
         editor.apply();
+        eventStuff();
+        fetchBranchHead();
 
         fetchFeedsDataFromFirebase();
 
@@ -153,9 +159,38 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         detectTouchEvents();
 
         hidePullUpArrowOnScroll();
-
         refresh();
 
+    }
+
+    private void fetchBranchHead() {
+        branchData = new ArrayList<>();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Branches");
+        ref.keepSynced(true);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                branchData.clear();
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    String about = ds.child("about").getValue().toString();
+                    ArrayList<BranchHeadModal> bh_list = new ArrayList<>();
+                    for(DataSnapshot d: ds.child("head").getChildren()){
+                        String cn,name,url,wn;
+                        name = d.child("name").getValue().toString();
+                        cn = d.child("cn").getValue().toString();
+                        wn = d.child("wn").getValue().toString();
+                        url = d.child("url").getValue().toString();
+                        bh_list.add(new BranchHeadModal(cn,name,url,wn));
+                    }
+                    branchData.add(new BranchModal(about,bh_list));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     void init() {
@@ -438,18 +473,17 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         setUpNavigationDrawer();
         setUpAnimationForImageView(mPullUp);
         detectTouchEvents();
-        setUpEventData();
 
     }
 
-    private void setUpEventData() {
+    private void eventStuff(){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Events");
-        progressDialog = new ProgressDialog(this);
+        progressDialog=new ProgressDialog(this);
         progressDialog.setMessage("Initialising App data...");
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        data = new ArrayList<>();
+        data=new ArrayList<>();
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -457,44 +491,53 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 data.clear();
                 progressDialog.dismiss();
                 try {
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        String about = ds.child("about").getValue(String.class);
-                        String branch = ds.child("branch").getValue(String.class);
-                        String details = ds.child("detail").getValue(String.class);
-                        String name = ds.child("name").getValue(String.class);
-                        Long prize1 = ds.child("prize").child("first").getValue(Long.class);
-                        Long prize2 = ds.child("prize").child("second").getValue(Long.class);
-                        Long prize3 = ds.child("prize").child("third").getValue(Long.class);
-                        Long prizeT = ds.child("prize").child("total").getValue(Long.class);
-                        ArrayList<CoordinatorsModel> coordinatorsModelArrayList = new ArrayList<>();
+                    for(DataSnapshot ds: dataSnapshot.getChildren()) {
+                        String about=ds.child("about").getValue(String.class);
+                        String branch=ds.child("branch").getValue(String.class);
+                        String details=ds.child("detail").getValue(String.class);
+                        String name=ds.child("name").getValue(String.class);
+                        Long prize1=ds.child("prize").child("first").getValue(Long.class);
+                        Long prize2=ds.child("prize").child("second").getValue(Long.class);
+                        Long prize3=ds.child("prize").child("third").getValue(Long.class);
+                        Long prizeT=ds.child("prize").child("total").getValue(Long.class);
+
+                        ArrayList<CoordinatorsModel> coordinatorsModelArrayList=new ArrayList<>();
                         coordinatorsModelArrayList.clear();
 
-                        ArrayList<RulesModel> rulesModelArrayList = new ArrayList<>();
+                        ArrayList<RulesModel> rulesModelArrayList=new ArrayList<>();
                         rulesModelArrayList.clear();
+                        try{
+                            for(DataSnapshot d:ds.child("coordinators").getChildren()) {
+                                String n = d.child("name").getValue().toString();
+                                String p = d.child("phone").getValue().toString();
+                                coordinatorsModelArrayList.add(new CoordinatorsModel(n,p));
+                            }
 
-                        for (DataSnapshot d : ds.child("coordinators").getChildren()) {
-                            CoordinatorsModel coordinatorsModel = d.getValue(CoordinatorsModel.class);
-                            coordinatorsModelArrayList.add(coordinatorsModel);
+                            for(DataSnapshot d:ds.child("rules").getChildren()) {
+                                if(d.exists()){
+                                    String s = d.child("text").getValue().toString();
+                                    rulesModelArrayList.add(new RulesModel(s));
+                                }
+                            }
+                        }
+                        catch(Exception e){
+                            Log.d("hello",ds.child("name").getValue().toString());
                         }
 
-                        for (DataSnapshot d : ds.child("rules").getChildren()) {
-                            RulesModel rulesModel = d.getValue(RulesModel.class);
-                            rulesModelArrayList.add(rulesModel);
-                        }
-                        data.add(new EventModel(about, branch, details, name, prize1, prize2, prize3, prizeT, coordinatorsModelArrayList, rulesModelArrayList));
+                        data.add(new EventModel(about,branch,details,name,prize1,prize2,prize3,prizeT,coordinatorsModelArrayList,rulesModelArrayList));
                     }
-                } catch (Exception e) {
+                } catch(Exception e){
                     if (progressDialog.isShowing()) progressDialog.dismiss();
-                    //Toast.makeText(MainActivity.this, "Something went wrong in Events!", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 if (progressDialog.isShowing()) progressDialog.dismiss();
             }
         });
     }
+
 
     private void setUpRecyclerView() {
         mRecyclerView.setHasFixedSize(true);
