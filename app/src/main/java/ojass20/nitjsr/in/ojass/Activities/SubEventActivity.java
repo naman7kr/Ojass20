@@ -178,7 +178,7 @@ public class SubEventActivity extends AppCompatActivity {
                 ViewGroup viewGroup = findViewById(android.R.id.content);
                 View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_layout, viewGroup, false);
                 dialogView.setMinimumWidth((int) (displayRectangle.width() * 1f));
-                dialogView.setMinimumHeight((int) (displayRectangle.height()/1.2f * 1f));
+                dialogView.setMinimumHeight((int) (displayRectangle.height() * 1f));
                 builder.setView(dialogView);
                 final AlertDialog alertDialog = builder.create();
                 mAbout = dialogView.findViewById(R.id.about_data);
