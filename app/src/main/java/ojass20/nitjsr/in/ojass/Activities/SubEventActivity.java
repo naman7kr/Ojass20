@@ -86,6 +86,7 @@ public class SubEventActivity extends AppCompatActivity {
         RecyclerClickInterface mInterface = new RecyclerClickInterface() {
             @Override
             public void onLayoutClick(View v, int position) {
+                getSupportActionBar().setTitle(Constants.SubEventsList[mainEventPosition][position]);
                 showBottomSheet();
                 bottomSheetOpen = true;
 
@@ -268,6 +269,7 @@ public class SubEventActivity extends AppCompatActivity {
         backArrow.setColorFilter(toolbarIconColor, PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(backArrow);
         toolbar.setBackgroundColor(getResources().getColor(R.color.transparent));
+        toolbar.setTitle(Constants.eventNames[mainEventPosition]);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

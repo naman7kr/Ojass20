@@ -54,7 +54,7 @@ public class EventsGridAdapter extends RecyclerView.Adapter<EventsGridAdapter.My
         holder.rl.getLayoutParams().width = width / 4;
         holder.tv.setText(data.getEvName());
         holder.iv.setAlpha(alphaVal);
-        holder.tv.setAlpha(1 - alphaVal);
+        holder.tv.setAlpha(1);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
