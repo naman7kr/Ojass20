@@ -9,6 +9,12 @@
     <string name="developers">DEVELOPERS</string>
     <string name="faqs">FAQs</string>
     <string name="logout">LOG OUT</string>
+    <string name="events">Events</string>
+    <string name="itinerary">Itinerary</string>
+    <string name="help"><![CDATA[Help & Support]]></string>
+    <string name="team">The Team</string>
+    <string name="developers">Developers</string>
+    <string name="logout">Log out</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="upvote">Upvote</string>
@@ -36,8 +42,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="sponsor">SPONSOR</string>
+    <string name="sponsor">Sponsor</string>
     <string name="backPress">Do you want to close the application</string>
+    <string name="emergency_call">Emergency Call</string>
 
     <string-array name="team_names">
         <item>Administration</item>

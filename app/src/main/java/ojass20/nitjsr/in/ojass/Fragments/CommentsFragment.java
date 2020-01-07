@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import ojass20.nitjsr.in.ojass.Activities.MainActivity;
 import ojass20.nitjsr.in.ojass.Models.Comments;
 import ojass20.nitjsr.in.ojass.R;
 
@@ -57,21 +58,24 @@ public class CommentsFragment extends Fragment {
 
     private DatabaseReference dref;
     private FirebaseAuth mauth;
-    private String current_user_id = "83";
+    private String current_user_id;
     private String current_post_id;
+
+    private MainActivity mainActivity;
 
     public CommentsFragment() {
         // Required empty public constructor
     }
 
-    public CommentsFragment(Context context, FragmentManager fragmentManager, String current_post_id) {
+    public CommentsFragment(Context context, FragmentManager fragmentManager, String current_post_id, MainActivity mainActivity) {
         this.context = context;
         this.fragmentManager = fragmentManager;
         this.current_post_id = current_post_id;
+        this.mainActivity = mainActivity;
     }
 
-    public static CommentsFragment newInstance(Context context, FragmentManager fragmentManager, String current_post_id) {
-        CommentsFragment fragment = new CommentsFragment(context, fragmentManager, current_post_id);
+    public static CommentsFragment newInstance(Context context, FragmentManager fragmentManager, String current_post_id, MainActivity mainActivity) {
+        CommentsFragment fragment = new CommentsFragment(context, fragmentManager, current_post_id, mainActivity);
         return fragment;
     }
 
@@ -85,6 +89,7 @@ public class CommentsFragment extends Fragment {
 
         mauth = FirebaseAuth.getInstance();
         dref = FirebaseDatabase.getInstance().getReference().child("Feeds").child(current_post_id).child("comments");
+        current_user_id = mauth.getCurrentUser().getDisplayName();
 
         dref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -115,7 +120,7 @@ public class CommentsFragment extends Fragment {
             }
         });
 
-        onBackPress(container);
+        //onBackPress(container);
         return view;
     }
 
@@ -131,7 +136,6 @@ public class CommentsFragment extends Fragment {
             }
         });
     }
-
 
     private String findTimeDifference(String time) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss aa", Locale.getDefault());
@@ -240,6 +244,7 @@ public class CommentsFragment extends Fragment {
     }
 
     void closeFragment(){
+        mainActivity.unsetIsCommentsFragmentOpen();
         self_comment_text.clearFocus();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setCustomAnimations(R.anim.no_anim, R.anim.slide_out_bottom);

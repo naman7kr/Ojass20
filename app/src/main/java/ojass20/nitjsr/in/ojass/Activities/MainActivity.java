@@ -47,6 +47,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -71,6 +72,8 @@ import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
 import ojass20.nitjsr.in.ojass.Adapters.PosterAdapter;
 import ojass20.nitjsr.in.ojass.Fragments.CommentsFragment;
 import ojass20.nitjsr.in.ojass.Fragments.HomeFragment;
+import ojass20.nitjsr.in.ojass.Models.BranchHeadModal;
+import ojass20.nitjsr.in.ojass.Models.BranchModal;
 import ojass20.nitjsr.in.ojass.Models.Comments;
 import ojass20.nitjsr.in.ojass.Models.CoordinatorsModel;
 import ojass20.nitjsr.in.ojass.Models.EventModel;
@@ -88,6 +91,7 @@ import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_POSTERIMAGES;
 public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragInterface, ViewPager.OnPageChangeListener, FeedAdapter.CommentClickInterface {
     private static final String LOG_TAG = "Main";
     private DrawerLayout mDrawer;
+    private View mDrwawerHeaderView;
     private Toolbar mToolbar;
     private NavigationView mNavigationDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -107,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private FeedAdapter mFeedAdapter;
     private PosterAdapter mPosterAdapter;
     private LinearLayoutManager mLinearLayoutManager;
+    private Boolean isCommentsFragmentOpen;
 
     private DatabaseReference dref;
     private FirebaseAuth mauth;
@@ -116,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private OjassApplication ojassApplication;
     public ProgressDialog progressDialog;
     public static ArrayList<EventModel> data;
+    public static ArrayList<BranchModal> branchData;
     private FrameLayout homeContainer;
     private ViewPager viewPager;
     private CircleIndicator indicator;
@@ -125,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private boolean isFragOpen = false;
     private Handler backHandler;
     private int backFlag = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +147,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("PostNo", Integer.toString(0));
         editor.apply();
+        eventStuff();
+        fetchBranchHead();
 
         fetchFeedsDataFromFirebase();
 
@@ -150,9 +159,38 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         detectTouchEvents();
 
         hidePullUpArrowOnScroll();
-
         refresh();
 
+    }
+
+    private void fetchBranchHead() {
+        branchData = new ArrayList<>();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Branches");
+        ref.keepSynced(true);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                branchData.clear();
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    String about = ds.child("about").getValue().toString();
+                    ArrayList<BranchHeadModal> bh_list = new ArrayList<>();
+                    for(DataSnapshot d: ds.child("head").getChildren()){
+                        String cn,name,url,wn;
+                        name = d.child("name").getValue().toString();
+                        cn = d.child("cn").getValue().toString();
+                        wn = d.child("wn").getValue().toString();
+                        url = d.child("url").getValue().toString();
+                        bh_list.add(new BranchHeadModal(cn,name,url,wn));
+                    }
+                    branchData.add(new BranchModal(about,bh_list));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     void init() {
@@ -161,8 +199,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationDrawer = (NavigationView) findViewById(R.id.navigation_view);
-        View headerView = mNavigationDrawer.inflateHeaderView(R.layout.nav_header);
-        headerView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
+
+        mDrwawerHeaderView = mNavigationDrawer.inflateHeaderView(R.layout.nav_header);
         mPullUp = findViewById(R.id.pull_up);
 
         mRecyclerView = findViewById(R.id.feed_recycler_view);
@@ -177,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         builder = new AlertDialog.Builder(this);
         ojassApplication = OjassApplication.getInstance();
         listposts = new ArrayList<>();
+        isCommentsFragmentOpen = false;
 
         mauth = FirebaseAuth.getInstance();
         currentuid = mauth.getCurrentUser().getUid();
@@ -242,6 +281,14 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             }
         });
 
+    }
+    
+    public void setIsCommentsFragmentOpen(){
+        isCommentsFragmentOpen = true;
+    }
+    
+    public void unsetIsCommentsFragmentOpen(){
+        isCommentsFragmentOpen = false;
     }
 
     public void setSlider() {
@@ -426,18 +473,17 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         setUpNavigationDrawer();
         setUpAnimationForImageView(mPullUp);
         detectTouchEvents();
-        setUpEventData();
 
     }
 
-    private void setUpEventData() {
+    private void eventStuff(){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Events");
-        progressDialog = new ProgressDialog(this);
+        progressDialog=new ProgressDialog(this);
         progressDialog.setMessage("Initialising App data...");
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        data = new ArrayList<>();
+        data=new ArrayList<>();
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -445,38 +491,46 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 data.clear();
                 progressDialog.dismiss();
                 try {
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        String about = ds.child("about").getValue(String.class);
-                        String branch = ds.child("branch").getValue(String.class);
-                        String details = ds.child("detail").getValue(String.class);
-                        String name = ds.child("name").getValue(String.class);
-                        Long prize1 = ds.child("prize").child("first").getValue(Long.class);
-                        Long prize2 = ds.child("prize").child("second").getValue(Long.class);
-                        Long prize3 = ds.child("prize").child("third").getValue(Long.class);
-                        Long prizeT = ds.child("prize").child("total").getValue(Long.class);
-                        ArrayList<CoordinatorsModel> coordinatorsModelArrayList = new ArrayList<>();
+                    for(DataSnapshot ds: dataSnapshot.getChildren()) {
+                        String about=ds.child("about").getValue(String.class);
+                        String branch=ds.child("branch").getValue(String.class);
+                        String details=ds.child("detail").getValue(String.class);
+                        String name=ds.child("name").getValue(String.class);
+                        Long prize1=ds.child("prize").child("first").getValue(Long.class);
+                        Long prize2=ds.child("prize").child("second").getValue(Long.class);
+                        Long prize3=ds.child("prize").child("third").getValue(Long.class);
+                        Long prizeT=ds.child("prize").child("total").getValue(Long.class);
+
+                        ArrayList<CoordinatorsModel> coordinatorsModelArrayList=new ArrayList<>();
                         coordinatorsModelArrayList.clear();
 
-                        ArrayList<RulesModel> rulesModelArrayList = new ArrayList<>();
+                        ArrayList<RulesModel> rulesModelArrayList=new ArrayList<>();
                         rulesModelArrayList.clear();
+                        try{
+                            for(DataSnapshot d:ds.child("coordinators").getChildren()) {
+                                String n = d.child("name").getValue().toString();
+                                String p = d.child("phone").getValue().toString();
+                                coordinatorsModelArrayList.add(new CoordinatorsModel(n,p));
+                            }
 
-                        for (DataSnapshot d : ds.child("coordinators").getChildren()) {
-                            CoordinatorsModel coordinatorsModel = d.getValue(CoordinatorsModel.class);
-                            coordinatorsModelArrayList.add(coordinatorsModel);
+                            for(DataSnapshot d:ds.child("rules").getChildren()) {
+                                if(d.exists()){
+                                    String s = d.child("text").getValue().toString();
+                                    rulesModelArrayList.add(new RulesModel(s));
+                                }
+                            }
+                        }
+                        catch(Exception e){
+                            Log.d("hello",ds.child("name").getValue().toString());
                         }
 
-                        for (DataSnapshot d : ds.child("rules").getChildren()) {
-                            RulesModel rulesModel = d.getValue(RulesModel.class);
-                            rulesModelArrayList.add(rulesModel);
-                        }
-                        data.add(new EventModel(about, branch, details, name, prize1, prize2, prize3, prizeT, coordinatorsModelArrayList, rulesModelArrayList));
+                        data.add(new EventModel(about,branch,details,name,prize1,prize2,prize3,prizeT,coordinatorsModelArrayList,rulesModelArrayList));
                     }
-                } catch (Exception e) {
+                } catch(Exception e){
                     if (progressDialog.isShowing()) progressDialog.dismiss();
-                    //Toast.makeText(MainActivity.this, "Something went wrong in Events!", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 if (progressDialog.isShowing()) progressDialog.dismiss();
@@ -484,12 +538,13 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         });
     }
 
+
     private void setUpRecyclerView() {
         mRecyclerView.setHasFixedSize(true);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        mFeedAdapter = new FeedAdapter(this, getSupportFragmentManager(), listposts, currentuid);
+        mFeedAdapter = new FeedAdapter(this, getSupportFragmentManager(), listposts, currentuid, this);
         mRecyclerView.setAdapter(mFeedAdapter);
         recyclerview_progress.setVisibility(View.GONE);
 
@@ -574,6 +629,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         transaction.setCustomAnimations(R.anim.no_anim, R.anim.slide_out_bottom);
         transaction.remove(f).commit();
         isFragOpen = false;
+        isCommentsFragmentOpen = false;
     }
 
     private void setUpAnimationForImageView(ImageView mImageView) {
@@ -589,6 +645,27 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        TextView profile_name = mDrwawerHeaderView.findViewById(R.id.user_profile_name);
+        profile_name.setText(mauth.getCurrentUser().getDisplayName());
+        ImageView profile_picture = mDrwawerHeaderView.findViewById(R.id.user_profile_picture);
+        if(mauth.getCurrentUser().getPhotoUrl() != null){
+            profile_picture.setImageDrawable(null);
+            Glide.with(this).load(mauth.getCurrentUser().getPhotoUrl()).into(profile_picture);
+        }
+
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            }
+        };
+
+        profile_name.setOnClickListener(onClickListener);
+        profile_picture.setOnClickListener(onClickListener);
+
+        mDrwawerHeaderView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
+
 
         //Uncomment below once all fragments have been created
         setupDrawerContent(mNavigationDrawer);
@@ -614,7 +691,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         selectDrawerItem(menuItem);
-                        return true;
+                        return false;
                     }
                 });
     }
@@ -652,7 +729,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
                 break;
-
             case R.id.navemergency:
                 showList();
                 break;
@@ -768,55 +844,27 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-//    @SuppressLint("WrongConstant")
-//    @Override
-//
-//    public boolean onDown(MotionEvent e) {
-//        return false;
-//    }
-//
-//    @Override
-//    public void onShowPress(MotionEvent e) {
-//
-//    }
-//
-//    @Override
-//    public boolean onSingleTapUp(MotionEvent e) {
-////        switch (mInd) {
-////            case 0:
-////                startActivity(new Intent(MainActivity.this, EventsActivity.class));
-////                break;
-////            case 1:
-////                startActivity(new Intent(MainActivity.this, GurugyanActivity.class));
-////                break;
-////            case 2:
-////                startActivity(new Intent(this, ItineraryActivity.class));
-////                break;
-////            case 3:
-////                startActivity(new Intent(MainActivity.this, MapsActivity.class));
-////                break;
-////            default:
-////                Log.e(LOG_TAG, "Bhai sahab ye kis line mein aa gye aap?");
-////                public void onBackPressed () {
-////                if (isFragOpen) {
-////                    closeFragment();
-////                    return true;
-////                }
-////                backHandler = new Handler();
-////
-////                if (backFlag == 1) {
-////                    finish();
-////                }
-////                backFlag = 1;
-////                Toast.makeText(ojassApplication, R.string.backPress, 3000).show();
-////                backHandler.postDelayed(new Runnable() {
-////                    @Override
-////                    public void run() {
-////                        backFlag = 0;
-////                    }
-////                }, 3000);
-////            }
-////        }
-//        return true;
-//    }
+    @SuppressLint("WrongConstant")
+    @Override
+    public void onBackPressed() {
+        Log.d("hoe-hoe-hoe", ""+isCommentsFragmentOpen);
+        if (isFragOpen || isCommentsFragmentOpen) {
+            closeFragment();
+            return;
+        }
+        backHandler = new Handler();
+
+        if (backFlag == 1) {
+            finish();
+        }
+        backFlag = 1;
+        Toast.makeText(ojassApplication, R.string.backPress, 3000).show();
+        backHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                backFlag = 0;
+            }
+        }, 3000);
+    }
+
 }

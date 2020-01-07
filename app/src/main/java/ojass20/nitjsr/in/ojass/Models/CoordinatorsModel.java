@@ -14,6 +14,7 @@ public class CoordinatorsModel {
         this.phone=phone;
 
     }
+
     public CoordinatorsModel()
     {
 
