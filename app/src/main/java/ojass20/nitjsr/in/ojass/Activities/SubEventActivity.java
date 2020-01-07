@@ -118,9 +118,9 @@ public class SubEventActivity extends AppCompatActivity {
                     mAboutLayout.setClickable(true);
                     isOpen = true;
                     mFab.setImageDrawable(getDrawable(R.drawable.ic_keyboard_arrow_down_black_24dp));
-                    TranslateAnimation tr = new TranslateAnimation(0.0f, 0.0f, 0, 30);
-                    tr.setDuration(100);
-                    mFab.startAnimation(tr);
+//                    TranslateAnimation tr = new TranslateAnimation(0.0f, 0.0f, 0, 30);
+//                    tr.setDuration(100);
+//                    mFab.startAnimation(tr);
                 }
             }
         });
@@ -134,8 +134,8 @@ public class SubEventActivity extends AppCompatActivity {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(SubEventActivity.this, R.style.CustomAlertDialog);
                 ViewGroup viewGroup = findViewById(android.R.id.content);
                 View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_layout, viewGroup, false);
-                dialogView.setMinimumWidth((int) (displayRectangle.width() * 1f));
-                dialogView.setMinimumHeight((int) (displayRectangle.height() * 1f));
+                dialogView.setMinimumWidth((int) (displayRectangle.width()/1.5f * 1f));
+                dialogView.setMinimumHeight((int) (displayRectangle.height()/1.2f * 1f));
                 builder.setView(dialogView);
                 final AlertDialog alertDialog = builder.create();
                 mLL = new ArrayList<>();
@@ -164,11 +164,6 @@ public class SubEventActivity extends AppCompatActivity {
 
                 mDivider1 = dialogView.findViewById(R.id.divider1);
                 mDivider2 = dialogView.findViewById(R.id.divider2);
-
-                mLL.get(0).setVisibility(View.VISIBLE);
-                mLL.get(1).setVisibility(View.VISIBLE);
-
-                mDivider1.setVisibility(View.VISIBLE);
                 alertDialog.show();
             }
         });
