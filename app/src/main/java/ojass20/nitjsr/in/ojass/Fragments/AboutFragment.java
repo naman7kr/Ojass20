@@ -1,7 +1,9 @@
 package ojass20.nitjsr.in.ojass.Fragments;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,56 +17,27 @@ import com.google.firebase.database.FirebaseDatabase;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import ojass20.nitjsr.in.ojass.Activities.MainActivity;
+import ojass20.nitjsr.in.ojass.Activities.SubEventActivity;
 import ojass20.nitjsr.in.ojass.R;
 
 public class AboutFragment extends Fragment {
     private TextView abt;
-    private LinearLayout abt_layout;
-//    private BtmNavVisCallback mCallback;
-
-    //variables
-    private DatabaseReference mRef;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.e("TAG","BOTTOMSHEET");
         View view = inflater.inflate(R.layout.fragment_about,container,false);
-        init(view);
-
-//        abt_layout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mCallback.onCallback();
-//            }
-//        });
-        getData();
+//        Toast.makeText(getContext(), ""+SubEventActivity.position, Toast.LENGTH_SHORT).show();
+        createUI(view);
         return view;
     }
-    void init(View view){
-        abt = view.findViewById(R.id.text_about);
-        abt_layout = view.findViewById(R.id.abt_layout);
-        mRef = FirebaseDatabase.getInstance().getReference("Events");
-    }
-    void getData(){
-//       for(EventModel em: HomeActivity.data){
-//           if(em.getName()!=null) {
-//               if (em.getName().compareToIgnoreCase(SubEventsActivity.event_name) == 0) {
-//                   Log.e("ABOUT",em.getName());
-//                   abt.setText(Html.fromHtml(em.getAbout()));
-//                   break;
-//               }
-//           }
-//        }
-    }
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//        mCallback = (BtmNavVisCallback) context;
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-//        mCallback = null;
+    private void createUI(View view) {
+
+        TextView t2=(TextView) view.findViewById(R.id.text_about);
+//        Typeface typeface= Typeface.createFromAsset(getActivity().getAssets(), "textfont.otf");
+//        t2.setTypeface(typeface);
+        t2.setText(Html.fromHtml(MainActivity.data.get(SubEventActivity.position).getAbout()));
     }
 }

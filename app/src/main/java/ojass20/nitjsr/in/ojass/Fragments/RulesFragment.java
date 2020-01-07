@@ -1,6 +1,8 @@
 package ojass20.nitjsr.in.ojass.Fragments;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import ojass20.nitjsr.in.ojass.Activities.MainActivity;
+import ojass20.nitjsr.in.ojass.Activities.SubEventActivity;
 import ojass20.nitjsr.in.ojass.R;
 
 public class RulesFragment extends Fragment {
@@ -20,44 +25,25 @@ public class RulesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_rules,container,false);
-        init(view);
-//        rules_layout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mCallback.onCallback();
-//            }
-//        });
-//        getData();
+        createUI(view);
         return view;
     }
-    private void init(View view){
-        rules_layout = view.findViewById(R.id.rules_layout);
-        rules = view.findViewById(R.id.text_rules);
+
+    private void createUI(View view) {
+//        TextView t1= view.findViewById(R.id.title_rules);
+//        Typeface customFontBold= Typeface.createFromAsset(getActivity().getAssets(),"Ojass.otf");
+//        t1.setTypeface(customFontBold);
+        TextView t2= view.findViewById(R.id.text_rules);
+//        Typeface typeface= Typeface.createFromAsset(getActivity().getAssets(),"textfont.otf");
+//        t2.setTypeface(typeface);
+        String rules="";
+
+        for(int i = 0; i< MainActivity.data.get(SubEventActivity.position).getRulesModels().size(); i++)
+        {
+            rules=rules+"<br>"+(i+1)+". "+ MainActivity.data.get(SubEventActivity.position).getRulesModels().get(i).getText();
+        }
+
+        t2.setText(Html.fromHtml(rules));
+        // t2.setText("Rules");
     }
-//    void getData(){
-//        for(EventModel em: HomeActivity.data){
-//            if(em.getName()!=null) {
-//                if (em.getName().compareToIgnoreCase(SubEventsActivity.event_name) == 0) {
-//                    String rl = "";
-//                    for (int i = 0; i < em.getRulesModels().size(); i++) {
-//                        rl = rl + "<br>" + (i + 1) + ". " + em.getRulesModels().get(i).getText();
-//
-//                    }
-//                    rules.setText(Html.fromHtml(rl));
-//                    break;
-//                }
-//            }
-//        }
-//    }
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        mCallback = (BtmNavVisCallback) context;
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mCallback = null;
-//    }
 }

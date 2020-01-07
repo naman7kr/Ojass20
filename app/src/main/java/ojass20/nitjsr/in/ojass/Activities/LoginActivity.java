@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -32,6 +34,11 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 
@@ -44,6 +51,8 @@ public class LoginActivity extends AppCompatActivity {
     public static final int RC_SIGN_IN = 7;
     private FirebaseAuth mAuth;
     private CallbackManager mCallbackManager;
+    boolean ans=false;
+    private ProgressDialog mprogressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         initialise();
+        setProgressDialog();
 
         FirebaseApp.initializeApp(this);
         mAuth=FirebaseAuth.getInstance();
@@ -99,6 +109,12 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    private void setProgressDialog() {
+        mprogressDialog = new ProgressDialog(this);
+        mprogressDialog.setMessage("Please wait...");
+        mprogressDialog.setCancelable(false);
+    }
+
 
     @Override
     public void onStart() {
@@ -132,9 +148,11 @@ public class LoginActivity extends AppCompatActivity {
 
         // Pass the activity result back to the Facebook SDK
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        mprogressDialog.show();
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
+            mprogressDialog.show();
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 // Google Sign In was successful, authenticate with Firebase
@@ -144,6 +162,9 @@ public class LoginActivity extends AppCompatActivity {
                 // Google Sign In failed, update UI appropriately
                 Log.e("VIVZ", "Google sign in failed "+e.getMessage()+" due to "+task.getException());
                 Toast.makeText(this, "Something went wrong!", Toast.LENGTH_SHORT).show();
+                if(mprogressDialog.isShowing()){
+                    mprogressDialog.dismiss();
+                }
             }
         }
     }
@@ -161,6 +182,9 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d("VIVZ", "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             //check if user is registered and then move to respective activity
+                            if(mprogressDialog.isShowing()){
+                                mprogressDialog.dismiss();
+                            }
                             if(registeredUser()){
                                 sendToMainActicity();
                             }
@@ -173,6 +197,9 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             //updateUI(null);
+                            if(mprogressDialog.isShowing()){
+                                mprogressDialog.dismiss();
+                            }
                         }
                     }
                 });
@@ -198,7 +225,11 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Authentication successful", Toast.LENGTH_LONG).show();
 
 
+                            if(mprogressDialog.isShowing()){
+                                mprogressDialog.dismiss();
+                            }
                             //check if user is registered and then move to respective activity
+                            //registeredUser();
                             if(registeredUser()){
                                 sendToMainActicity();
                             }
@@ -208,12 +239,41 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             Log.w("VIVZ", "signInWithCredential:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication Failed due to "+task.getException(), Toast.LENGTH_LONG).show();
+                            if(mprogressDialog.isShowing()){
+                                mprogressDialog.dismiss();
+                            }
                         }
                     }
                 });
     }
 
     private boolean registeredUser() {
-        return true;
+        //boolean ans=false;
+        DatabaseReference dref = FirebaseDatabase.getInstance().getReference("Users");
+        dref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds:dataSnapshot.getChildren())
+                {
+                    Log.e("onDataChange: ",mAuth.getCurrentUser().getUid());
+                    Log.e("onDataChange: ",ds.getKey());
+
+                    if(mAuth.getCurrentUser().getUid().equals(ds.getKey())){
+                        Log.e("onDataChange: ","heyy");
+                        sendToMainActicity();
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        if(ans)
+        Log.e( "registeredUser: ","true");
+        else Log.e("registeredUser: ","false");
+        return false;
     }
 }
