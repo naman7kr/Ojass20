@@ -675,7 +675,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         //Replacing back arrow with hamburger icon
         mDrawerToggle = setupDrawerToggle();
         mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerToggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.colorPrimaryDark));
+        mDrawerToggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.white));
         mDrawerToggle.syncState();
         mDrawer.addDrawerListener(mDrawerToggle);
 
