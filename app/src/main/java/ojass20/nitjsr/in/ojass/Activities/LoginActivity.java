@@ -185,12 +185,13 @@ public class LoginActivity extends AppCompatActivity {
                             if(mprogressDialog.isShowing()){
                                 mprogressDialog.dismiss();
                             }
-                            if(registeredUser()){
-                                sendToMainActicity();
-                            }
-                            else{
-                                sendToRegisteredActivity();
-                            }
+                            registeredUser();
+//                            if(registeredUser()){
+//                                sendToMainActicity();
+//                            }
+//                            else{
+//                                sendToRegisteredActivity();
+//                            }
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("VIVZ", "signInWithCredential:failure", task.getException());
@@ -229,13 +230,13 @@ public class LoginActivity extends AppCompatActivity {
                                 mprogressDialog.dismiss();
                             }
                             //check if user is registered and then move to respective activity
-                            //registeredUser();
-                            if(registeredUser()){
-                                sendToMainActicity();
-                            }
-                            else{
-                                sendToRegisteredActivity();
-                            }
+                            registeredUser();
+//                            if(registeredUser()){
+//                                sendToMainActicity();
+//                            }
+//                            else{
+//                                sendToRegisteredActivity();
+//                            }
                         } else {
                             Log.w("VIVZ", "signInWithCredential:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication Failed due to "+task.getException(), Toast.LENGTH_LONG).show();
@@ -247,7 +248,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    private boolean registeredUser() {
+    private void registeredUser() {
         //boolean ans=false;
         DatabaseReference dref = FirebaseDatabase.getInstance().getReference("Users");
         dref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -271,9 +272,10 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-        if(ans)
-        Log.e( "registeredUser: ","true");
-        else Log.e("registeredUser: ","false");
-        return false;
+        sendToRegisteredActivity();
+//        if(ans)
+//        Log.e( "registeredUser: ","true");
+//        else Log.e("registeredUser: ","false");
+//        return false;
     }
 }

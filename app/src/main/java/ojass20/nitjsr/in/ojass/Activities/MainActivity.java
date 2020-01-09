@@ -64,6 +64,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -131,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private OjassApplication ojassApplication;
     public ProgressDialog progressDialog;
     public static ArrayList<EventModel> data;
-    public static ArrayList<BranchModal> branchData;
+    public static HashMap<String, BranchModal> branchData;
     private FrameLayout homeContainer;
     private ViewPager viewPager;
     private CircleIndicator indicator;
@@ -176,25 +177,25 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     }
 
     private void fetchBranchHead() {
-        branchData = new ArrayList<>();
+        branchData = new HashMap<>();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Branches");
         ref.keepSynced(true);
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 branchData.clear();
-                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     String about = ds.child("about").getValue().toString();
                     ArrayList<BranchHeadModal> bh_list = new ArrayList<>();
-                    for(DataSnapshot d: ds.child("head").getChildren()){
-                        String cn,name,url,wn;
+                    for (DataSnapshot d : ds.child("head").getChildren()) {
+                        String cn, name, url, wn;
                         name = d.child("name").getValue().toString();
                         cn = d.child("cn").getValue().toString();
                         wn = d.child("wn").getValue().toString();
                         url = d.child("url").getValue().toString();
-                        bh_list.add(new BranchHeadModal(cn,name,url,wn));
+                        bh_list.add(new BranchHeadModal(cn, name, url, wn));
                     }
-                    branchData.add(new BranchModal(about,bh_list));
+                    branchData.put(ds.getKey(), new BranchModal(about, bh_list));
                 }
             }
 
@@ -294,12 +295,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         });
 
     }
-    
-    public void setIsCommentsFragmentOpen(){
+
+    public void setIsCommentsFragmentOpen() {
         isCommentsFragmentOpen = true;
     }
-    
-    public void unsetIsCommentsFragmentOpen(){
+
+    public void unsetIsCommentsFragmentOpen() {
         isCommentsFragmentOpen = false;
     }
 
@@ -488,14 +489,14 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
     }
 
-    private void eventStuff(){
+    private void eventStuff() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Events");
-        progressDialog=new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Initialising App data...");
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        data=new ArrayList<>();
+        data = new ArrayList<>();
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -503,46 +504,46 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 data.clear();
                 progressDialog.dismiss();
                 try {
-                    for(DataSnapshot ds: dataSnapshot.getChildren()) {
-                        String about=ds.child("about").getValue(String.class);
-                        String branch=ds.child("branch").getValue(String.class);
-                        String details=ds.child("detail").getValue(String.class);
-                        String name=ds.child("name").getValue(String.class);
-                        Long prize1=ds.child("prize").child("first").getValue(Long.class);
-                        Long prize2=ds.child("prize").child("second").getValue(Long.class);
-                        Long prize3=ds.child("prize").child("third").getValue(Long.class);
-                        Long prizeT=ds.child("prize").child("total").getValue(Long.class);
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        String about = ds.child("about").getValue(String.class);
+                        String branch = ds.child("branch").getValue(String.class);
+                        String details = ds.child("detail").getValue(String.class);
+                        String name = ds.child("name").getValue(String.class);
+                        Long prize1 = ds.child("prize").child("first").getValue(Long.class);
+                        Long prize2 = ds.child("prize").child("second").getValue(Long.class);
+                        Long prize3 = ds.child("prize").child("third").getValue(Long.class);
+                        Long prizeT = ds.child("prize").child("total").getValue(Long.class);
 
-                        ArrayList<CoordinatorsModel> coordinatorsModelArrayList=new ArrayList<>();
+                        ArrayList<CoordinatorsModel> coordinatorsModelArrayList = new ArrayList<>();
                         coordinatorsModelArrayList.clear();
 
-                        ArrayList<RulesModel> rulesModelArrayList=new ArrayList<>();
+                        ArrayList<RulesModel> rulesModelArrayList = new ArrayList<>();
                         rulesModelArrayList.clear();
-                        try{
-                            for(DataSnapshot d:ds.child("coordinators").getChildren()) {
+                        try {
+                            for (DataSnapshot d : ds.child("coordinators").getChildren()) {
                                 String n = d.child("name").getValue().toString();
                                 String p = d.child("phone").getValue().toString();
-                                coordinatorsModelArrayList.add(new CoordinatorsModel(n,p));
+                                coordinatorsModelArrayList.add(new CoordinatorsModel(n, p));
                             }
 
-                            for(DataSnapshot d:ds.child("rules").getChildren()) {
-                                if(d.exists()){
+                            for (DataSnapshot d : ds.child("rules").getChildren()) {
+                                if (d.exists()) {
                                     String s = d.child("text").getValue().toString();
                                     rulesModelArrayList.add(new RulesModel(s));
                                 }
                             }
-                        }
-                        catch(Exception e){
-                            Log.d("hello",ds.child("name").getValue().toString());
+                        } catch (Exception e) {
+                            Log.d("hello", ds.child("name").getValue().toString());
                         }
 
-                        data.add(new EventModel(about,branch,details,name,prize1,prize2,prize3,prizeT,coordinatorsModelArrayList,rulesModelArrayList));
+                        data.add(new EventModel(about, branch, details, name, prize1, prize2, prize3, prizeT, coordinatorsModelArrayList, rulesModelArrayList));
                     }
-                } catch(Exception e){
+                } catch (Exception e) {
                     if (progressDialog.isShowing()) progressDialog.dismiss();
 //                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 if (progressDialog.isShowing()) progressDialog.dismiss();
@@ -661,7 +662,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         TextView profile_name = mDrwawerHeaderView.findViewById(R.id.user_profile_name);
         profile_name.setText(mauth.getCurrentUser().getDisplayName());
         ImageView profile_picture = mDrwawerHeaderView.findViewById(R.id.user_profile_picture);
-        if(mauth.getCurrentUser().getPhotoUrl() != null){
+        if (mauth.getCurrentUser().getPhotoUrl() != null) {
             profile_picture.setImageDrawable(null);
             Glide.with(this).load(mauth.getCurrentUser().getPhotoUrl()).into(profile_picture);
         }
@@ -859,7 +860,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     @SuppressLint("WrongConstant")
     @Override
     public void onBackPressed() {
-        Log.d("hoe-hoe-hoe", ""+isCommentsFragmentOpen);
+        Log.d("hoe-hoe-hoe", "" + isCommentsFragmentOpen);
         if (isFragOpen || isCommentsFragmentOpen) {
             closeFragment();
             return;
