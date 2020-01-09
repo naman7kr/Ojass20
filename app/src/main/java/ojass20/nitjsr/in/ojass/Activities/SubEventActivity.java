@@ -55,7 +55,7 @@ import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.Constants;
 import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
 
-public class SubEventActivity extends AppCompatActivity {
+public class SubEventActivity extends AppCompatActivity  {
     private LinearLayout mAboutLayout, mHeadLayout;
     private RecyclerView rView;
     private ArrayList<SubEventsModel> data = new ArrayList<>();

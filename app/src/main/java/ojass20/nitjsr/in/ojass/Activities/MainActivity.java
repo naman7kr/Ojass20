@@ -94,7 +94,6 @@ import ojass20.nitjsr.in.ojass.Models.EventModel;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.Models.Likes;
 import ojass20.nitjsr.in.ojass.Models.RulesModel;
-import ojass20.nitjsr.in.ojass.Utils.Constants;
 import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
 import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
@@ -102,10 +101,6 @@ import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
 
 import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_IMG_SRC;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_POSTERIMAGES;
-import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsMap;
-import static ojass20.nitjsr.in.ojass.Utils.Constants.eventNames;
-import static ojass20.nitjsr.in.ojass.Utils.Constants.updateSubEventsArray;
-import static ojass20.nitjsr.in.ojass.Utils.StringEqualityPercentCheckUsingJaroWinklerDistance.getSimilarity;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragInterface, ViewPager.OnPageChangeListener, FeedAdapter.CommentClickInterface {
     private static final String LOG_TAG = "Main";
@@ -183,7 +178,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         refresh();
 
     }
-
 
     private void fetchBranchHead() {
         branchData = new HashMap<>();
@@ -537,12 +531,35 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                             SubEventsMap.get(branch).add(name);
                             Log.e("Main", branch + "->" + name);
                         }
-
                         String details = ds.child("detail").getValue(String.class);
-                        Long prize1 = ds.child("prize").child("first").getValue(Long.class);
-                        Long prize2 = ds.child("prize").child("second").getValue(Long.class);
-                        Long prize3 = ds.child("prize").child("third").getValue(Long.class);
-                        Long prizeT = ds.child("prize").child("total").getValue(Long.class);
+                        String name = ds.child("name").getValue(String.class);
+                        PrizeModel2 p2=null;
+                        PrizeModel1 p1=null;
+                        if(checkPrizeType(name)){
+                            Long prize1=ds.child("prize").child("first").getValue(Long.class);
+                            Long prize2=ds.child("prize").child("second").getValue(Long.class);
+                            Long prize3=ds.child("prize").child("third").getValue(Long.class);
+                            Long prize4=ds.child("prize").child("fourth").getValue(Long.class);
+                            Long prize5=ds.child("prize").child("fifth").getValue(Long.class);
+                            Long prize6=ds.child("prize").child("sixth").getValue(Long.class);
+                            Long prizeT=ds.child("prize").child("total").getValue(Long.class);
+                            p1 = new PrizeModel1(prize1,prize2,prize3,prize4,prize5,prize6,prizeT);
+                        }
+                        else{
+
+                            Long prizeT,prize1_F,prize2_F,prize3_F,prize1_S,prize2_S,prize3_S,prize1_T,prize2_T,prize3_T;
+                            prizeT = ds.child("prize").child("total").getValue(Long.class);
+                            prize1_F = ds.child("prize").child("firstyear").child("first").getValue(Long.class);
+                            prize2_F = ds.child("prize").child("firstyear").child("second").getValue(Long.class);
+                            prize3_F = ds.child("prize").child("firstyear").child("third").getValue(Long.class);
+                            prize1_S = ds.child("prize").child("secondyear").child("first").getValue(Long.class);
+                            prize2_S = ds.child("prize").child("secondyear").child("second").getValue(Long.class);
+                            prize3_S = ds.child("prize").child("secondyear").child("third").getValue(Long.class);
+                            prize1_T = ds.child("prize").child("thirdyear").child("first").getValue(Long.class);
+                            prize2_T = ds.child("prize").child("thirdyear").child("second").getValue(Long.class);
+                            prize3_T = ds.child("prize").child("thirdyear").child("third").getValue(Long.class);
+                            p2 = new PrizeModel2(prizeT,prize1_F,prize2_F,prize3_F,prize1_S,prize2_S,prize3_S,prize1_T,prize2_T,prize3_T);
+                        }
 
                         ArrayList<CoordinatorsModel> coordinatorsModelArrayList = new ArrayList<>();
                         coordinatorsModelArrayList.clear();
@@ -581,7 +598,21 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         });
     }
 
-
+    private boolean checkPrizeType(String name){
+        if((name.compareToIgnoreCase("embetrix")==0 ) ||
+                (name.compareToIgnoreCase("High Voltage Concepts")==0) ||
+                (name.compareToIgnoreCase("electrospection")==0) ||
+                (name.compareToIgnoreCase("Electro Scribble")==0) ||
+                (name.compareToIgnoreCase("matsim")==0) ||
+                (name.compareToIgnoreCase("Pro-Lo-Co")==0) ||
+                (name.compareToIgnoreCase("Hack-De-Science")==0) ||
+                (name.compareToIgnoreCase("agnikund")==0) ||
+                (name.compareToIgnoreCase("knockout")==0)
+        ){
+            return false;
+        }
+        return true;
+    }
     private void setUpRecyclerView() {
         mRecyclerView.setHasFixedSize(true);
         mLinearLayoutManager = new LinearLayoutManager(this);
@@ -801,7 +832,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         switch (id) {
             case R.id.notifications:
                 Intent intent = new Intent(this, NotificationActivity.class);
-                intent.putExtra("Caller", 0);
+                intent.putExtra("Caller",0);
                 startActivity(intent);
                 return true;
             case R.id.emergency:
