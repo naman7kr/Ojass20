@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -71,6 +72,7 @@ public class NotificationActivity extends AppCompatActivity {
         findViewById(R.id.ib_back_feed).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startActivity(new Intent(NotificationActivity.this, MainActivity.class));
                 finish();
             }
         });
@@ -105,7 +107,11 @@ public class NotificationActivity extends AppCompatActivity {
 
             }
         });
+    }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(NotificationActivity.this, MainActivity.class));
     }
 }

@@ -51,7 +51,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
->>>>>>>2c3f95bb36657a4020ec1c9cd328597294accc3d
 
 import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.SharedPrefManager;
