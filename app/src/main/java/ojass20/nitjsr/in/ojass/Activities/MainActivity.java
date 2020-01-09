@@ -774,7 +774,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
         switch (id) {
             case R.id.notifications:
-                startActivity(new Intent(this, NotificationActivity.class));
+                Intent intent = new Intent(this, NotificationActivity.class);
+                intent.putExtra("Caller",0);
+                startActivity(intent);
                 return true;
             case R.id.emergency:
                 showList();
