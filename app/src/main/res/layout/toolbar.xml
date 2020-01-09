@@ -6,7 +6,6 @@
     android:layout_height="@dimen/toolbar_height"
     android:fitsSystemWindows="true"
     android:minHeight="?attr/actionBarSize"
-    app:layout_scrollFlags="scroll|enterAlways|snap"
     app:theme="@style/AppTheme"
     app:title="@string/feeds"
     app:titleTextAppearance="@style/OpenSansTextStyle"
