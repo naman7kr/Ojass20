@@ -25,7 +25,7 @@ public class Constants {
             R.mipmap.csgolive,
             R.mipmap.exposicion,
             R.mipmap.school_events,
-            R.mipmap.school_events
+            R.mipmap.checkered_flag
     };
     public static final String eventNames[] = new String[]{
             "Rise of Machines",

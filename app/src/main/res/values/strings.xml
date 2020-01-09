@@ -41,21 +41,21 @@
     <string name="emergency_call">Emergency Call</string>
 
     <string-array name="team_names">
-        <item>Administration</item>
-        <item>Core</item>
-        <item>Plannning &amp; Development</item>
-        <item>Team Coordinator</item>
-        <item>Media Relation</item>
-        <item>Public Relation</item>
-        <item>Event Management</item>
-        <item>Hospitality</item>
-        <item>Corporate</item>
-        <item>Logistics</item>
-        <item>Web Team</item>
-        <item>App Team</item>
+        <item>Technical Secretary</item>
+        <item>Joint Technical Secretary</item>
+        <item>General Secretary</item>
+        <item>Finance Secretary</item>
+        <item>Joint Secretary</item>
+        <item>Executive Secretary</item>
+        <item>Team Co-Ordinator</item>
+        <item>Spokesperson</item>
+        <item>Planning &amp; Development</item>
+        <item>Corporate Affairs</item>
+        <item>Workshop Planning</item>
+        <item>Digital PR &amp; Planning</item>
+        <item>Application &amp; Web Development</item>
         <item>Creative Team</item>
-        <item>Robotics</item>
-        <item>Decorations</item>
+        <item>Media Relations</item>
     </string-array>
 
     <string-array name="noti_channel">
