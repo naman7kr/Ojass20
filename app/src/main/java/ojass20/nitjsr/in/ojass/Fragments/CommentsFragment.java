@@ -235,7 +235,7 @@ public class CommentsFragment extends Fragment {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return "23 min";
+        return "24 min";
     }
 
     public Toolbar getToolbar() {
