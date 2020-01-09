@@ -1,10 +1,12 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -32,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -93,7 +96,7 @@ public class SubEventActivity extends AppCompatActivity {
         RecyclerClickInterface mInterface = new RecyclerClickInterface() {
             @Override
             public void onLayoutClick(View v, int position) {
-                getSupportActionBar().setTitle(Constants.SubEventsList[mainEventPosition][position]);
+                getSupportActionBar().setTitle(Constants.SubEventsList.get(mainEventPosition).get(position));
                 showBottomSheet();
                 bottomSheetOpen = true;
                 getPostion(position);
@@ -142,7 +145,7 @@ public class SubEventActivity extends AppCompatActivity {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(SubEventActivity.this, R.style.CustomAlertDialog);
                 ViewGroup viewGroup = findViewById(android.R.id.content);
                 View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_layout, viewGroup, false);
-                ArrayList<BranchHeadModal> bhNames = MainActivity.branchData.get(Constants.eventNames[mainEventPosition]).getBranchHead();
+                final ArrayList<BranchHeadModal> bhNames = MainActivity.branchData.get(Constants.eventNames.get(mainEventPosition)).getBranchHead();
                 dialogView.setMinimumWidth((int) (displayRectangle.width() / 1.5f * 1f));
                 dialogView.setMinimumHeight((int) (displayRectangle.height() / 5f * 1f));
                 builder.setView(dialogView);
@@ -181,20 +184,81 @@ public class SubEventActivity extends AppCompatActivity {
                 if (bhNames.size() == 1) {
                     mLL.get(0).setVisibility(View.VISIBLE);
                     mName.get(0).setText(bhNames.get(0).getName());
+                    final Intent intent = new Intent(Intent.ACTION_DIAL);
+                    for (int j = 0; j < 1; j++) {
+                        final int i = j;
+                        mCall.get(i).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                intent.setData(Uri.parse("tel:" + bhNames.get(i).getCn()));
+                                startActivity(intent);
+                            }
+                        });
+                        mWhatsapp.get(i).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String url = "https://api.whatsapp.com/send?phone=" + "+91" + bhNames.get(i).getWn();
+                                Intent i = new Intent(Intent.ACTION_VIEW);
+                                i.setData(Uri.parse(url));
+                                startActivity(i);
+                            }
+                        });
+                    }
                 } else if (bhNames.size() == 2) {
                     mLL.get(0).setVisibility(View.VISIBLE);
                     mLL.get(1).setVisibility(View.VISIBLE);
                     mName.get(0).setText(bhNames.get(0).getName());
                     mName.get(1).setText(bhNames.get(1).getName());
                     mDivider1.setVisibility(View.VISIBLE);
+                    final Intent intent = new Intent(Intent.ACTION_DIAL);
+                    for (int j = 0; j < 2; j++) {
+                        final int i = j;
+                        mCall.get(i).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                intent.setData(Uri.parse("tel:" + bhNames.get(i).getCn()));
+                                startActivity(intent);
+                            }
+                        });
+                        mWhatsapp.get(i).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String url = "https://api.whatsapp.com/send?phone=" + "+91" + bhNames.get(i).getWn();
+                                Intent i = new Intent(Intent.ACTION_VIEW);
+                                i.setData(Uri.parse(url));
+                                startActivity(i);
+                            }
+                        });
+                    }
                 } else {
                     mLL.get(0).setVisibility(View.VISIBLE);
                     mLL.get(1).setVisibility(View.VISIBLE);
                     mLL.get(2).setVisibility(View.VISIBLE);
+                    mDivider1.setVisibility(View.VISIBLE);
                     mDivider2.setVisibility(View.VISIBLE);
                     mName.get(0).setText(bhNames.get(0).getName());
                     mName.get(1).setText(bhNames.get(1).getName());
                     mName.get(2).setText(bhNames.get(2).getName());
+                    final Intent intent = new Intent(Intent.ACTION_DIAL);
+                    for (int j = 0; j < 3; j++) {
+                        final int i = j;
+                        mCall.get(i).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                intent.setData(Uri.parse("tel:" + bhNames.get(i).getCn()));
+                                startActivity(intent);
+                            }
+                        });
+                        mWhatsapp.get(i).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String url = "https://api.whatsapp.com/send?phone=" + "+91" + bhNames.get(i).getWn();
+                                Intent i = new Intent(Intent.ACTION_VIEW);
+                                i.setData(Uri.parse(url));
+                                startActivity(i);
+                            }
+                        });
+                    }
                 }
                 alertDialog.show();
             }
@@ -216,9 +280,9 @@ public class SubEventActivity extends AppCompatActivity {
                 mAbout = dialogView.findViewById(R.id.about_data);
                 mAbout.setVisibility(View.VISIBLE);
                 mHeading = dialogView.findViewById(R.id.heading);
-                String s = "About " + Constants.eventNames[mainEventPosition];
+                String s = "About " + Constants.eventNames.get(mainEventPosition);
                 mHeading.setText(s);
-                mAbout.setText(MainActivity.branchData.get(Constants.eventNames[mainEventPosition]).getAbout());
+                mAbout.setText(MainActivity.branchData.get(Constants.eventNames.get(mainEventPosition)).getAbout());
                 alertDialog.show();
             }
         });
@@ -239,7 +303,7 @@ public class SubEventActivity extends AppCompatActivity {
     private void manageToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setTitle(Constants.eventNames[mainEventPosition]);
+        toolbar.setTitle(Constants.eventNames.get(mainEventPosition));
 
         //manage toolbar icons and text color
         BitmapDrawable drawable = (BitmapDrawable) iv.getDrawable();
@@ -270,9 +334,9 @@ public class SubEventActivity extends AppCompatActivity {
     }
 
     ArrayList<SubEventsModel> getData() {
-        String subEventsName[][] = Constants.SubEventsList;
-        for (int i = 0; i < subEventsName[mainEventPosition].length; i++) {
-            data.add(new SubEventsModel(subEventsName[mainEventPosition][i]));
+        HashMap<Integer, ArrayList<String>> subEventsName = Constants.SubEventsList;
+        for (int i = 0; i < subEventsName.get(mainEventPosition).size(); i++) {
+            data.add(new SubEventsModel(subEventsName.get(mainEventPosition).get(i)));
         }
         return data;
     }
@@ -301,7 +365,7 @@ public class SubEventActivity extends AppCompatActivity {
         backArrow.setColorFilter(toolbarIconColor, PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(backArrow);
         toolbar.setBackgroundColor(getResources().getColor(R.color.transparent));
-        toolbar.setTitle(Constants.eventNames[mainEventPosition]);
+        toolbar.setTitle(Constants.eventNames.get(mainEventPosition));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -323,7 +387,7 @@ public class SubEventActivity extends AppCompatActivity {
 
     public void getPostion(int pos) {
         for (int i = 0; i < MainActivity.data.size(); i++) {
-            String event = Constants.SubEventsList[mainEventPosition][pos].trim();
+            String event = Constants.SubEventsList.get(mainEventPosition).get(position).trim();
             try {
                 if (event.equalsIgnoreCase(MainActivity.data.get(i).getName().trim())) {
                     position = i;

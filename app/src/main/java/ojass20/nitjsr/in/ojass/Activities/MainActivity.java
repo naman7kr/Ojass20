@@ -1,19 +1,24 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
-import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -56,7 +61,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -67,6 +75,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import me.relex.circleindicator.CircleIndicator;
 import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
@@ -81,6 +94,7 @@ import ojass20.nitjsr.in.ojass.Models.EventModel;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.Models.Likes;
 import ojass20.nitjsr.in.ojass.Models.RulesModel;
+import ojass20.nitjsr.in.ojass.Utils.Constants;
 import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
 import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
@@ -88,6 +102,10 @@ import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
 
 import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_IMG_SRC;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_POSTERIMAGES;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsMap;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.eventNames;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.updateSubEventsArray;
+import static ojass20.nitjsr.in.ojass.Utils.StringEqualityPercentCheckUsingJaroWinklerDistance.getSimilarity;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragInterface, ViewPager.OnPageChangeListener, FeedAdapter.CommentClickInterface {
     private static final String LOG_TAG = "Main";
@@ -132,7 +150,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private boolean isFragOpen = false;
     private Handler backHandler;
     private int backFlag = 0;
-
+    private String currentVersion;
+    String urlOfApp = "https://play.google.com/store/apps/details?id=ojass20.nitjsr.in.ojass";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +167,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("PostNo", Integer.toString(0));
         editor.apply();
-        eventStuff();
         fetchBranchHead();
 
         fetchFeedsDataFromFirebase();
@@ -160,9 +178,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         detectTouchEvents();
 
         hidePullUpArrowOnScroll();
+        compareAppVersion();
+//        printHashKey(this);
         refresh();
 
     }
+
 
     private void fetchBranchHead() {
         branchData = new HashMap<>();
@@ -173,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 branchData.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    eventNames.add(ds.getKey());
                     String about = ds.child("about").getValue().toString();
                     ArrayList<BranchHeadModal> bh_list = new ArrayList<>();
                     for (DataSnapshot d : ds.child("head").getChildren()) {
@@ -185,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                     }
                     branchData.put(ds.getKey(), new BranchModal(about, bh_list));
                 }
+                eventStuff();
             }
 
             @Override
@@ -495,8 +518,27 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         String about = ds.child("about").getValue(String.class);
                         String branch = ds.child("branch").getValue(String.class);
-                        String details = ds.child("detail").getValue(String.class);
+                        double ma = 0.0;
+                        String bName = "";
+                        for (int i = 0; i < eventNames.size(); i++) {
+                            double match = getSimilarity(eventNames.get(i), branch);
+                            if (match > ma) {
+                                ma = match;
+                                bName = eventNames.get(i);
+                            }
+                        }
+                        branch = bName;
                         String name = ds.child("name").getValue(String.class);
+                        if (SubEventsMap.containsKey(branch)) {
+                            SubEventsMap.get(branch).add(name);
+                            Log.e("Main", branch + "->" + name);
+                        } else {
+                            SubEventsMap.put(branch, new ArrayList<String>());
+                            SubEventsMap.get(branch).add(name);
+                            Log.e("Main", branch + "->" + name);
+                        }
+
+                        String details = ds.child("detail").getValue(String.class);
                         Long prize1 = ds.child("prize").child("first").getValue(Long.class);
                         Long prize2 = ds.child("prize").child("second").getValue(Long.class);
                         Long prize3 = ds.child("prize").child("third").getValue(Long.class);
@@ -523,8 +565,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         } catch (Exception e) {
                             Log.d("hello", ds.child("name").getValue().toString());
                         }
-
                         data.add(new EventModel(about, branch, details, name, prize1, prize2, prize3, prizeT, coordinatorsModelArrayList, rulesModelArrayList));
+                        updateSubEventsArray();
                     }
                 } catch (Exception e) {
                     if (progressDialog.isShowing()) progressDialog.dismiss();
@@ -758,7 +800,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
         switch (id) {
             case R.id.notifications:
-                startActivity(new Intent(this, NotificationActivity.class));
+                Intent intent = new Intent(this, NotificationActivity.class);
+                intent.putExtra("Caller", 0);
+                startActivity(intent);
                 return true;
             case R.id.emergency:
                 showList();
@@ -867,5 +911,99 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             }
         }, 3000);
     }
+
+    private void compareAppVersion() {
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(this.getPackageName(), 0);
+            currentVersion = pInfo.versionName;
+            new GetCurrentVersion().execute();
+        } catch (PackageManager.NameNotFoundException e1) {
+            Toast.makeText(this, e1.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class GetCurrentVersion extends AsyncTask<Void, Void, Void> {
+
+        private String latestVersion;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                Document document = Jsoup.connect(urlOfApp)
+                        .timeout(30000)
+//                        .userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
+//                        .referrer("http://www.google.com")
+                        .get();
+                if (document != null) {
+                    Elements element = document.getElementsContainingOwnText("Current Version");
+                    for (Element ele : element) {
+                        if (ele.siblingElements() != null) {
+                            Elements sibElemets = ele.siblingElements();
+                            for (Element sibElemet : sibElemets) {
+                                latestVersion = sibElemet.text();
+                            }
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (!TextUtils.isEmpty(currentVersion) && !TextUtils.isEmpty(latestVersion)) {
+//                Log.d("hello", doc.toString());
+                Log.d("hello", "Current : " + currentVersion + " Latest : " + latestVersion);
+                if (currentVersion.compareTo(latestVersion) < 0) {
+                    if (!isFinishing()) {
+                        showUpdateDialog();
+                    }
+                }
+            }
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    private void showUpdateDialog() {
+        //        Dialog  dialog = new Dialog(this);
+//        dialog.setContentView(R.lay);
+//        dialog.setCancelable(false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("New update");
+        builder.setMessage("We have changed since we last met. Let's get the updates.");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=ojass20.nitjsr.in.ojass")));
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("Later", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
+
+//    public static void printHashKey(Context pContext) {
+//        try {
+//            PackageInfo info = pContext.getPackageManager().getPackageInfo(pContext.getPackageName(), PackageManager.GET_SIGNATURES);
+//            for (Signature signature : info.signatures) {
+//                MessageDigest md = MessageDigest.getInstance("SHA");
+//                md.update(signature.toByteArray());
+//                String hashKey = new String(Base64.encode(md.digest(), 0));
+//                Log.i("hello", "printHashKey() Hash Key: " + hashKey);
+//            }
+//        } catch (NoSuchAlgorithmException e) {
+//            Log.e("hello", "printHashKey()", e);
+//        } catch (Exception e) {
+//            Log.e("hello", "printHashKey()", e);
+//        }
+//    }
 
 }
