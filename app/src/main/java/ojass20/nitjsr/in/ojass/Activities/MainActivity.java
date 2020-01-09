@@ -665,13 +665,13 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         profile_name.setOnClickListener(onClickListener);
         profile_picture.setOnClickListener(onClickListener);
 
-        mDrwawerHeaderView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
+        //mDrwawerHeaderView.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
 
 
         //Uncomment below once all fragments have been created
         setupDrawerContent(mNavigationDrawer);
 
-        mNavigationDrawer.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.DARKEN);
+        //mNavigationDrawer.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.DARKEN);
         // headerView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
         //Replacing back arrow with hamburger icon
         mDrawerToggle = setupDrawerToggle();

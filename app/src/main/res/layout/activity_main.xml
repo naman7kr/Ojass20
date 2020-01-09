@@ -167,10 +167,10 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@android:color/white"
-        app:itemIconTint="@android:color/white"
+        android:background="#FFF"
+        app:itemIconTint="#29363d"
         app:itemTextAppearance="@style/NavItemsStyle"
-        app:itemTextColor="@android:color/darker_gray"
+        app:itemTextColor="#29363d"
         app:menu="@menu/navigation_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
