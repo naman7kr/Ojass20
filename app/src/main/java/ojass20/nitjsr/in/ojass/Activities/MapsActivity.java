@@ -1,6 +1,7 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -11,14 +12,19 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.os.Build;
 import android.provider.Settings;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -62,10 +68,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private final static int REQUEST_CHECK_SETTINGS_GPS=0x1;
     private final static int REQUEST_ID_MULTIPLE_PERMISSIONS=0x2;
 
+    Toolbar toolbar;
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        toolbar = findViewById(R.id.toolbar);
+        setActionBar(toolbar);
+        getActionBar().setTitle("NIT Jamshedpur");
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -173,6 +188,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_CHECK_SETTINGS_GPS:
                 switch (resultCode) {
@@ -312,6 +328,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
+        mMap.setMinZoomPreference(calculateZoomLevel());
+    }
+
+    private int calculateZoomLevel(){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+        double eq = 40075004;
+        double mtperpixel = eq / 256;
+        int zoomlevel = 1;
+        while (((mtperpixel * width)) > 4000){
+            mtperpixel /= 2;
+            ++zoomlevel;
+        }
+
+        return zoomlevel;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 

@@ -45,7 +45,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
 
     private Toolbar toolbar;
     private LinearLayout event_search_layout;
-    private ImageView events_search_back_button, events_search_cleartext_button;
+    private ImageView events_search_cleartext_button;
     private AutoCompleteTextView event_search_text;
 
     private MenuItem search_menu_item;
@@ -63,18 +63,11 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         init();
 
         getSupportActionBar().setTitle("Events");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
 
         setZoomableGridView();
         bottomSheetOpen = false;
-
-        events_search_back_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                event_search_layout.setVisibility(View.GONE);
-                search_menu_item.setVisible(true);
-                closeKeyboard();
-            }
-        });
 
         events_search_cleartext_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +105,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_cancel);
         //getSupportActionBar().setLogo(R.drawable.ic_cancel);
-        toolbar.setBackgroundColor(Color.BLACK);
+        //toolbar.setBackgroundColor(Color.BLACK);
         toolbar.setTitle(event_search_text.getText().toString());
         event_search_text.setText("");
     }
@@ -129,8 +122,9 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
 //        Drawable backArrow =  getResources().getDrawable(R.drawable.ic_arrow_back);
 //        backArrow.setColorFilter(toolbarIconColor, PorterDuff.Mode.SRC_ATOP);
         //getSupportActionBar().setLogo(null);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        toolbar.setBackgroundColor(getResources().getColor(R.color.transparent));
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+//        toolbar.setBackgroundColor(getResources().getColor(R.color.transparent));
         toolbar.setTitle("Events");
     }
 
@@ -156,7 +150,6 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         toolbar = findViewById(R.id.events_toolbar);
         setSupportActionBar(toolbar);
         event_search_layout = toolbar.findViewById(R.id.event_search_layout_change);
-        events_search_back_button = toolbar.findViewById(R.id.event_search_back_button);
         events_search_cleartext_button = toolbar.findViewById(R.id.event_search_clear_text_button);
         event_search_text = toolbar.findViewById(R.id.event_search_text);
     }
@@ -220,8 +213,14 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
                 hideBottomSheet();
                 search_menu_item.setVisible(true);
             } else {
-                //go to EventsActivity with transition
-                //finishAfterTransition();
+                if (event_search_layout.getVisibility() == View.VISIBLE) {
+                    closeKeyboard();
+                    event_search_layout.setVisibility(View.GONE);
+                    search_menu_item.setVisible(true);
+                }
+                else {
+                    finish();
+                }
             }
         }
 

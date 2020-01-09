@@ -22,12 +22,12 @@ public class SponsorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sponser);
         recyclerView=findViewById(R.id.sponser_list);
-        staggeredGridLayoutManager=new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(staggeredGridLayoutManager);
-         list=new ArrayList<Map<String,String>>();
-
-        sponserAdapter=new SponserAdapter(getData(),this);
-        recyclerView.setAdapter(sponserAdapter);
+//        staggeredGridLayoutManager=new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL);
+//        recyclerView.setLayoutManager(staggeredGridLayoutManager);
+//         list=new ArrayList<Map<String,String>>();
+//
+//        sponserAdapter=new SponserAdapter(getData(),this);
+//        recyclerView.setAdapter(sponserAdapter);
     }
     ArrayList<Map<String,String>> getData(){
        for(int i=0;i<50;i++){
