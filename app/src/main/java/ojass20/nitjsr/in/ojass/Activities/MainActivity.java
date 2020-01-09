@@ -1,6 +1,5 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
-import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.net.Uri;
@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -62,6 +63,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -172,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
         hidePullUpArrowOnScroll();
         compareAppVersion();
+//        printHashKey(this);
         refresh();
 
     }
@@ -954,5 +958,21 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         });
         builder.show();
     }
+
+//    public static void printHashKey(Context pContext) {
+//        try {
+//            PackageInfo info = pContext.getPackageManager().getPackageInfo(pContext.getPackageName(), PackageManager.GET_SIGNATURES);
+//            for (Signature signature : info.signatures) {
+//                MessageDigest md = MessageDigest.getInstance("SHA");
+//                md.update(signature.toByteArray());
+//                String hashKey = new String(Base64.encode(md.digest(), 0));
+//                Log.i("hello", "printHashKey() Hash Key: " + hashKey);
+//            }
+//        } catch (NoSuchAlgorithmException e) {
+//            Log.e("hello", "printHashKey()", e);
+//        } catch (Exception e) {
+//            Log.e("hello", "printHashKey()", e);
+//        }
+//    }
 
 }
