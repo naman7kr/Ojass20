@@ -3,12 +3,18 @@ package ojass20.nitjsr.in.ojass.Activities;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -17,6 +23,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
@@ -34,9 +41,17 @@ import com.onesignal.OSNotificationAction;
 import com.onesignal.OSNotificationOpenResult;
 
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+>>>>>>>2c3f95bb36657a4020ec1c9cd328597294accc3d
 
 import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.SharedPrefManager;
@@ -105,7 +120,6 @@ public class SplashScreen extends AppCompatActivity {
 //        AnimatorSet animatorSet = new AnimatorSet();
 //        animatorSet.play(scaleXAnimation).with(scaleYAnimation).with(alphaAnimation);
 //        animatorSet.start();
-
         Animation anim_circle = AnimationUtils.loadAnimation(SplashScreen.this, R.anim.slide_in_bottom_splash);
         Animation anim_arrow = AnimationUtils.loadAnimation(SplashScreen.this, R.anim.slide_in_top_splash);
         Animation anim_pi = AnimationUtils.loadAnimation(SplashScreen.this, R.anim.fade_in_splash);
@@ -185,6 +199,54 @@ public class SplashScreen extends AppCompatActivity {
                 Log.e("UPDATE", "Not downloaded yet");
         }
     };
+//    private void inAppUpdate() {
+//        // Creates instance of the manager.
+//        appUpdateManager = AppUpdateManagerFactory.create(this);
+//
+//        // Returns an intent object that you use to check for an update.
+//        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+//
+//        // Checks that the platform will allow the specified type of update.
+//        appUpdateInfoTask.addOnSuccessListener(new OnSuccessListener<AppUpdateInfo>() {
+//            @Override
+//            public void onSuccess(AppUpdateInfo appUpdateInfo) {
+//
+//                Log.e("AVAILABLE_VERSION_CODE", appUpdateInfo.availableVersionCode()+"");
+//                if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+//                        // For a flexible update, use AppUpdateType.FLEXIBLE
+//                        && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+//                    // Request the update.
+//
+//                    try {
+//                        appUpdateManager.startUpdateFlowForResult(
+//                                // Pass the intent that is returned by 'getAppUpdateInfo()'.
+//                                appUpdateInfo,
+//                                // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
+//                                AppUpdateType.IMMEDIATE,
+//                                // The current activity making the update request.
+//                                SplashScreen.this,
+//                                // Include a request code to later monitor this update request.
+//                                UPDATE_REQUEST_CODE);
+//                    } catch (IntentSender.SendIntentException ignored) {
+//
+//                    }
+//                }
+//            }
+//        });
+//
+//        appUpdateManager.registerListener(installStateUpdatedListener);
+//
+//    }
+//    //lambda operation used for below listener
+//    InstallStateUpdatedListener installStateUpdatedListener = new InstallStateUpdatedListener() {
+//        @Override
+//        public void onStateUpdate(InstallState installState) {
+//            if (installState.installStatus() == InstallStatus.DOWNLOADED) {
+//                SplashScreen.this.popupSnackbarForCompleteUpdate();
+//            } else
+//                Log.e("UPDATE", "Not downloaded yet");
+//        }
+//    };
 
 
     private void popupSnackbarForCompleteUpdate() {
