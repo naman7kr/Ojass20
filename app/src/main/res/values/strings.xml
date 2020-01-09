@@ -37,7 +37,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sponsor">Sponsor</string>
-    <string name="backPress">Do you want to close the application</string>
+    <string name="backPress">Press again to exit</string>
     <string name="emergency_call">Emergency Call</string>
 
     <string-array name="team_names">

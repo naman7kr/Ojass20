@@ -935,6 +935,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     }
 
     private void showUpdateDialog() {
+        //        Dialog  dialog = new Dialog(this);
+//        dialog.setContentView(R.lay);
+//        dialog.setCancelable(false);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("New update");
         builder.setMessage("We have changed since we last met. Let's get the updates.");
