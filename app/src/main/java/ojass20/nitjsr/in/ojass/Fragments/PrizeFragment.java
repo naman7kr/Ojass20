@@ -45,12 +45,12 @@ public class PrizeFragment extends Fragment {
 //                        init2(view);
 //                        setData2(em);
 //                    }
-                    prize_layout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mCallback.onCallback();
-                        }
-                    });
+////                    prize_layout.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            mCallback.onCallback();
+//                        }
+//                    });
                 }
             }
         }

@@ -93,6 +93,8 @@ import ojass20.nitjsr.in.ojass.Models.CoordinatorsModel;
 import ojass20.nitjsr.in.ojass.Models.EventModel;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.Models.Likes;
+import ojass20.nitjsr.in.ojass.Models.PrizeModel1;
+import ojass20.nitjsr.in.ojass.Models.PrizeModel2;
 import ojass20.nitjsr.in.ojass.Models.RulesModel;
 import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
 import ojass20.nitjsr.in.ojass.R;
@@ -101,6 +103,10 @@ import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
 
 import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_IMG_SRC;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_POSTERIMAGES;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsMap;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.eventNames;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.updateSubEventsArray;
+import static ojass20.nitjsr.in.ojass.Utils.StringEqualityPercentCheckUsingJaroWinklerDistance.getSimilarity;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragInterface, ViewPager.OnPageChangeListener, FeedAdapter.CommentClickInterface {
     private static final String LOG_TAG = "Main";
@@ -532,10 +538,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                             Log.e("Main", branch + "->" + name);
                         }
                         String details = ds.child("detail").getValue(String.class);
-                        String name = ds.child("name").getValue(String.class);
+                        String nam = ds.child("name").getValue(String.class);
                         PrizeModel2 p2=null;
                         PrizeModel1 p1=null;
-                        if(checkPrizeType(name)){
+                        if(checkPrizeType(nam)){
                             Long prize1=ds.child("prize").child("first").getValue(Long.class);
                             Long prize2=ds.child("prize").child("second").getValue(Long.class);
                             Long prize3=ds.child("prize").child("third").getValue(Long.class);
@@ -582,7 +588,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         } catch (Exception e) {
                             Log.d("hello", ds.child("name").getValue().toString());
                         }
-                        data.add(new EventModel(about, branch, details, name, prize1, prize2, prize3, prizeT, coordinatorsModelArrayList, rulesModelArrayList));
+                        data.add(new EventModel(about, branch, details, name, p1, p2, coordinatorsModelArrayList, rulesModelArrayList));
                         updateSubEventsArray();
                     }
                 } catch (Exception e) {
