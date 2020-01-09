@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -34,13 +35,15 @@ import ojass20.nitjsr.in.ojass.Utils.PinchAlphaInterface;
 import ojass20.nitjsr.in.ojass.Utils.ZoomLayout;
 import ojass20.nitjsr.in.ojass.R;
 
+import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsMap;
+
 public class EventsActivity extends AppCompatActivity implements PinchAlphaInterface {
     private static final int NO_OF_COLUMNS = 4;
     private static final float INIT_ALPHA = 0.6f;
     ArrayList<EventsDisplayModel> data = new ArrayList<>();
     EventsGridAdapter mAdapter;
     int width;
-    float alphaVal=0;
+    float alphaVal = 0;
     RecyclerView gridLayout;
 
     private Toolbar toolbar;
@@ -54,7 +57,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
     private static boolean bottomSheetOpen = false;
     private static int toolbarIconColor = Color.BLACK;
 
-    String[] fruits = {"Apple", "Banana", "Cherry", "Date", "Grape", "Kiwi", "Mango", "Pear"};
+    ArrayList<String> fruits;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +138,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
     }
 
     private void setZoomableGridView() {
-        gridLayout.setLayoutManager(new GridLayoutManager(this,NO_OF_COLUMNS));
+        gridLayout.setLayoutManager(new GridLayoutManager(this, NO_OF_COLUMNS));
 
         //getting width of device
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -147,11 +150,17 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
             data.add(new EventsDisplayModel(Constants.eventImg[i], Constants.eventNames.get(i), INIT_ALPHA));
         }
 
-        mAdapter = new EventsGridAdapter(this,width,data);
+        mAdapter = new EventsGridAdapter(this, width, data);
         gridLayout.setAdapter(mAdapter);
     }
 
-    void init(){
+    void init() {
+        fruits = new ArrayList<>();
+        for (Map.Entry<String, ArrayList<String>> entry : SubEventsMap.entrySet()) {
+
+            for (int i = 0; i < entry.getValue().size(); i++)
+                fruits.add(entry.getValue().get(i));
+        }
         gridLayout = findViewById(R.id.events_grid);
         toolbar = findViewById(R.id.events_toolbar);
         setSupportActionBar(toolbar);
