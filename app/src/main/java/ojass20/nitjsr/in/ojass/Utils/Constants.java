@@ -31,7 +31,7 @@ public class Constants {
             R.mipmap.csgolive,
             R.mipmap.exposicion,
             R.mipmap.school_events,
-            R.mipmap.school_events
+            R.mipmap.checkered_flag
     };
     public static final ArrayList<String> eventNames = new ArrayList<>();
     public static final HashMap<String, ArrayList<String>> SubEventsMap = new HashMap<>();
