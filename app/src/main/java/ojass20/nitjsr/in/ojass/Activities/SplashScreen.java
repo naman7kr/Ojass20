@@ -30,9 +30,14 @@ import com.google.android.play.core.install.model.InstallStatus;
 import com.google.android.play.core.install.model.UpdateAvailability;
 import com.google.android.play.core.tasks.OnSuccessListener;
 import com.google.android.play.core.tasks.Task;
+import com.onesignal.OSNotificationAction;
+import com.onesignal.OSNotificationOpenResult;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.json.JSONObject;
+
 import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.SharedPrefManager;
 
@@ -47,8 +52,19 @@ public class SplashScreen extends AppCompatActivity {
     private static final int DASHBOARD = 3;
     private int destinationFlag;
     private AppUpdateManager appUpdateManager;
+    private int val;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        val = getIntent().getIntExtra("Caller", -1);
+//        Log.e("Hey", "" + val);
+//        if (val == 0) {
+//            Intent intent = new Intent(SplashScreen.this, NotificationActivity.class);
+////            intent.putExtra("Caller", 0);
+//            startActivity(intent);
+//            finish();
+//            return;
+//        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
@@ -62,6 +78,7 @@ public class SplashScreen extends AppCompatActivity {
         animation();
         doTheDelayStuff();
     }
+
     public static void changeStatusBarColor(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = activity.getWindow();
@@ -70,6 +87,7 @@ public class SplashScreen extends AppCompatActivity {
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
     }
+
     private void animation() {
 
 //        ObjectAnimator scaleXAnimation = ObjectAnimator.ofFloat(mImageView, "scaleX", 5.0F, 1.0F);
@@ -88,9 +106,9 @@ public class SplashScreen extends AppCompatActivity {
 //        animatorSet.play(scaleXAnimation).with(scaleYAnimation).with(alphaAnimation);
 //        animatorSet.start();
 
-        Animation anim_circle= AnimationUtils.loadAnimation(SplashScreen.this,R.anim.slide_in_bottom_splash);
-        Animation anim_arrow= AnimationUtils.loadAnimation(SplashScreen.this,R.anim.slide_in_top_splash);
-        Animation anim_pi= AnimationUtils.loadAnimation(SplashScreen.this,R.anim.fade_in_splash);
+        Animation anim_circle = AnimationUtils.loadAnimation(SplashScreen.this, R.anim.slide_in_bottom_splash);
+        Animation anim_arrow = AnimationUtils.loadAnimation(SplashScreen.this, R.anim.slide_in_top_splash);
+        Animation anim_pi = AnimationUtils.loadAnimation(SplashScreen.this, R.anim.fade_in_splash);
         circle.startAnimation(anim_circle);
         arrow.startAnimation(anim_arrow);
         pi.startAnimation(anim_pi);
@@ -103,7 +121,7 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void run() {
                 inAppUpdate();
-                switch (destinationFlag){
+                switch (destinationFlag) {
                     case DASHBOARD:
                         moveToMainActivity();
                         break;
@@ -117,6 +135,7 @@ public class SplashScreen extends AppCompatActivity {
             }
         }, SPLASH_DISPLAY_LENGTH);
     }
+
     private void inAppUpdate() {
         // Creates instance of the manager.
         appUpdateManager = AppUpdateManagerFactory.create(this);
@@ -129,7 +148,7 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void onSuccess(AppUpdateInfo appUpdateInfo) {
 
-                Log.e("AVAILABLE_VERSION_CODE", appUpdateInfo.availableVersionCode()+"");
+                Log.e("AVAILABLE_VERSION_CODE", appUpdateInfo.availableVersionCode() + "");
                 if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                         // For a flexible update, use AppUpdateType.FLEXIBLE
                         && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
@@ -155,6 +174,7 @@ public class SplashScreen extends AppCompatActivity {
         appUpdateManager.registerListener(installStateUpdatedListener);
 
     }
+
     //lambda operation used for below listener
     InstallStateUpdatedListener installStateUpdatedListener = new InstallStateUpdatedListener() {
         @Override
@@ -183,13 +203,14 @@ public class SplashScreen extends AppCompatActivity {
         });
         snackbar.show();
     }
-    private int getDestinationActivity(){
+
+    private int getDestinationActivity() {
         sharedPrefManager = new SharedPrefManager(this);
-        if (sharedPrefManager.isFirstOpen()){
+        if (sharedPrefManager.isFirstOpen()) {
             sharedPrefManager.setIsFirstOpen(false);
             return WALKTHROUGH;
         } else {
-            if (sharedPrefManager.isLoggedIn()){
+            if (sharedPrefManager.isLoggedIn()) {
                 return DASHBOARD;
             } else {
                 return LOGIN;
