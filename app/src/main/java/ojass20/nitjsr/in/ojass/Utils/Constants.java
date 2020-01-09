@@ -50,7 +50,7 @@ public class Constants {
     };
     public static final String[][] SubEventsList = new String[][]{
             {"Mech-Trivia","GURUTWA", "iANSYST", "BOX-CIPHER", "CORPORATE BYTES","Junkyard Wars","Prakshepan"},
-            {"Codemania", "Hack-De-Science", "Code-o-Soccer", "Comp Geeks", "Sudo-Code", "Imitation Game"},
+            {"Codemania", "Hack-De-Science", "Code-o-Soccer", "Comp Geeks", "Sudo-Code", "Imitation Game","Bamboozle"},
             {"High Voltage Concepts", "Elixir of Electricity", "ELECTROSPECTION", "Electro Scribble", "MAT-SIM", "Electro-Q","Who Am I?"},
             {"TUKVILLA", "Jigyasa", "CODESENSE", "NETKRAFT", "EMBETRIX","Electonics Frenzy","Tech Today"},
             {"Toddler to Tycoon(TTT)", "Prabandh Yojana", "Let's Start Up", "Bizzathlon", "Corporate Roadies"},

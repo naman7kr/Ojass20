@@ -7,13 +7,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -56,6 +60,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,6 +72,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import me.relex.circleindicator.CircleIndicator;
 import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
@@ -132,7 +142,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private boolean isFragOpen = false;
     private Handler backHandler;
     private int backFlag = 0;
-
+    private String currentVersion;
+    String urlOfApp ="https://play.google.com/store/apps/details?id=ojass20.nitjsr.in.ojass";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         detectTouchEvents();
 
         hidePullUpArrowOnScroll();
+        compareAppVersion();
         refresh();
 
     }
@@ -866,6 +878,81 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 backFlag = 0;
             }
         }, 3000);
+    }
+
+    private void compareAppVersion() {
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(this.getPackageName(), 0);
+            currentVersion = pInfo.versionName;
+            new GetCurrentVersion().execute();
+        } catch (PackageManager.NameNotFoundException e1) {
+            Toast.makeText(this, e1.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class GetCurrentVersion extends AsyncTask<Void, Void, Void> {
+
+        private String latestVersion;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                Document document = Jsoup.connect(urlOfApp)
+                        .timeout(30000)
+//                        .userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
+//                        .referrer("http://www.google.com")
+                        .get();
+                if (document != null) {
+                    Elements element = document.getElementsContainingOwnText("Current Version");
+                    for (Element ele : element) {
+                        if (ele.siblingElements() != null) {
+                            Elements sibElemets = ele.siblingElements();
+                            for (Element sibElemet : sibElemets) {
+                                latestVersion = sibElemet.text();
+                            }
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (!TextUtils.isEmpty(currentVersion) && !TextUtils.isEmpty(latestVersion)) {
+//                Log.d("hello", doc.toString());
+                Log.d("hello", "Current : " + currentVersion + " Latest : " + latestVersion);
+                if (currentVersion.compareTo(latestVersion) < 0) {
+                    if (!isFinishing()) {
+                        showUpdateDialog();
+                    }
+                }
+            }
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    private void showUpdateDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("New update");
+        builder.setMessage("We have changed since we last met. Let's get the updates.");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=ojass20.nitjsr.in.ojass")));
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("Later", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 
 }
