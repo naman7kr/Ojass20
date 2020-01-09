@@ -143,8 +143,8 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         width = displayMetrics.widthPixels;
 
         //getting event names and images
-        for (int i = 0; i < Constants.eventNames.length; i++) {
-            data.add(new EventsDisplayModel(Constants.eventImg[i], Constants.eventNames[i], INIT_ALPHA));
+        for (int i = 0; i < Constants.eventNames.size(); i++) {
+            data.add(new EventsDisplayModel(Constants.eventImg[i], Constants.eventNames.get(i), INIT_ALPHA));
         }
 
         mAdapter = new EventsGridAdapter(this,width,data);
@@ -172,8 +172,8 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         }
         data.clear();
 //        Log.e("TAG"," "+alphaVal);
-        for (int i = 0; i < Constants.eventNames.length; i++) {
-            data.add(new EventsDisplayModel(Constants.eventImg[i], Constants.eventNames[i], alphaVal));
+        for (int i = 0; i < Constants.eventNames.size(); i++) {
+            data.add(new EventsDisplayModel(Constants.eventImg[i], Constants.eventNames.get(i), alphaVal));
         }
         mAdapter.notifyDataSetChanged();
     }

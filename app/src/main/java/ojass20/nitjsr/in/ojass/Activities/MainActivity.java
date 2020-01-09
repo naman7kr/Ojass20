@@ -91,6 +91,7 @@ import ojass20.nitjsr.in.ojass.Models.EventModel;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.Models.Likes;
 import ojass20.nitjsr.in.ojass.Models.RulesModel;
+import ojass20.nitjsr.in.ojass.Utils.Constants;
 import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
 import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
@@ -98,6 +99,10 @@ import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
 
 import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_IMG_SRC;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_POSTERIMAGES;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsMap;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.eventNames;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.updateSubEventsArray;
+import static ojass20.nitjsr.in.ojass.Utils.StringEqualityPercentCheckUsingJaroWinklerDistance.getSimilarity;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragInterface, ViewPager.OnPageChangeListener, FeedAdapter.CommentClickInterface {
     private static final String LOG_TAG = "Main";
@@ -143,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private Handler backHandler;
     private int backFlag = 0;
     private String currentVersion;
-    String urlOfApp ="https://play.google.com/store/apps/details?id=ojass20.nitjsr.in.ojass";
+    String urlOfApp = "https://play.google.com/store/apps/details?id=ojass20.nitjsr.in.ojass";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("PostNo", Integer.toString(0));
         editor.apply();
-        eventStuff();
         fetchBranchHead();
 
         fetchFeedsDataFromFirebase();
@@ -176,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
     }
 
+
     private void fetchBranchHead() {
         branchData = new HashMap<>();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Branches");
@@ -185,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 branchData.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    eventNames.add(ds.getKey());
                     String about = ds.child("about").getValue().toString();
                     ArrayList<BranchHeadModal> bh_list = new ArrayList<>();
                     for (DataSnapshot d : ds.child("head").getChildren()) {
@@ -197,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                     }
                     branchData.put(ds.getKey(), new BranchModal(about, bh_list));
                 }
+                eventStuff();
             }
 
             @Override
@@ -507,8 +514,27 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         String about = ds.child("about").getValue(String.class);
                         String branch = ds.child("branch").getValue(String.class);
-                        String details = ds.child("detail").getValue(String.class);
+                        double ma = 0.0;
+                        String bName = "";
+                        for (int i = 0; i < eventNames.size(); i++) {
+                            double match = getSimilarity(eventNames.get(i), branch);
+                            if (match > ma) {
+                                ma = match;
+                                bName = eventNames.get(i);
+                            }
+                        }
+                        branch = bName;
                         String name = ds.child("name").getValue(String.class);
+                        if (SubEventsMap.containsKey(branch)) {
+                            SubEventsMap.get(branch).add(name);
+                            Log.e("Main", branch + "->" + name);
+                        } else {
+                            SubEventsMap.put(branch, new ArrayList<String>());
+                            SubEventsMap.get(branch).add(name);
+                            Log.e("Main", branch + "->" + name);
+                        }
+
+                        String details = ds.child("detail").getValue(String.class);
                         Long prize1 = ds.child("prize").child("first").getValue(Long.class);
                         Long prize2 = ds.child("prize").child("second").getValue(Long.class);
                         Long prize3 = ds.child("prize").child("third").getValue(Long.class);
@@ -535,8 +561,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         } catch (Exception e) {
                             Log.d("hello", ds.child("name").getValue().toString());
                         }
-
                         data.add(new EventModel(about, branch, details, name, prize1, prize2, prize3, prizeT, coordinatorsModelArrayList, rulesModelArrayList));
+                        updateSubEventsArray();
                     }
                 } catch (Exception e) {
                     if (progressDialog.isShowing()) progressDialog.dismiss();
@@ -771,7 +797,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         switch (id) {
             case R.id.notifications:
                 Intent intent = new Intent(this, NotificationActivity.class);
-                intent.putExtra("Caller",0);
+                intent.putExtra("Caller", 0);
                 startActivity(intent);
                 return true;
             case R.id.emergency:
