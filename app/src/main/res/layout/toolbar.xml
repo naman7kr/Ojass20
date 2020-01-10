@@ -9,4 +9,4 @@
     app:theme="@style/AppTheme"
     app:title="@string/feeds"
     app:titleTextAppearance="@style/OpenSansTextStyle"
-    app:titleTextColor="@color/white" />
+    app:titleTextColor="#000" />

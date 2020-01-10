@@ -16,15 +16,20 @@
         android:launchMode="singleInstance"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Activities.FeedBackActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="com.onesignal.NotificationOpened.DEFAULT"
             android:value="DISABLE" />
 
-        <activity android:name=".Activities.FaqActivity">
-
-        </activity>
-        <activity android:name=".Activities.NotificationActivity"></activity>
+        <activity android:name=".Activities.FaqActivity"></activity>
+        <activity android:name=".Activities.NotificationActivity" />
         <activity android:name=".Activities.WalkThroughActivity" />
         <activity android:name=".Activities.SplashScreen">
             <intent-filter>
