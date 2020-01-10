@@ -84,6 +84,7 @@ public class SubEventActivity extends AppCompatActivity {
     private TextView mAbout, mHeading;
     private View mDivider1, mDivider2;
     private ArrayList<String> mSubEventName;
+    private SubEventsAdapter mAdapter;
 
     private ArrayList<ValueAnimator> animators;
 
@@ -111,13 +112,14 @@ public class SubEventActivity extends AppCompatActivity {
             }
         };
 
-        if (mSubEventName != null) {
-            showBottomSheet();
-            bottomSheetOpen = true;
-            getPostion(mSubEventName.get(0));
-        }
+//        if (mSubEventName != null) {
+//            showBottomSheet();
+//            bottomSheetOpen = true;
+//            getPostion(mSubEventName.get(0));
+//        }
 
-        rView.setAdapter(new SubEventsAdapter(this, getData(), mInterface));
+        mAdapter = new SubEventsAdapter(this, getData(), mInterface);
+        rView.setAdapter(mAdapter);
         //set Image
         iv.setImageResource(Constants.eventImg[mainEventPosition]);
 
@@ -128,7 +130,7 @@ public class SubEventActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (isOpen) {
 
-                    if(animators.size()>0)
+                    if (animators.size() > 0)
                         animators.clear();
 
                     animators.add(changeRadius2(mHeadLayout));
@@ -146,7 +148,7 @@ public class SubEventActivity extends AppCompatActivity {
                     isOpen = false;
 
                     //mFab.setBackgroundColor(Color.parseColor("#00ccff"));
-                    Animation manim = AnimationUtils.loadAnimation(SubEventActivity.this,R.anim.rotate_around_center_point);
+                    Animation manim = AnimationUtils.loadAnimation(SubEventActivity.this, R.anim.rotate_around_center_point);
                     manim.setDuration(350);
                     mFab.startAnimation(manim);
                     Handler handler = new Handler();
@@ -156,11 +158,11 @@ public class SubEventActivity extends AppCompatActivity {
                             mFab.setImageDrawable(getDrawable(R.drawable.ic_add_black_24dp));
                             //mFab.setBackgroundColor(Color.WHITE);
                         }
-                    },350);
+                    }, 350);
                 } else {
 
-                    if(animators.size()>0)
-                    animators.clear();
+                    if (animators.size() > 0)
+                        animators.clear();
 
                     animators.add(changeRadius(mHeadLayout));
                     animators.add(changeRadius(mAboutLayout));
@@ -177,7 +179,7 @@ public class SubEventActivity extends AppCompatActivity {
                     isOpen = true;
 
                     //mFab.setBackgroundColor(Color.parseColor("#00ccff"));
-                    Animation manim = AnimationUtils.loadAnimation(SubEventActivity.this,R.anim.rotate_around_center_point);
+                    Animation manim = AnimationUtils.loadAnimation(SubEventActivity.this, R.anim.rotate_around_center_point);
                     manim.setDuration(350);
                     mFab.startAnimation(manim);
                     Handler handler = new Handler();
@@ -187,7 +189,7 @@ public class SubEventActivity extends AppCompatActivity {
                             mFab.setImageDrawable(getDrawable(R.drawable.ic_close_fab_24dp));
                             //mFab.setBackgroundColor(Color.WHITE);
                         }
-                    },350);
+                    }, 350);
 //                    TranslateAnimation tr = new TranslateAnimation(0.0f, 0.0f, 0, 30);
 //                    tr.setDuration(100);
 //                    mFab.startAnimation(tr);
@@ -329,7 +331,7 @@ public class SubEventActivity extends AppCompatActivity {
                 dismiss_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(alertDialog.isShowing()) alertDialog.dismiss();
+                        if (alertDialog.isShowing()) alertDialog.dismiss();
                     }
                 });
             }
@@ -365,7 +367,7 @@ public class SubEventActivity extends AppCompatActivity {
                 dismiss_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(alertDialog.isShowing()) alertDialog.dismiss();
+                        if (alertDialog.isShowing()) alertDialog.dismiss();
                     }
                 });
             }
@@ -389,6 +391,7 @@ public class SubEventActivity extends AppCompatActivity {
         anim.setInterpolator(new LinearInterpolator());
         return anim;
     }
+
     private ValueAnimator changeRadius2(final ImageView imageView) {
         ConstraintLayout.LayoutParams lP = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
         ValueAnimator anim = ValueAnimator.ofInt((int) MainActivity.convertDpToPixel(120, getApplicationContext()), (int) MainActivity.convertDpToPixel(0, getApplicationContext()));
@@ -413,6 +416,7 @@ public class SubEventActivity extends AppCompatActivity {
             hideBottomSheet();
             bottomSheetOpen = false;
         } else {
+            mAdapter = null;
             finishAfterTransition();
         }
     }
@@ -453,6 +457,8 @@ public class SubEventActivity extends AppCompatActivity {
 
     ArrayList<SubEventsModel> getData() {
         HashMap<Integer, ArrayList<String>> subEventsName = SubEventsList;
+        data.clear();
+        Log.e("xx", "called again " + subEventsName.size());
         for (int i = 0; i < subEventsName.get(mainEventPosition).size(); i++) {
             data.add(new SubEventsModel(subEventsName.get(mainEventPosition).get(i)));
         }

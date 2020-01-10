@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         editor.putString("PostNo", Integer.toString(0));
         editor.apply();
         fetchBranchHead();
+//        eventStuff();
 
         fetchFeedsDataFromFirebase();
 
@@ -187,14 +188,29 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
     private void fetchBranchHead() {
         branchData = new HashMap<>();
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Initialising App data...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Branches");
         ref.keepSynced(true);
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 branchData.clear();
+                boolean sizeUpdated = false;
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    eventNames.add(ds.getKey());
+                    boolean z = false;
+                    for (int i = 0; i < eventNames.size(); i++) {
+                        if (eventNames.get(i).equals(ds.getKey())) {
+                            z = true;
+                            break;
+                        }
+                    }
+                    if (!z) {
+                        eventNames.add(ds.getKey());
+                        sizeUpdated = true;
+                    }
                     String about = ds.child("about").getValue().toString();
                     ArrayList<BranchHeadModal> bh_list = new ArrayList<>();
                     for (DataSnapshot d : ds.child("head").getChildren()) {
@@ -207,7 +223,11 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                     }
                     branchData.put(ds.getKey(), new BranchModal(about, bh_list));
                 }
-                eventStuff();
+                if (eventNames.size() == 18 && sizeUpdated) {
+                    eventStuff();
+                }
+                if (eventNames.size() == 18)
+                    progressDialog.dismiss();
             }
 
             @Override
@@ -513,7 +533,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 data.clear();
-                progressDialog.dismiss();
                 try {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         String about = ds.child("about").getValue(String.class);
@@ -533,7 +552,15 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                             SubEventsMap.get(branch).add(name);
                         } else {
                             SubEventsMap.put(branch, new ArrayList<String>());
-                            SubEventsMap.get(branch).add(name);
+                            boolean z = false;
+                            for (int i = 0; i < SubEventsMap.get(branch).size(); i++) {
+                                if (SubEventsMap.get(branch).get(i).equals(name)) {
+                                    z = true;
+                                    break;
+                                }
+                            }
+                            if (!z)
+                                SubEventsMap.get(branch).add(name);
                         }
                         String details = ds.child("detail").getValue(String.class);
                         String nam = ds.child("name").getValue(String.class);
@@ -617,6 +644,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                     if (progressDialog.isShowing()) progressDialog.dismiss();
 //                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
+                progressDialog.dismiss();
             }
 
             @Override

@@ -133,6 +133,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         toolbar.setTitle(event_search_text.getText().toString());
         event_search_text.setText("");
     }
+
     private void hideBottomSheet() {
         bottomSheetOpen = false;
 
@@ -160,6 +161,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         width = displayMetrics.widthPixels;
 
         //getting event names and images
+        data.clear();
         for (int i = 0; i < Constants.eventNames.size(); i++) {
             data.add(new EventsDisplayModel(Constants.eventImg[i], Constants.eventNames.get(i), INIT_ALPHA));
         }
@@ -232,6 +234,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         } else {
             //finishAfterTransition();
             super.onBackPressed();
+            finish();
         }
     }
 
@@ -246,8 +249,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
                     closeKeyboard();
                     event_search_layout.setVisibility(View.GONE);
                     search_menu_item.setVisible(true);
-                }
-                else {
+                } else {
                     finish();
                 }
             }
