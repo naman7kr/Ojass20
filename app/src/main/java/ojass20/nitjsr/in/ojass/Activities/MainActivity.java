@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         progressDialog.setMessage("Initialising App data...");
         progressDialog.setCancelable(false);
         progressDialog.show();
+        progressDialog.dismiss();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Branches");
         ref.keepSynced(true);
         ref.addValueEventListener(new ValueEventListener() {
@@ -200,6 +201,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 branchData.clear();
                 boolean sizeUpdated = false;
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    if (ds.getKey().equalsIgnoreCase("National College Film Festival"))
+                        continue;
                     boolean z = false;
                     for (int i = 0; i < eventNames.size(); i++) {
                         if (eventNames.get(i).equals(ds.getKey())) {
@@ -226,8 +229,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 if (eventNames.size() == 18 && sizeUpdated) {
                     eventStuff();
                 }
-                if (eventNames.size() == 18)
-                    progressDialog.dismiss();
             }
 
             @Override
@@ -525,7 +526,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Initialising App data...");
         progressDialog.setCancelable(false);
-        progressDialog.show();
+//        progressDialog.show();
 
         data = new ArrayList<>();
 
@@ -535,8 +536,14 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 data.clear();
                 try {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        String link = "";
                         String about = ds.child("about").getValue(String.class);
                         String branch = ds.child("branch").getValue(String.class);
+                        try {
+                            link = ds.child("link").getValue(String.class);
+                        } catch (Exception e) {
+                            Log.e(LOG_TAG, e.getLocalizedMessage());
+                        }
                         double ma = 0.0;
                         String bName = "";
                         for (int i = 0; i < eventNames.size(); i++) {
@@ -637,14 +644,14 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                             Log.d("hello", ds.child("name").getValue().toString());
                         }
                         Log.e(LOG_TAG, branch);
-                        data.add(new EventModel(about, branch, details, name, p1, p2, coordinatorsModelArrayList, rulesModelArrayList));
+                        data.add(new EventModel(about, branch, details, name, p1, p2, coordinatorsModelArrayList, rulesModelArrayList, link));
                         updateSubEventsArray();
                     }
                 } catch (Exception e) {
                     if (progressDialog.isShowing()) progressDialog.dismiss();
 //                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
             }
 
             @Override

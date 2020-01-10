@@ -1,5 +1,6 @@
 package ojass20.nitjsr.in.ojass.Fragments;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
