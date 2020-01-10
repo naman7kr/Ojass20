@@ -94,5 +94,6 @@ public class Constants {
             }
             SubEventsList.put(j, entry.getValue());
         }
+        Log.e("cons", "" + SubEventsList.size());
     }
 }

@@ -55,6 +55,8 @@ import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.Constants;
 import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
 
+import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsList;
+
 public class SubEventActivity extends AppCompatActivity {
     private LinearLayout mAboutLayout, mHeadLayout;
     private RecyclerView rView;
@@ -77,6 +79,7 @@ public class SubEventActivity extends AppCompatActivity {
     private ArrayList<TextView> mName;
     private TextView mAbout, mHeading;
     private View mDivider1, mDivider2;
+    private ArrayList<String> mSubEventName;
 
 
     @Override
@@ -86,8 +89,7 @@ public class SubEventActivity extends AppCompatActivity {
         init();
         //get intent get main event
         mainEventPosition = getIntent().getIntExtra("event_id", 0); //from intent
-
-
+        mSubEventName = getIntent().getStringArrayListExtra("sub_event_name");
         rView.setLayoutManager(new LinearLayoutManager(this));
 
         manageToolbar();
@@ -96,13 +98,19 @@ public class SubEventActivity extends AppCompatActivity {
         RecyclerClickInterface mInterface = new RecyclerClickInterface() {
             @Override
             public void onLayoutClick(View v, int position) {
-                Log.e("Hey", mainEventPosition + " " + position);
-                getSupportActionBar().setTitle(Constants.SubEventsList.get(mainEventPosition).get(position));
+                getSupportActionBar().setTitle(SubEventsList.get(mainEventPosition).get(position));
                 showBottomSheet();
                 bottomSheetOpen = true;
                 getPostion(position);
             }
         };
+
+        if (mSubEventName != null) {
+            showBottomSheet();
+            bottomSheetOpen = true;
+            getPostion(mSubEventName.get(0));
+        }
+
         rView.setAdapter(new SubEventsAdapter(this, getData(), mInterface));
         //set Image
         iv.setImageResource(Constants.eventImg[mainEventPosition]);
@@ -335,7 +343,7 @@ public class SubEventActivity extends AppCompatActivity {
     }
 
     ArrayList<SubEventsModel> getData() {
-        HashMap<Integer, ArrayList<String>> subEventsName = Constants.SubEventsList;
+        HashMap<Integer, ArrayList<String>> subEventsName = SubEventsList;
         for (int i = 0; i < subEventsName.get(mainEventPosition).size(); i++) {
             data.add(new SubEventsModel(subEventsName.get(mainEventPosition).get(i)));
         }
@@ -387,17 +395,34 @@ public class SubEventActivity extends AppCompatActivity {
     }
 
     public void getPostion(int pos) {
+        String event = SubEventsList.get(mainEventPosition).get(pos).trim();
+        Log.e("this", "" + event);
         for (int i = 0; i < MainActivity.data.size(); i++) {
-            String event = Constants.SubEventsList.get(mainEventPosition).get(pos).trim();
             try {
                 if (event.equalsIgnoreCase(MainActivity.data.get(i).getName().trim())) {
                     position = i;
                     break;
                 }
             } catch (Exception e) {
-                Toast.makeText(this, MainActivity.data.get(i).getBranch(), Toast.LENGTH_SHORT).show();
+                Log.e("Sub", e.getLocalizedMessage());
+            } finally {
+                continue;
             }
+        }
+    }
 
+    public void getPostion(String subEvent) {
+        for (int i = 0; i < MainActivity.data.size(); i++) {
+            try {
+                if (subEvent.equalsIgnoreCase(MainActivity.data.get(i).getName().trim())) {
+                    position = i;
+                    break;
+                }
+            } catch (Exception e) {
+                Log.e("Sub", e.getLocalizedMessage());
+            } finally {
+                continue;
+            }
         }
     }
 }
