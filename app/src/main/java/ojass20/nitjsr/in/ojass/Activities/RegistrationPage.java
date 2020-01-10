@@ -112,11 +112,13 @@ public class RegistrationPage extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Toast.makeText(RegistrationPage.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(RegistrationPage.this, MainActivity.class));
+                            finish();
                         }
                         else{
                             Toast.makeText(RegistrationPage.this, "Error: Not registered", Toast.LENGTH_SHORT).show();
                             Log.e("onComplete: "," "+task.getException().toString());
                             startActivity(new Intent(RegistrationPage.this, MainActivity.class));
+                            finish();
                         }
                     }
                 });
@@ -132,4 +134,5 @@ public class RegistrationPage extends AppCompatActivity {
         register_button = findViewById(R.id.register_button_Registration_page);
         self_image = findViewById(R.id.register_self_pic);
     }
+
 }

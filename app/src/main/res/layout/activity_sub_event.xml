@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -52,84 +53,145 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/about_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:visibility="invisible">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:fontFamily="@font/opensans"
-                        android:text="About"
-                        android:textColor="@color/white"
-                        android:textStyle="bold"></TextView>
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_margin="4dp"
-                        android:clickable="true"
-                        android:elevation="16dp"
-                        android:focusable="true"
-                        android:src="@drawable/ic_info_black_24dp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/head_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:visibility="invisible">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:fontFamily="@font/opensans"
-                        android:text="Event Heads"
-                        android:textColor="@color/white"
-                        android:textStyle="bold"></TextView>
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_margin="4dp"
-                        android:clickable="true"
-                        android:elevation="16dp"
-                        android:focusable="true"
-                        android:src="@drawable/ic_account_circle_black_24dp" />
-
-                </LinearLayout>
+                android:layout_alignParentBottom="true">
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_margin="24dp"
-                    android:background="?android:attr/selectableItemBackground"
+                    android:background="@color/white"
+                    android:clickable="true"
+                    android:elevation="36dp"
+                    android:focusable="true"
+                    android:src="@drawable/ic_add_black_24dp"
+                    app:backgroundTint="#d3d3d3"
+                    app:fabSize="normal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.901"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.955" />
+
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/about_layout"
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:clickable="true"
+                    android:elevation="16dp"
+                    app:layout_constraintCircle="@id/fab"
+                    app:layout_constraintCircleAngle="285"
+                    app:layout_constraintCircleRadius="0dp"
+                    android:focusable="true"
+                    android:src="@drawable/ic_info_black_24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.901"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.955" />
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/head_layout"
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    app:layout_constraintCircle="@id/fab"
+                    app:layout_constraintCircleAngle="330"
+                    app:layout_constraintCircleRadius="0dp"
                     android:clickable="true"
                     android:elevation="16dp"
                     android:focusable="true"
-                    android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
-                    app:backgroundTint="#d3d3d3"
-                    app:fabSize="normal" />
+                    android:src="@drawable/ic_account_circle_black_24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.901"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.955" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_alignParentRight="true"-->
+<!--                android:layout_alignParentBottom="true"-->
+<!--                android:orientation="vertical">-->
 
-            </LinearLayout>
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/about_layout"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="right"-->
+<!--                    android:visibility="invisible">-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:fontFamily="@font/opensans"-->
+<!--                        android:text="About"-->
+<!--                        android:textColor="@color/white"-->
+<!--                        android:textStyle="bold"></TextView>-->
+
+<!--                    <ImageView-->
+<!--                        android:layout_width="48dp"-->
+<!--                        android:layout_height="48dp"-->
+<!--                        android:layout_margin="4dp"-->
+<!--                        android:clickable="true"-->
+<!--                        android:elevation="16dp"-->
+<!--                        android:focusable="true"-->
+<!--                        android:src="@drawable/ic_info_black_24dp" />-->
+
+<!--                </LinearLayout>-->
+
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/head_layout"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="right"-->
+<!--                    android:visibility="invisible">-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:fontFamily="@font/opensans"-->
+<!--                        android:text="Event Heads"-->
+<!--                        android:textColor="@color/white"-->
+<!--                        android:textStyle="bold"></TextView>-->
+
+<!--                    <ImageView-->
+<!--                        android:layout_width="48dp"-->
+<!--                        android:layout_height="48dp"-->
+<!--                        android:layout_margin="4dp"-->
+<!--                        android:clickable="true"-->
+<!--                        android:elevation="16dp"-->
+<!--                        android:focusable="true"-->
+<!--                        android:src="@drawable/ic_account_circle_black_24dp" />-->
+
+<!--                </LinearLayout>-->
+
+<!--                <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--                    android:id="@+id/fab"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="right"-->
+<!--                    android:layout_margin="24dp"-->
+<!--                    android:background="@color/white"-->
+<!--                    android:clickable="true"-->
+<!--                    android:elevation="16dp"-->
+<!--                    android:focusable="true"-->
+<!--                    android:src="@drawable/ic_add_black_24dp"-->
+<!--                    app:backgroundTint="#d3d3d3"-->
+<!--                    app:fabSize="normal" />-->
+
+<!--            </LinearLayout>-->
         </RelativeLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

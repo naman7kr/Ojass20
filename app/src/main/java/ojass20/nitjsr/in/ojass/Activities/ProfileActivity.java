@@ -19,10 +19,15 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import ojass20.nitjsr.in.ojass.R;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -34,11 +39,16 @@ public class ProfileActivity extends AppCompatActivity {
     private ArrayList<Integer> mAngles;
     private ArrayList<ImageView> mImageViews;
     private ImageView mBack;
+    private CircleImageView user_image;
+    private TextView user_name;
+    private FirebaseAuth mauth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        mauth=FirebaseAuth.getInstance();
 
         initializeInstanceVariables();
         new Handler().postDelayed(new Runnable() {
@@ -55,6 +65,9 @@ public class ProfileActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        Glide.with(this).load(mauth.getCurrentUser().getPhotoUrl()).into(user_image);
+        user_name.setText(mauth.getCurrentUser().getDisplayName());
     }
 
     private void initializeInstanceVariables() {
@@ -68,6 +81,9 @@ public class ProfileActivity extends AppCompatActivity {
         mAngles = new ArrayList<>();
         mImageViews = new ArrayList<>();
         mBack = findViewById(R.id.back_arrow);
+
+        user_image = findViewById(R.id.image_profile_activity);
+        user_name = findViewById(R.id.username_profile_activity);
     }
 
     private void animate() {

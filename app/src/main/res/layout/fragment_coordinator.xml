@@ -26,7 +26,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Coordinators"
+                    android:text="Event Head"
                     android:textSize="22dp"/>
 
                 <RelativeLayout
@@ -37,7 +37,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/coord_rview"
+                    android:id="@+id/rv_eventhead"
                     />
                 </RelativeLayout>
             </LinearLayout>

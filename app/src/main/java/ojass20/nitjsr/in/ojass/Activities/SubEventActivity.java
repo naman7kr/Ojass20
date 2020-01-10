@@ -1,10 +1,13 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
+import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -14,6 +17,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.Handler;
 import android.util.Log;
 
 import android.util.Log;
@@ -24,6 +28,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -32,7 +37,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.palette.graphics.Palette;
@@ -52,8 +59,10 @@ import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.Constants;
 import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
 
+import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsList;
+
 public class SubEventActivity extends AppCompatActivity {
-    private LinearLayout mAboutLayout, mHeadLayout;
+    private ImageView mAboutLayout, mHeadLayout;
     private RecyclerView rView;
     private ArrayList<SubEventsModel> data = new ArrayList<>();
     private int mainEventPosition;
@@ -74,6 +83,9 @@ public class SubEventActivity extends AppCompatActivity {
     private ArrayList<TextView> mName;
     private TextView mAbout, mHeading;
     private View mDivider1, mDivider2;
+    private ArrayList<String> mSubEventName;
+
+    private ArrayList<ValueAnimator> animators;
 
 
     @Override
@@ -83,8 +95,7 @@ public class SubEventActivity extends AppCompatActivity {
         init();
         //get intent get main event
         mainEventPosition = getIntent().getIntExtra("event_id", 0); //from intent
-
-
+        mSubEventName = getIntent().getStringArrayListExtra("sub_event_name");
         rView.setLayoutManager(new LinearLayoutManager(this));
 
         manageToolbar();
@@ -93,12 +104,19 @@ public class SubEventActivity extends AppCompatActivity {
         RecyclerClickInterface mInterface = new RecyclerClickInterface() {
             @Override
             public void onLayoutClick(View v, int position) {
-                getSupportActionBar().setTitle(Constants.SubEventsList[mainEventPosition][position]);
+                getSupportActionBar().setTitle(SubEventsList.get(mainEventPosition).get(position));
                 showBottomSheet();
                 bottomSheetOpen = true;
                 getPostion(position);
             }
         };
+
+        if (mSubEventName != null) {
+            showBottomSheet();
+            bottomSheetOpen = true;
+            getPostion(mSubEventName.get(0));
+        }
+
         rView.setAdapter(new SubEventsAdapter(this, getData(), mInterface));
         //set Image
         iv.setImageResource(Constants.eventImg[mainEventPosition]);
@@ -109,23 +127,67 @@ public class SubEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isOpen) {
-                    mHeadLayout.startAnimation(fadeOut);
-                    mAboutLayout.startAnimation(fadeOut);
+
+                    if(animators.size()>0)
+                        animators.clear();
+
+                    animators.add(changeRadius2(mHeadLayout));
+                    animators.add(changeRadius2(mAboutLayout));
+
+                    animators.get(0).start();
+                    animators.get(1).start();
+
+//                    mHeadLayout.startAnimation(fadeOut);
+//                    mAboutLayout.startAnimation(fadeOut);
                     mHeadLayout.setVisibility(View.INVISIBLE);
                     mAboutLayout.setVisibility(View.INVISIBLE);
                     mHeadLayout.setClickable(false);
                     mAboutLayout.setClickable(false);
                     isOpen = false;
-                    mFab.setImageDrawable(getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp));
+
+                    //mFab.setBackgroundColor(Color.parseColor("#00ccff"));
+                    Animation manim = AnimationUtils.loadAnimation(SubEventActivity.this,R.anim.rotate_around_center_point);
+                    manim.setDuration(350);
+                    mFab.startAnimation(manim);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mFab.setImageDrawable(getDrawable(R.drawable.ic_add_black_24dp));
+                            //mFab.setBackgroundColor(Color.WHITE);
+                        }
+                    },350);
                 } else {
-                    mHeadLayout.startAnimation(fadeIn);
-                    mAboutLayout.startAnimation(fadeIn);
+
+                    if(animators.size()>0)
+                    animators.clear();
+
+                    animators.add(changeRadius(mHeadLayout));
+                    animators.add(changeRadius(mAboutLayout));
+
+                    animators.get(0).start();
+                    animators.get(1).start();
+
+//                    mHeadLayout.startAnimation(fadeIn);
+//                    mAboutLayout.startAnimation(fadeIn);
                     mHeadLayout.setVisibility(View.VISIBLE);
                     mAboutLayout.setVisibility(View.VISIBLE);
                     mHeadLayout.setClickable(true);
                     mAboutLayout.setClickable(true);
                     isOpen = true;
-                    mFab.setImageDrawable(getDrawable(R.drawable.ic_keyboard_arrow_down_black_24dp));
+
+                    //mFab.setBackgroundColor(Color.parseColor("#00ccff"));
+                    Animation manim = AnimationUtils.loadAnimation(SubEventActivity.this,R.anim.rotate_around_center_point);
+                    manim.setDuration(350);
+                    mFab.startAnimation(manim);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mFab.setImageDrawable(getDrawable(R.drawable.ic_close_fab_24dp));
+                            //mFab.setBackgroundColor(Color.WHITE);
+                        }
+                    },350);
 //                    TranslateAnimation tr = new TranslateAnimation(0.0f, 0.0f, 0, 30);
 //                    tr.setDuration(100);
 //                    mFab.startAnimation(tr);
@@ -142,7 +204,7 @@ public class SubEventActivity extends AppCompatActivity {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(SubEventActivity.this, R.style.CustomAlertDialog);
                 ViewGroup viewGroup = findViewById(android.R.id.content);
                 View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_layout, viewGroup, false);
-                ArrayList<BranchHeadModal> bhNames = MainActivity.branchData.get(Constants.eventNames[mainEventPosition]).getBranchHead();
+                final ArrayList<BranchHeadModal> bhNames = MainActivity.branchData.get(Constants.eventNames.get(mainEventPosition)).getBranchHead();
                 dialogView.setMinimumWidth((int) (displayRectangle.width() / 1.5f * 1f));
                 dialogView.setMinimumHeight((int) (displayRectangle.height() / 5f * 1f));
                 builder.setView(dialogView);
@@ -181,22 +243,95 @@ public class SubEventActivity extends AppCompatActivity {
                 if (bhNames.size() == 1) {
                     mLL.get(0).setVisibility(View.VISIBLE);
                     mName.get(0).setText(bhNames.get(0).getName());
+                    final Intent intent = new Intent(Intent.ACTION_DIAL);
+                    for (int j = 0; j < 1; j++) {
+                        final int i = j;
+                        mCall.get(i).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                intent.setData(Uri.parse("tel:" + bhNames.get(i).getCn()));
+                                startActivity(intent);
+                            }
+                        });
+                        mWhatsapp.get(i).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String url = "https://api.whatsapp.com/send?phone=" + "+91" + bhNames.get(i).getWn();
+                                Intent i = new Intent(Intent.ACTION_VIEW);
+                                i.setData(Uri.parse(url));
+                                startActivity(i);
+                            }
+                        });
+                    }
                 } else if (bhNames.size() == 2) {
                     mLL.get(0).setVisibility(View.VISIBLE);
                     mLL.get(1).setVisibility(View.VISIBLE);
                     mName.get(0).setText(bhNames.get(0).getName());
                     mName.get(1).setText(bhNames.get(1).getName());
                     mDivider1.setVisibility(View.VISIBLE);
+                    final Intent intent = new Intent(Intent.ACTION_DIAL);
+                    for (int j = 0; j < 2; j++) {
+                        final int i = j;
+                        mCall.get(i).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                intent.setData(Uri.parse("tel:" + bhNames.get(i).getCn()));
+                                startActivity(intent);
+                            }
+                        });
+                        mWhatsapp.get(i).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String url = "https://api.whatsapp.com/send?phone=" + "+91" + bhNames.get(i).getWn();
+                                Intent i = new Intent(Intent.ACTION_VIEW);
+                                i.setData(Uri.parse(url));
+                                startActivity(i);
+                            }
+                        });
+                    }
                 } else {
                     mLL.get(0).setVisibility(View.VISIBLE);
                     mLL.get(1).setVisibility(View.VISIBLE);
                     mLL.get(2).setVisibility(View.VISIBLE);
+                    mDivider1.setVisibility(View.VISIBLE);
                     mDivider2.setVisibility(View.VISIBLE);
                     mName.get(0).setText(bhNames.get(0).getName());
                     mName.get(1).setText(bhNames.get(1).getName());
                     mName.get(2).setText(bhNames.get(2).getName());
+                    final Intent intent = new Intent(Intent.ACTION_DIAL);
+                    for (int j = 0; j < 3; j++) {
+                        final int i = j;
+                        mCall.get(i).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                intent.setData(Uri.parse("tel:" + bhNames.get(i).getCn()));
+                                startActivity(intent);
+                            }
+                        });
+                        mWhatsapp.get(i).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String url = "https://api.whatsapp.com/send?phone=" + "+91" + bhNames.get(i).getWn();
+                                Intent i = new Intent(Intent.ACTION_VIEW);
+                                i.setData(Uri.parse(url));
+                                startActivity(i);
+                            }
+                        });
+                    }
                 }
+                alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+
+                ImageView dialogIcon = dialogView.findViewById(R.id.dialog_icon);
+                dialogIcon.setImageDrawable(getResources().getDrawable(R.drawable.dialog_head));
                 alertDialog.show();
+                ImageView dismiss_button = dialogView.findViewById(R.id.dismiss_dialog);
+                dismiss_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(alertDialog.isShowing()) alertDialog.dismiss();
+                    }
+                });
             }
         });
 
@@ -209,20 +344,66 @@ public class SubEventActivity extends AppCompatActivity {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(SubEventActivity.this, R.style.CustomAlertDialog);
                 ViewGroup viewGroup = findViewById(android.R.id.content);
                 View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_layout, viewGroup, false);
-                dialogView.setMinimumWidth((int) (displayRectangle.width() * 1f));
-                dialogView.setMinimumHeight((int) (displayRectangle.height() * 1f));
+//                dialogView.setMinimumWidth((int) (displayRectangle.width() * 1f));
+//                dialogView.setMinimumHeight((int) (displayRectangle.height() * 1f));
                 builder.setView(dialogView);
                 final AlertDialog alertDialog = builder.create();
                 mAbout = dialogView.findViewById(R.id.about_data);
                 mAbout.setVisibility(View.VISIBLE);
                 mHeading = dialogView.findViewById(R.id.heading);
-                String s = "About " + Constants.eventNames[mainEventPosition];
+                String s = Constants.eventNames.get(mainEventPosition);
                 mHeading.setText(s);
-                mAbout.setText(MainActivity.branchData.get(Constants.eventNames[mainEventPosition]).getAbout());
+                mAbout.setText(MainActivity.branchData.get(Constants.eventNames.get(mainEventPosition)).getAbout());
+
+                alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+
+                ImageView dialogIcon = dialogView.findViewById(R.id.dialog_icon);
+                dialogIcon.setImageDrawable(getResources().getDrawable(R.drawable.pinned_dialog));
                 alertDialog.show();
+                ImageView dismiss_button = dialogView.findViewById(R.id.dismiss_dialog);
+                dismiss_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(alertDialog.isShowing()) alertDialog.dismiss();
+                    }
+                });
             }
         });
 
+    }
+
+    private ValueAnimator changeRadius(final ImageView imageView) {
+        ConstraintLayout.LayoutParams lP = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+        ValueAnimator anim = ValueAnimator.ofInt((int) lP.circleRadius, (int) MainActivity.convertDpToPixel(120, getApplicationContext()));
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+                layoutParams.circleRadius = val;
+                imageView.setLayoutParams(layoutParams);
+            }
+        });
+        anim.setDuration(350);
+        anim.setInterpolator(new LinearInterpolator());
+        return anim;
+    }
+    private ValueAnimator changeRadius2(final ImageView imageView) {
+        ConstraintLayout.LayoutParams lP = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+        ValueAnimator anim = ValueAnimator.ofInt((int) MainActivity.convertDpToPixel(120, getApplicationContext()), (int) MainActivity.convertDpToPixel(0, getApplicationContext()));
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+                layoutParams.circleRadius = val;
+                imageView.setLayoutParams(layoutParams);
+            }
+        });
+        anim.setDuration(350);
+        anim.setInterpolator(new LinearInterpolator());
+        return anim;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -239,7 +420,7 @@ public class SubEventActivity extends AppCompatActivity {
     private void manageToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setTitle(Constants.eventNames[mainEventPosition]);
+        toolbar.setTitle(Constants.eventNames.get(mainEventPosition));
 
         //manage toolbar icons and text color
         BitmapDrawable drawable = (BitmapDrawable) iv.getDrawable();
@@ -267,12 +448,13 @@ public class SubEventActivity extends AppCompatActivity {
         isOpen = false;
         fadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
         fadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
+        animators = new ArrayList<>();
     }
 
     ArrayList<SubEventsModel> getData() {
-        String subEventsName[][] = Constants.SubEventsList;
-        for (int i = 0; i < subEventsName[mainEventPosition].length; i++) {
-            data.add(new SubEventsModel(subEventsName[mainEventPosition][i]));
+        HashMap<Integer, ArrayList<String>> subEventsName = SubEventsList;
+        for (int i = 0; i < subEventsName.get(mainEventPosition).size(); i++) {
+            data.add(new SubEventsModel(subEventsName.get(mainEventPosition).get(i)));
         }
         return data;
     }
@@ -301,7 +483,7 @@ public class SubEventActivity extends AppCompatActivity {
         backArrow.setColorFilter(toolbarIconColor, PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(backArrow);
         toolbar.setBackgroundColor(getResources().getColor(R.color.transparent));
-        toolbar.setTitle(Constants.eventNames[mainEventPosition]);
+        toolbar.setTitle(Constants.eventNames.get(mainEventPosition));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -322,17 +504,34 @@ public class SubEventActivity extends AppCompatActivity {
     }
 
     public void getPostion(int pos) {
+        String event = SubEventsList.get(mainEventPosition).get(pos).trim();
+        Log.e("this", "" + event);
         for (int i = 0; i < MainActivity.data.size(); i++) {
-            String event = Constants.SubEventsList[mainEventPosition][pos].trim();
             try {
                 if (event.equalsIgnoreCase(MainActivity.data.get(i).getName().trim())) {
                     position = i;
                     break;
                 }
             } catch (Exception e) {
-                Toast.makeText(this, MainActivity.data.get(i).getBranch(), Toast.LENGTH_SHORT).show();
+                Log.e("Sub", e.getLocalizedMessage());
+            } finally {
+                continue;
             }
+        }
+    }
 
+    public void getPostion(String subEvent) {
+        for (int i = 0; i < MainActivity.data.size(); i++) {
+            try {
+                if (subEvent.equalsIgnoreCase(MainActivity.data.get(i).getName().trim())) {
+                    position = i;
+                    break;
+                }
+            } catch (Exception e) {
+                Log.e("Sub", e.getLocalizedMessage());
+            } finally {
+                continue;
+            }
         }
     }
 }

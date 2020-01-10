@@ -1,5 +1,6 @@
 package ojass20.nitjsr.in.ojass.Adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import java.util.ArrayList;
 
 import ojass20.nitjsr.in.ojass.Models.TeamMember;
@@ -19,8 +23,10 @@ public class TeamMemberAdapter extends RecyclerView.Adapter<TeamMemberAdapter.Te
 
     OnClickItem onClickItem;
     ArrayList<TeamMember> list;
+    Context context;
 
-    public TeamMemberAdapter(OnClickItem onClickItem, ArrayList<TeamMember> list) {
+    public TeamMemberAdapter(Context context,OnClickItem onClickItem, ArrayList<TeamMember> list) {
+        this.context=context;
         this.onClickItem = onClickItem;
         this.list = list;
     }
@@ -45,7 +51,8 @@ public class TeamMemberAdapter extends RecyclerView.Adapter<TeamMemberAdapter.Te
                     onClickItem.onSelected(list.get(position));
                 }
             });
-            holder.imageView.setImageResource(list.get(position).img);
+            Glide.with(context).asBitmap().fitCenter().load(list.get(position).img).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(holder.imageView);
+            //holder.imageView.setImageResource(list.get(position).img);
 
     }
 

@@ -1,326 +1,257 @@
 package ojass20.nitjsr.in.ojass.Fragments;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import ojass20.nitjsr.in.ojass.Activities.MainActivity;
 import ojass20.nitjsr.in.ojass.Activities.SubEventActivity;
+import ojass20.nitjsr.in.ojass.Models.EventModel;
+import ojass20.nitjsr.in.ojass.Models.PrizeModel1;
+import ojass20.nitjsr.in.ojass.Models.PrizeModel2;
 import ojass20.nitjsr.in.ojass.R;
+import ojass20.nitjsr.in.ojass.Utils.BtmNavVisCallback;
+
 
 public class PrizeFragment extends Fragment {
     private LinearLayout prize_layout;
-//    private BtmNavVisCallback mCallback;
-private TextView prize1,prize2,prize3,prizet,f1,f2,ft,t_1,t2,tt,s1,s2,st,more_details,style2_total,more_details3;
-    private LinearLayout style1,style2,first,second,third,one,two,three;
+    private BtmNavVisCallback mCallback;
+    private TextView prize1,prize2,prize3,prize4,prize5,prize6,prizeT,prize1_F,prize2_F,prize3_F,prize1_S,prize2_S,prize3_S,prize1_T,prize2_T,prize3_T,prize1_Th,prize2_Th,prize3_Th;
+    private LinearLayout first,second,third,fourth,fifth,sixth,director_cut_layout,no_ground_zone_layout;
+    private LinearLayout first_first,first_second,first_third,second_first,second_second,second_third,third_first,third_second,third_third;
+    private TextView text_firstyear,text_secondyear,text_thirdyear;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_prize1, container, false);
-//        createUI(view);
+        View view = null;
+        for(EventModel em: MainActivity.data){
+            if(em.getName()!=null){
+                if(em.getName().compareToIgnoreCase(MainActivity.data.get(SubEventActivity.position).getName())==0){
+                    //check type event
+//                    if(checkLayout(em.getName())) {
+//                        view = inflater.inflate(R.layout.fragment_prize1, container, false);
+//                        init1(view);
+//                        setData1(em);
+//                    }else{
+//                        view = inflater.inflate(R.layout.fragment_prize2, container, false);
+//                        init2(view);
+//                        setData2(em);
+//                    }
+////                    prize_layout.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            mCallback.onCallback();
+//                        }
+//                    });
+                }
+            }
+        }
+
         return view;
     }
-//    private void createUI(View view) {
-//        prize1=(TextView) view.findViewById(R.id.prize1);
-//        prize2=(TextView) view.findViewById(R.id.prize2);
-//        prize3=(TextView) view.findViewById(R.id.prize3);
-//        prizet=(TextView) view.findViewById(R.id.total_prize);
-//        f1=(TextView) view.findViewById(R.id.f1);
-//        f2=(TextView) view.findViewById(R.id.f2);
-//        s1=(TextView) view.findViewById(R.id.s1);
-//        s2=(TextView) view.findViewById(R.id.s2);
-//        ft=(TextView) view.findViewById(R.id.ft);
-//        st=(TextView) view.findViewById(R.id.st);
-//        tt=(TextView) view.findViewById(R.id.tt);
-//        t_1=(TextView) view.findViewById(R.id.t1);
-//        t2=(TextView) view.findViewById(R.id.t2);
-//        more_details=(TextView) view.findViewById(R.id.more_deatils);
-//        more_details3=(TextView) view.findViewById(R.id.more_detail3);
-//        style2_total=(TextView) view.findViewById(R.id.style2_total);
-//        style1=(LinearLayout) view.findViewById(R.id.style1);
-//        style2=(LinearLayout) view.findViewById(R.id.style2);
-//        first=(LinearLayout) view.findViewById(R.id.first);
-//        second=(LinearLayout) view.findViewById(R.id.second);
-//        third=(LinearLayout) view.findViewById(R.id.third);
-//        one=(LinearLayout) view.findViewById(R.id.one);
-//        two=(LinearLayout) view.findViewById(R.id.two);
-//        three=(LinearLayout) view.findViewById(R.id.three);
-//
-//        switch(SubEventActivity.actionBarTitle)
-//        {
-//            case "High Voltage Concepts (HVC)":{
-//                style1.setVisibility(View.GONE);
-//                style2.setVisibility(View.VISIBLE);
-//                f1.setText("3000");
-//                f2.setText("2000");
-//                ft.setText("Total : 5000");
-//                s1.setText("3000");
-//                s2.setText("2000");
-//                st.setText("Total : 5000");
-//                t_1.setText("3000");
-//                t2.setText("2000");
-//                tt.setText("Total : 5000");
-//                more_details.setText("");
-//                style2_total.setText("15000/-");
-//                break;
-//            }
-//            case "Codemania":
-//            {
-//                style1.setVisibility(View.VISIBLE);
-//                style2.setVisibility(View.GONE);
-//                prize1.setText("15000");
-//                prize2.setText("11000");
-//                prize3.setText("7000");
-//                more_details3.setText("Next three winners : 3000");
-//                prizet.setText("36000/-");
-//                break;
-//            }
-//            case "Who Am I":
-//            {
-//                style1.setVisibility(View.GONE);
-//                style2.setVisibility(View.VISIBLE);
-//                f1.setText("2000");
-//                f2.setText("1000");
-//                ft.setText("Total : 3000");
-//                s1.setText("2000");
-//                s2.setText("1000");
-//                st.setText("Total : 3000");
-//                third.setVisibility(View.VISIBLE);
-//                t_1.setText("0");
-//                t2.setText("0");
-//                tt.setText("0");
-//                more_details.setText("");
-//                style2_total.setText("8000/-");
-//                break;
-//            }case "Nexus":
-//        {
-//            style1.setVisibility(View.GONE);
-//            style2.setVisibility(View.VISIBLE);
-//            f1.setText("3000");
-//            f2.setText("1500");
-//            ft.setText("");
-//            s1.setText("3000");
-//            s2.setText("1500");
-//            st.setText("");
-//            t_1.setText("3000");
-//            t2.setText("");
-//            tt.setText("");
+//    boolean checkLayout(String name){
+//        if((name.compareToIgnoreCase("embetrix")==0 ) ||
+//                (name.compareToIgnoreCase("High Voltage Concepts")==0) ||
+//                (name.compareToIgnoreCase("electrospection")==0) ||
+//                (name.compareToIgnoreCase("Electro Scribble")==0) ||
+//                (name.compareToIgnoreCase("matsim")==0) ||
+//                (name.compareToIgnoreCase("Pro-Lo-Co")==0) ||
+//                (name.compareToIgnoreCase("Hack-De-Science")==0) ||
+//                (name.compareToIgnoreCase("agnikund")==0) ||
+//                (name.compareToIgnoreCase("knockout")==0)
+//        ){
+//            return false;
+//        }
+//        return true;
+//    }
+//    void setData1(EventModel em){
+//        if(em.getName().compareToIgnoreCase("Director's Cut")==0){
+//            director_cut_layout.setVisibility(View.VISIBLE);
+//            no_ground_zone_layout.setVisibility(View.GONE);
+//        }else if(em.getName().compareToIgnoreCase("Touch Down the plane")==0){
+//            no_ground_zone_layout.setVisibility(View.VISIBLE);
+//            director_cut_layout.setVisibility(View.GONE);
+//        }else{
+//            no_ground_zone_layout.setVisibility(View.GONE);
+//            director_cut_layout.setVisibility(View.GONE);
+//        }
+//        PrizeModel1 p1 = em.getP1();
+//        if(p1.getPrize1()!=null && p1.getPrize1()!=Long.valueOf(0)) {
+//            prize1.setText(String.valueOf(p1.getPrize1()));
+//            first.setVisibility(View.VISIBLE);
+//        }
+//        else{
 //            first.setVisibility(View.GONE);
+//        }
+//        if(p1.getPrize2()!=null && p1.getPrize2()!=Long.valueOf(0)) {
+//            prize2.setText(String.valueOf(p1.getPrize2()));
+//            second.setVisibility(View.VISIBLE);
+//        }else{
 //            second.setVisibility(View.GONE);
+//        }
+//        if(p1.getPrize3()!=null && p1.getPrize3()!=Long.valueOf(0)) {
+//            prize3.setText(String.valueOf(p1.getPrize3()));
+//            third.setVisibility(View.VISIBLE);
+//        }else{
 //            third.setVisibility(View.GONE);
-//            more_details.setText("First Year : 3000\n" +
-//                    "Second Year : 3000\n" +
-//                    "Third Year : 3000");
-//            style2_total.setText("9000/-");
-//            break;
 //        }
-//            case "Touch Down the plane":
-//            {
-//                style1.setVisibility(View.VISIBLE);
-//                style2.setVisibility(View.GONE);
-//                prize1.setText("24000");
-//                prize2.setText("18000");
-//                prize3.setText("10000");
-//                more_details3.setText("Other 6 Best Team:3000 each\nInnovative Design:1500\nBest Design Report:500");
-//                prizet.setText("72000/-");
-//                break;
-//            }
-//            case "Director's Cut":
-//            {
-//                style1.setVisibility(View.VISIBLE);
-//                style2.setVisibility(View.GONE);
-//                prize1.setText("12500");
-//                prize2.setText("8500");
-//                prize3.setText("6500");
-//                more_details3.setText("Best Trailer:1500\nBest Actor:1000\nBest Actress:1000\nBest Cinematographer:1000\nBest Story:1000\nBest Editor:1000");
-//                prizet.setText("34000/-");
-//                break;
-//            }
-//            case "Embetrix":
-//            {
-//                style1.setVisibility(View.GONE);
-//                style2.setVisibility(View.VISIBLE);
-//                f1.setText("2000");
-//                f2.setText("1000");
-//                ft.setText("Total : 3000");
-//                second.setVisibility(View.GONE);
-//                third.setVisibility(View.GONE);
-//                s1.setText("");
-//                s2.setText("");
-//                st.setText("");
-//                t_1.setText("");
-//                t2.setText("");
-//                tt.setText("");
-//                more_details.setText("2nd & 3rd Year :\n" +
-//                        "1st: 2800\n" +
-//                        "2nd: 2000\n" +
-//                        "3rd: 1200");
-//                style2_total.setText("9000/-");
-//                break;
-//            }
-//            case "Agnikund":
-//            {
-//                style1.setVisibility(View.GONE);
-//                style2.setVisibility(View.VISIBLE);
-//                f1.setText("");
-//                f2.setText("");
-//                ft.setText("Total : 3000");
-//                s1.setText("");
-//                s2.setText("");
-//                st.setText("Total : 3000");
-//                t_1.setText("");
-//                t2.setText("");
-//                tt.setText("Total : 3000");
-//                first.setVisibility(View.GONE);
-//                second.setVisibility(View.GONE);
-//                third.setVisibility(View.GONE);
-//                more_details.setText("First Year : 3000\n" +
-//                        "Second Year : 3000\n" +
-//                        "Third Year : 3000");
-//                style2_total.setText("9000/-");
-//                break;
-//            }
-//            case "LiveCS":
-//            {
-//                style1.setVisibility(View.VISIBLE);
-//                style2.setVisibility(View.GONE);
-//                one.setVisibility(View.GONE);
-//                two.setVisibility(View.GONE);
-//                three.setVisibility(View.GONE);
-//                prizet.setText("10000/-");
-//                break;
-//            }
-//            case "Exposicion":
-//            {
-//                style1.setVisibility(View.VISIBLE);
-//                style2.setVisibility(View.GONE);
-//                one.setVisibility(View.GONE);
-//                two.setVisibility(View.GONE);
-//                three.setVisibility(View.GONE);
-//                prizet.setText("8000/-");
-//                break;
-//            }
-//            case "Tachyon":
-//            {
-//                style1.setVisibility(View.VISIBLE);
-//                style2.setVisibility(View.GONE);
-//                one.setVisibility(View.GONE);
-//                two.setVisibility(View.GONE);
-//                three.setVisibility(View.GONE);
-//                prizet.setText("43000/-");
-//                break;
-//            }
-//            case "MAC FIFA":
-//            {
-//                style1.setVisibility(View.VISIBLE);
-//                style2.setVisibility(View.GONE);
-//                one.setVisibility(View.GONE);
-//                two.setVisibility(View.GONE);
-//                three.setVisibility(View.GONE);
-//                prizet.setText("17000/-");
-//                break;
-//            }
-//            case "360 Mania":
-//            {
-//                style1.setVisibility(View.VISIBLE);
-//                style2.setVisibility(View.GONE);
-//                one.setVisibility(View.GONE);
-//                two.setVisibility(View.GONE);
-//                three.setVisibility(View.GONE);
-//                prizet.setText("15000/-");
-//                break;
-//            }
-//            case "Shapeshifter":
-//            {
-//                style1.setVisibility(View.VISIBLE);
-//                style2.setVisibility(View.GONE);
-//                one.setVisibility(View.GONE);
-//                two.setVisibility(View.GONE);
-//                three.setVisibility(View.GONE);
-//                prizet.setText("18000/-");
-//                break;
-//            }
-//            case "Kurukshetra":
-//            {
-//                style1.setVisibility(View.VISIBLE);
-//                style2.setVisibility(View.GONE);
-//                one.setVisibility(View.GONE);
-//                two.setVisibility(View.GONE);
-//                three.setVisibility(View.GONE);
-//                prizet.setText("25000/-");
-//                break;
-//            }
-//            case "Battleship":
-//            {
-//                style1.setVisibility(View.VISIBLE);
-//                style2.setVisibility(View.GONE);
-//                one.setVisibility(View.GONE);
-//                two.setVisibility(View.GONE);
-//                three.setVisibility(View.GONE);
-//                prizet.setText("18000/-");
-//                break;
-//            }
-//            case "NSCET":
-//            {
-//                style1.setVisibility(View.VISIBLE);
-//                style2.setVisibility(View.GONE);
-//                one.setVisibility(View.GONE);
-//                two.setVisibility(View.GONE);
-//                three.setVisibility(View.GONE);
-//                prizet.setText("30000/-");
-//                break;
-//            }
-//            case "Exempler":
-//            {
-//                style1.setVisibility(View.GONE);
-//                style2.setVisibility(View.VISIBLE);
-//                f1.setText("");
-//                f2.setText("");
-//                ft.setText("Total : 3000");
-//                s1.setText("");
-//                s2.setText("");
-//                st.setText("Total : 3000");
-//                t_1.setText("");
-//                t2.setText("");
-//                tt.setText("Total : 3000");
-//                first.setVisibility(View.GONE);
-//                second.setVisibility(View.GONE);
-//                third.setVisibility(View.GONE);
-//                more_details.setText("1st : 5500\n" +
-//                        "2nd : 4500\n" +
-//                        "3rd : 3500\n" +
-//                        "4th : 2500");
-//                style2_total.setText("16000/-");
-//                break;
-//            }
-//            default: {
-//                style1.setVisibility(View.VISIBLE);
-//                style2.setVisibility(View.GONE);
-//                prize1.setText(MainActivity.data.get(SubEventActivity.position).getPrize1().toString());
-//                prize2.setText(MainActivity.data.get(SubEventActivity.position).getPrize2().toString());
-//                prize3.setText(MainActivity.data.get(SubEventActivity.position).getPrize3().toString());
-//                prizet.setText(MainActivity.data.get(SubEventActivity.position).getPrizeT().toString()+"/-");
-//
-////                prize1.setText("prize 1");
-////                    prize2.setText("prize 1");
-////                    prize3.setText("prize 1");
-////                    prizet.setText("prize 1");
-//
-//                break;}
+//        if(p1.getPrize4()!=null && p1.getPrize4()!=Long.valueOf(0)) {
+//            prize4.setText(String.valueOf(p1.getPrize4()));
+//            fourth.setVisibility(View.VISIBLE);
+//        }else{
+//            fourth.setVisibility(View.GONE);
+//        }
+//        if(p1.getPrize5()!=null && p1.getPrize5()!=Long.valueOf(0)) {
+//            prize5.setText(String.valueOf(p1.getPrize5()));
+//            fifth.setVisibility(View.VISIBLE);
+//        }else{
+//            fifth.setVisibility(View.GONE);
+//        }
+//        if(p1.getPrize6()!=null && p1.getPrize6()!=Long.valueOf(0)) {
+//            prize6.setText(String.valueOf(p1.getPrize6()));
+//            sixth.setVisibility(View.VISIBLE);
+//        }else{
+//            sixth.setVisibility(View.GONE);
 //        }
 //
+//        prizeT.setText(String.valueOf(p1.getPrizeT()));
+//    }
 //
+//    void setData2(EventModel em){
+//        if(em.getName().compareToIgnoreCase("Hack-De-Science")==0){
+//            text_firstyear.setText("App");
+//            text_secondyear.setText("Web");
+//            text_thirdyear.setText("Others");
+//        }else{
+//            text_firstyear.setText("First Year");
+//            text_secondyear.setText("Second Year");
+//            text_thirdyear.setText("Third Year");
+//        }
+//        PrizeModel2 p2 = em.getP2();
+//        if(p2.getPrize1_F()!=null && p2.getPrize1_F()!=Long.valueOf(0)) {
+//            prize1_F.setText(String.valueOf(p2.getPrize1_F()));
+//            first_first.setVisibility(View.VISIBLE);
+//        }else{
+//            first_first.setVisibility(View.GONE);
+//        }
+//        if(p2.getPrize2_F()!=null && p2.getPrize2_F()!=Long.valueOf(0)) {
+//            prize2_F.setText(String.valueOf(p2.getPrize2_F()));
+//            second_first.setVisibility(View.VISIBLE);
+//        }else{
+//            second_first.setVisibility(View.GONE);
+//        }
+//        if(p2.getPrize3_F()!=null && p2.getPrize3_F()!=Long.valueOf(0)) {
+//            prize3_F.setText(String.valueOf(p2.getPrize3_F()));
+//            third_first.setVisibility(View.VISIBLE);
+//        }else{
+//            third_first.setVisibility(View.GONE);
+//        }
+//        if(p2.getPrize1_S()!=null && p2.getPrize1_S()!=Long.valueOf(0)) {
+//            prize1_S.setText(String.valueOf(p2.getPrize1_S()));
+//            first_second.setVisibility(View.VISIBLE);
+//        }else{
+//            first_second.setVisibility(View.GONE);
+//        }
+//        if(p2.getPrize2_S()!=null && p2.getPrize2_S()!=Long.valueOf(0)) {
+//            prize2_S.setText(String.valueOf(p2.getPrize2_S()));
+//            second_second.setVisibility(View.VISIBLE);
+//        }else{
+//            second_second.setVisibility(View.GONE);
+//        }
+//        if(p2.getPrize3_S()!=null && p2.getPrize3_S()!=Long.valueOf(0)) {
+//            prize3_S.setText(String.valueOf(p2.getPrize3_S()));
+//            third_second.setVisibility(View.VISIBLE);
+//        }else{
+//            third_second.setVisibility(View.GONE);
+//        }
+//        if(p2.getPrize1_T()!=null && p2.getPrize1_T()!=Long.valueOf(0)) {
+//            prize1_Th.setText(String.valueOf(p2.getPrize1_T()));
+//            first_third.setVisibility(View.VISIBLE);
+//        }else{
+//            third_first.setVisibility(View.GONE);
+//        }
+//        if(p2.getPrize2_T()!=null && p2.getPrize2_T()!=Long.valueOf(0)) {
+//            prize2_Th.setText(String.valueOf(p2.getPrize2_T()));
+//            second_third.setVisibility(View.VISIBLE);
+//        }else{
+//            second_third.setVisibility(View.GONE);
+//        }
+//        if(p2.getPrize3_T()!=null && p2.getPrize3_T()!=Long.valueOf(0)) {
+//            prize3_Th.setText(String.valueOf(p2.getPrize3_T()));
+//            third_third.setVisibility(View.VISIBLE);
+//        }else{
+//            third_third.setVisibility(View.GONE);
+//        }
+//        prizeT.setText(String.valueOf(p2.getPrizeT()));
+//    }
+//    void init1(View view){
+//        prize_layout = view.findViewById(R.id.prize_layout);
+//        prize1 = view.findViewById(R.id.prize1);
+//        prize2 = view.findViewById(R.id.prize2);
+//        prize3 = view.findViewById(R.id.prize3);
+//        prize4 = view.findViewById(R.id.prize4);
+//        prize5 = view.findViewById(R.id.prize5);
+//        prize6 = view.findViewById(R.id.prize6);
+//        first = view.findViewById(R.id.prize_first_layout);
+//        second = view.findViewById(R.id.prize_second_layout);
+//        third = view.findViewById(R.id.prize_third_layout);
+//        fourth = view.findViewById(R.id.prize_fourth_layout);
+//        fifth = view.findViewById(R.id.prize_fifth_layout);
+//        sixth = view.findViewById(R.id.prize_sixth_layout);
+//        director_cut_layout = view.findViewById(R.id.director_cut_layout);
+//        no_ground_zone_layout = view.findViewById(R.id.no_ground_zone_layout);
+//        prizeT = view.findViewById(R.id.total_prize);
+//    }
+//    void init2(View view){
+//        prize_layout = view.findViewById(R.id.prize_layout);
+//        prize1_F = view.findViewById(R.id.prize1_first);
+//        prize2_F = view.findViewById(R.id.prize2_first);
+//        prize3_F = view.findViewById(R.id.prize3_first);
+//        prize1_T = view.findViewById(R.id.total_prize_first);
 //
+//        prize1_S = view.findViewById(R.id.prize1_second);
+//        prize2_S = view.findViewById(R.id.prize2_second);
+//        prize3_S = view.findViewById(R.id.prize3_second);
+//        prize2_T = view.findViewById(R.id.total_prize_second);
 //
+//        prize1_Th = view.findViewById(R.id.prize1_third);
+//        prize2_Th = view.findViewById(R.id.prize2_third);
+//        prize3_Th = view.findViewById(R.id.prize3_third);
+//        prize3_T = view.findViewById(R.id.total_prize_third);
 //
+//        prizeT = view.findViewById(R.id.total_prize);
 //
+//        text_firstyear = view.findViewById(R.id.text_first_year);
+//        text_secondyear = view.findViewById(R.id.text_second_year);
+//        text_thirdyear = view.findViewById(R.id.text_third_year);
+//
+//        first_first = view.findViewById(R.id.first_first);
+//        second_second = view.findViewById(R.id.second_second);
+//        third_third = view.findViewById(R.id.third_third);
+//        first_second = view.findViewById(R.id.first_second);
+//        first_third = view.findViewById(R.id.first_third);
+//        second_first = view.findViewById(R.id.second_first);
+//        second_third = view.findViewById(R.id.second_third);
+//        third_first = view.findViewById(R.id.third_first);
+//        third_second = view.findViewById(R.id.third_second);
+//    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        mCallback = (BtmNavVisCallback) context;
+//    }
+//
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//        mCallback = null;
 //    }
 }

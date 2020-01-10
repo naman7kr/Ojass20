@@ -49,7 +49,7 @@ public class HomeFragment extends Fragment implements
         GestureDetector.OnGestureListener, View.OnClickListener {
     private static final long ANIM_DURATION = 500;
     private HomeFragInterface fragInterface;
-    private ImageView cancelBtn;
+    private TextView cancelBtn;
     private ArrayList<HomePage> mItems = new ArrayList<>();
     private int mInd;
     private ImageView bigCircle, c1, c2, c3, c4;
