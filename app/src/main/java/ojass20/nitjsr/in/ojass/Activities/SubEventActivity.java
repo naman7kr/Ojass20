@@ -55,7 +55,7 @@ import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.Constants;
 import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
 
-public class SubEventActivity extends AppCompatActivity  {
+public class SubEventActivity extends AppCompatActivity {
     private LinearLayout mAboutLayout, mHeadLayout;
     private RecyclerView rView;
     private ArrayList<SubEventsModel> data = new ArrayList<>();
@@ -96,6 +96,7 @@ public class SubEventActivity extends AppCompatActivity  {
         RecyclerClickInterface mInterface = new RecyclerClickInterface() {
             @Override
             public void onLayoutClick(View v, int position) {
+                Log.e("Hey", mainEventPosition + " " + position);
                 getSupportActionBar().setTitle(Constants.SubEventsList.get(mainEventPosition).get(position));
                 showBottomSheet();
                 bottomSheetOpen = true;
@@ -387,7 +388,7 @@ public class SubEventActivity extends AppCompatActivity  {
 
     public void getPostion(int pos) {
         for (int i = 0; i < MainActivity.data.size(); i++) {
-            String event = Constants.SubEventsList.get(mainEventPosition).get(position).trim();
+            String event = Constants.SubEventsList.get(mainEventPosition).get(pos).trim();
             try {
                 if (event.equalsIgnoreCase(MainActivity.data.get(i).getName().trim())) {
                     position = i;

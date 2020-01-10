@@ -92,9 +92,6 @@ public class Constants {
                 if (eventNames.get(j).equalsIgnoreCase(entry.getKey()))
                     break;
             }
-            for (int i = 0; i < entry.getValue().size(); i++)
-                Log.e("cons", entry.getValue().get(i));
-            Log.e("cons", " ");
             SubEventsList.put(j, entry.getValue());
         }
     }

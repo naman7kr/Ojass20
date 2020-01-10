@@ -531,29 +531,26 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         String name = ds.child("name").getValue(String.class);
                         if (SubEventsMap.containsKey(branch)) {
                             SubEventsMap.get(branch).add(name);
-                            Log.e("Main", branch + "->" + name);
                         } else {
                             SubEventsMap.put(branch, new ArrayList<String>());
                             SubEventsMap.get(branch).add(name);
-                            Log.e("Main", branch + "->" + name);
                         }
                         String details = ds.child("detail").getValue(String.class);
                         String nam = ds.child("name").getValue(String.class);
-                        PrizeModel2 p2=null;
-                        PrizeModel1 p1=null;
-                        if(checkPrizeType(nam)){
-                            Long prize1=ds.child("prize").child("first").getValue(Long.class);
-                            Long prize2=ds.child("prize").child("second").getValue(Long.class);
-                            Long prize3=ds.child("prize").child("third").getValue(Long.class);
-                            Long prize4=ds.child("prize").child("fourth").getValue(Long.class);
-                            Long prize5=ds.child("prize").child("fifth").getValue(Long.class);
-                            Long prize6=ds.child("prize").child("sixth").getValue(Long.class);
-                            Long prizeT=ds.child("prize").child("total").getValue(Long.class);
-                            p1 = new PrizeModel1(prize1,prize2,prize3,prize4,prize5,prize6,prizeT);
-                        }
-                        else{
+                        PrizeModel2 p2 = null;
+                        PrizeModel1 p1 = null;
+                        if (checkPrizeType(nam)) {
+                            Long prize1 = ds.child("prize").child("first").getValue(Long.class);
+                            Long prize2 = ds.child("prize").child("second").getValue(Long.class);
+                            Long prize3 = ds.child("prize").child("third").getValue(Long.class);
+                            Long prize4 = ds.child("prize").child("fourth").getValue(Long.class);
+                            Long prize5 = ds.child("prize").child("fifth").getValue(Long.class);
+                            Long prize6 = ds.child("prize").child("sixth").getValue(Long.class);
+                            Long prizeT = ds.child("prize").child("total").getValue(Long.class);
+                            p1 = new PrizeModel1(prize1, prize2, prize3, prize4, prize5, prize6, prizeT);
+                        } else {
 
-                            Long prizeT,prize1_F,prize2_F,prize3_F,prize1_S,prize2_S,prize3_S,prize1_T,prize2_T,prize3_T;
+                            Long prizeT, prize1_F, prize2_F, prize3_F, prize1_S, prize2_S, prize3_S, prize1_T, prize2_T, prize3_T;
                             prizeT = ds.child("prize").child("total").getValue(Long.class);
                             prize1_F = ds.child("prize").child("firstyear").child("first").getValue(Long.class);
                             prize2_F = ds.child("prize").child("firstyear").child("second").getValue(Long.class);
@@ -564,7 +561,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                             prize1_T = ds.child("prize").child("thirdyear").child("first").getValue(Long.class);
                             prize2_T = ds.child("prize").child("thirdyear").child("second").getValue(Long.class);
                             prize3_T = ds.child("prize").child("thirdyear").child("third").getValue(Long.class);
-                            p2 = new PrizeModel2(prizeT,prize1_F,prize2_F,prize3_F,prize1_S,prize2_S,prize3_S,prize1_T,prize2_T,prize3_T);
+                            p2 = new PrizeModel2(prizeT, prize1_F, prize2_F, prize3_F, prize1_S, prize2_S, prize3_S, prize1_T, prize2_T, prize3_T);
                         }
 
                         ArrayList<CoordinatorsModel> coordinatorsModelArrayList = new ArrayList<>();
@@ -588,6 +585,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         } catch (Exception e) {
                             Log.d("hello", ds.child("name").getValue().toString());
                         }
+                        Log.e(LOG_TAG, branch);
                         data.add(new EventModel(about, branch, details, name, p1, p2, coordinatorsModelArrayList, rulesModelArrayList));
                         updateSubEventsArray();
                     }
@@ -604,21 +602,22 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         });
     }
 
-    private boolean checkPrizeType(String name){
-        if((name.compareToIgnoreCase("embetrix")==0 ) ||
-                (name.compareToIgnoreCase("High Voltage Concepts")==0) ||
-                (name.compareToIgnoreCase("electrospection")==0) ||
-                (name.compareToIgnoreCase("Electro Scribble")==0) ||
-                (name.compareToIgnoreCase("matsim")==0) ||
-                (name.compareToIgnoreCase("Pro-Lo-Co")==0) ||
-                (name.compareToIgnoreCase("Hack-De-Science")==0) ||
-                (name.compareToIgnoreCase("agnikund")==0) ||
-                (name.compareToIgnoreCase("knockout")==0)
-        ){
+    private boolean checkPrizeType(String name) {
+        if ((name.compareToIgnoreCase("embetrix") == 0) ||
+                (name.compareToIgnoreCase("High Voltage Concepts") == 0) ||
+                (name.compareToIgnoreCase("electrospection") == 0) ||
+                (name.compareToIgnoreCase("Electro Scribble") == 0) ||
+                (name.compareToIgnoreCase("matsim") == 0) ||
+                (name.compareToIgnoreCase("Pro-Lo-Co") == 0) ||
+                (name.compareToIgnoreCase("Hack-De-Science") == 0) ||
+                (name.compareToIgnoreCase("agnikund") == 0) ||
+                (name.compareToIgnoreCase("knockout") == 0)
+        ) {
             return false;
         }
         return true;
     }
+
     private void setUpRecyclerView() {
         mRecyclerView.setHasFixedSize(true);
         mLinearLayoutManager = new LinearLayoutManager(this);
@@ -838,7 +837,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         switch (id) {
             case R.id.notifications:
                 Intent intent = new Intent(this, NotificationActivity.class);
-                intent.putExtra("Caller",0);
+                intent.putExtra("Caller", 0);
                 startActivity(intent);
                 return true;
             case R.id.emergency:

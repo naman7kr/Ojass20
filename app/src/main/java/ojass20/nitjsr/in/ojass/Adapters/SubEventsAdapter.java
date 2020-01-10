@@ -1,6 +1,7 @@
 package ojass20.nitjsr.in.ojass.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ public class SubEventsAdapter extends RecyclerView.Adapter<SubEventsAdapter.MyVi
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("Interface",""+position);
                 mInterface.onLayoutClick(v,position);
             }
         });
