@@ -60,11 +60,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/Email_Registration_page"
-
                     android:background="@drawable/backgroung_edittext_registration_page"
                     android:textColor="@android:color/white"
                     android:textColorHint="@color/secondaryLightColor"
-
+                    android:inputType="textWebEmailAddress"
                     android:hint="Email-Id"/>
             </LinearLayout>
         </com.google.android.material.textfield.TextInputLayout>
@@ -89,6 +88,7 @@
                 android:background="@drawable/backgroung_edittext_registration_page"
                 android:textColor="@android:color/white"
                 android:textColorHint="@color/secondaryLightColor"
+                android:inputType="phone"
 
                 android:hint="Mobile No."/>
         </LinearLayout>
