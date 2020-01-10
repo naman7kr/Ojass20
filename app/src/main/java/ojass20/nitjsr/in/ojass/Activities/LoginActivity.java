@@ -254,17 +254,24 @@ public class LoginActivity extends AppCompatActivity {
         dref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds:dataSnapshot.getChildren())
-                {
-                    Log.e("onDataChange: ",mAuth.getCurrentUser().getUid());
-                    Log.e("onDataChange: ",ds.getKey());
-
-                    if(mAuth.getCurrentUser().getUid().equals(ds.getKey())){
-                        Log.e("onDataChange: ","heyy");
-                        sendToMainActicity();
-                        break;
-                    }
+                if(dataSnapshot.child(mAuth.getCurrentUser().getUid()).exists()){
+                    Log.e("46onDataChange: ","heyy");
+                    sendToMainActicity();
                 }
+                else {
+                    sendToRegisteredActivity();
+                }
+//                for(DataSnapshot ds:dataSnapshot.getChildren())
+//                {
+//                    Log.e("onDataChange: ",mAuth.getCurrentUser().getUid());
+//                    Log.e("onDataChange: ",ds.getKey());
+//
+//                    if(mAuth.getCurrentUser().getUid().equals(ds.getKey())){
+//                        Log.e("onDataChange: ","heyy");
+//                        sendToMainActicity();
+//                        break;
+//                    }
+//                }
             }
 
             @Override
@@ -272,7 +279,7 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-        sendToRegisteredActivity();
+        //sendToRegisteredActivity();
 //        if(ans)
 //        Log.e( "registeredUser: ","true");
 //        else Log.e("registeredUser: ","false");
