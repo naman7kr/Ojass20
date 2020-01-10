@@ -83,5 +83,9 @@
     <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@drawable/popup_background</item>
     </style>
+    <style name="UpdateButton" parent="Widget.AppCompat.Button.Colored">
 
+    </style>
+
+    <color name="updateButtonColor">#4CAF50</color>
 </resources>
