@@ -1,5 +1,6 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.Handler;
 import android.util.Log;
 
 import android.util.Log;
@@ -26,6 +28,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -36,6 +39,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.palette.graphics.Palette;
@@ -58,7 +62,7 @@ import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsList;
 
 public class SubEventActivity extends AppCompatActivity {
-    private LinearLayout mAboutLayout, mHeadLayout;
+    private ImageView mAboutLayout, mHeadLayout;
     private RecyclerView rView;
     private ArrayList<SubEventsModel> data = new ArrayList<>();
     private int mainEventPosition;
@@ -80,6 +84,8 @@ public class SubEventActivity extends AppCompatActivity {
     private TextView mAbout, mHeading;
     private View mDivider1, mDivider2;
     private ArrayList<String> mSubEventName;
+
+    private ArrayList<ValueAnimator> animators;
 
 
     @Override
@@ -121,23 +127,67 @@ public class SubEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isOpen) {
-                    mHeadLayout.startAnimation(fadeOut);
-                    mAboutLayout.startAnimation(fadeOut);
+
+                    if(animators.size()>0)
+                        animators.clear();
+
+                    animators.add(changeRadius2(mHeadLayout));
+                    animators.add(changeRadius2(mAboutLayout));
+
+                    animators.get(0).start();
+                    animators.get(1).start();
+
+//                    mHeadLayout.startAnimation(fadeOut);
+//                    mAboutLayout.startAnimation(fadeOut);
                     mHeadLayout.setVisibility(View.INVISIBLE);
                     mAboutLayout.setVisibility(View.INVISIBLE);
                     mHeadLayout.setClickable(false);
                     mAboutLayout.setClickable(false);
                     isOpen = false;
-                    mFab.setImageDrawable(getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp));
+
+                    //mFab.setBackgroundColor(Color.parseColor("#00ccff"));
+                    Animation manim = AnimationUtils.loadAnimation(SubEventActivity.this,R.anim.rotate_around_center_point);
+                    manim.setDuration(350);
+                    mFab.startAnimation(manim);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mFab.setImageDrawable(getDrawable(R.drawable.ic_add_black_24dp));
+                            //mFab.setBackgroundColor(Color.WHITE);
+                        }
+                    },350);
                 } else {
-                    mHeadLayout.startAnimation(fadeIn);
-                    mAboutLayout.startAnimation(fadeIn);
+
+                    if(animators.size()>0)
+                    animators.clear();
+
+                    animators.add(changeRadius(mHeadLayout));
+                    animators.add(changeRadius(mAboutLayout));
+
+                    animators.get(0).start();
+                    animators.get(1).start();
+
+//                    mHeadLayout.startAnimation(fadeIn);
+//                    mAboutLayout.startAnimation(fadeIn);
                     mHeadLayout.setVisibility(View.VISIBLE);
                     mAboutLayout.setVisibility(View.VISIBLE);
                     mHeadLayout.setClickable(true);
                     mAboutLayout.setClickable(true);
                     isOpen = true;
-                    mFab.setImageDrawable(getDrawable(R.drawable.ic_keyboard_arrow_down_black_24dp));
+
+                    //mFab.setBackgroundColor(Color.parseColor("#00ccff"));
+                    Animation manim = AnimationUtils.loadAnimation(SubEventActivity.this,R.anim.rotate_around_center_point);
+                    manim.setDuration(350);
+                    mFab.startAnimation(manim);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mFab.setImageDrawable(getDrawable(R.drawable.ic_close_fab_24dp));
+                            //mFab.setBackgroundColor(Color.WHITE);
+                        }
+                    },350);
 //                    TranslateAnimation tr = new TranslateAnimation(0.0f, 0.0f, 0, 30);
 //                    tr.setDuration(100);
 //                    mFab.startAnimation(tr);
@@ -269,7 +319,19 @@ public class SubEventActivity extends AppCompatActivity {
                         });
                     }
                 }
+                alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+
+                ImageView dialogIcon = dialogView.findViewById(R.id.dialog_icon);
+                dialogIcon.setImageDrawable(getResources().getDrawable(R.drawable.dialog_head));
                 alertDialog.show();
+                ImageView dismiss_button = dialogView.findViewById(R.id.dismiss_dialog);
+                dismiss_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(alertDialog.isShowing()) alertDialog.dismiss();
+                    }
+                });
             }
         });
 
@@ -282,20 +344,66 @@ public class SubEventActivity extends AppCompatActivity {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(SubEventActivity.this, R.style.CustomAlertDialog);
                 ViewGroup viewGroup = findViewById(android.R.id.content);
                 View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_layout, viewGroup, false);
-                dialogView.setMinimumWidth((int) (displayRectangle.width() * 1f));
-                dialogView.setMinimumHeight((int) (displayRectangle.height() * 1f));
+//                dialogView.setMinimumWidth((int) (displayRectangle.width() * 1f));
+//                dialogView.setMinimumHeight((int) (displayRectangle.height() * 1f));
                 builder.setView(dialogView);
                 final AlertDialog alertDialog = builder.create();
                 mAbout = dialogView.findViewById(R.id.about_data);
                 mAbout.setVisibility(View.VISIBLE);
                 mHeading = dialogView.findViewById(R.id.heading);
-                String s = "About " + Constants.eventNames.get(mainEventPosition);
+                String s = Constants.eventNames.get(mainEventPosition);
                 mHeading.setText(s);
                 mAbout.setText(MainActivity.branchData.get(Constants.eventNames.get(mainEventPosition)).getAbout());
+
+                alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+
+                ImageView dialogIcon = dialogView.findViewById(R.id.dialog_icon);
+                dialogIcon.setImageDrawable(getResources().getDrawable(R.drawable.pinned_dialog));
                 alertDialog.show();
+                ImageView dismiss_button = dialogView.findViewById(R.id.dismiss_dialog);
+                dismiss_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(alertDialog.isShowing()) alertDialog.dismiss();
+                    }
+                });
             }
         });
 
+    }
+
+    private ValueAnimator changeRadius(final ImageView imageView) {
+        ConstraintLayout.LayoutParams lP = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+        ValueAnimator anim = ValueAnimator.ofInt((int) lP.circleRadius, (int) MainActivity.convertDpToPixel(120, getApplicationContext()));
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+                layoutParams.circleRadius = val;
+                imageView.setLayoutParams(layoutParams);
+            }
+        });
+        anim.setDuration(350);
+        anim.setInterpolator(new LinearInterpolator());
+        return anim;
+    }
+    private ValueAnimator changeRadius2(final ImageView imageView) {
+        ConstraintLayout.LayoutParams lP = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+        ValueAnimator anim = ValueAnimator.ofInt((int) MainActivity.convertDpToPixel(120, getApplicationContext()), (int) MainActivity.convertDpToPixel(0, getApplicationContext()));
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+                layoutParams.circleRadius = val;
+                imageView.setLayoutParams(layoutParams);
+            }
+        });
+        anim.setDuration(350);
+        anim.setInterpolator(new LinearInterpolator());
+        return anim;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -340,6 +448,7 @@ public class SubEventActivity extends AppCompatActivity {
         isOpen = false;
         fadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
         fadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
+        animators = new ArrayList<>();
     }
 
     ArrayList<SubEventsModel> getData() {
