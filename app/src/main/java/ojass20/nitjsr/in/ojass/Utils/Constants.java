@@ -30,9 +30,10 @@ public class Constants {
             R.mipmap.nscet,
             R.mipmap.csgolive,
             R.mipmap.exposicion,
-            R.mipmap.school_events,
-            R.mipmap.checkered_flag
+            R.mipmap.school_events
     };
+    //            R.mipmap.checkered_flag
+//    };
     public static final ArrayList<String> eventNames = new ArrayList<>();
     public static final HashMap<String, ArrayList<String>> SubEventsMap = new HashMap<>();
 
@@ -87,11 +88,12 @@ public class Constants {
         SubEventsList.clear();
         int j = 0;
         for (Map.Entry<String, ArrayList<String>> entry : SubEventsMap.entrySet()) {
-            Log.e("cons", entry.getKey());
             for (j = 0; j < eventNames.size(); j++) {
                 if (eventNames.get(j).equalsIgnoreCase(entry.getKey()))
                     break;
             }
+            if (SubEventsList.containsKey(j))
+                SubEventsList.get(j).clear();
             SubEventsList.put(j, entry.getValue());
         }
         Log.e("cons", "" + SubEventsList.size());
