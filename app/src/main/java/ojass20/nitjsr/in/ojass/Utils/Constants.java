@@ -36,6 +36,7 @@ public class Constants {
 //    };
     public static final ArrayList<String> eventNames = new ArrayList<>();
     public static final HashMap<String, ArrayList<String>> SubEventsMap = new HashMap<>();
+    public static final String NOT_REGISTERED = "Not Registered";
 
     //    public static final String eventNames[] = new String[]{
 //            "Rise of Machines",
