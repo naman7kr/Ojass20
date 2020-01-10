@@ -694,6 +694,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
 
     private void openFragment() {
+        findViewById(R.id.parent_frame).setVisibility(View.GONE);
+        mPullUp.setVisibility(View.GONE);
         HomeFragment homeFrag = new HomeFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_bottom, R.anim.no_anim);
@@ -703,6 +705,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     }
 
     private void closeFragment() {
+        findViewById(R.id.parent_frame).setVisibility(View.VISIBLE);
+        mPullUp.setVisibility(View.VISIBLE);
         Fragment f = getSupportFragmentManager().findFragmentById(R.id.home_container);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.no_anim, R.anim.slide_out_bottom);

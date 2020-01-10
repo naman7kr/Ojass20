@@ -17,15 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/event_search_back_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="5dp"
-            android:src="@drawable/ic_arrow_back" />
+        android:visibility="gone"
+        android:paddingRight="16dp">
 
         <AutoCompleteTextView
             android:id="@+id/event_search_text"

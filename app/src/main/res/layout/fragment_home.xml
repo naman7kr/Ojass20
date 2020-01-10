@@ -1,10 +1,15 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/secondaryDarkColor"
-    android:orientation="vertical">
+    android:background="@color/secondaryLightColor"
+    android:orientation="vertical"
+    android:elevation="200dp">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <FrameLayout
         android:id="@+id/flContent"
@@ -53,7 +58,24 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:alpha="0"
-                    tools:src="@drawable/ic_launcher_background" />
+                    tools:src="@drawable/ic_launcher_background"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/heading"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="HEADING"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="48sp"
+                    android:textAllCaps="true"
+                    android:visibility="visible"
+                    android:layout_centerInParent="true"
+                    android:paddingBottom="64dp"/>
+
 
                 <ImageView
                     android:id="@+id/img_swipe1"
@@ -61,7 +83,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:alpha="1"
-                    tools:src="@drawable/ic_launcher_foreground" />
+                    tools:src="@drawable/ic_launcher_foreground"
+                    android:visibility="gone"/>
             </RelativeLayout>
 
         </RelativeLayout>
@@ -174,11 +197,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
+                android:src="@drawable/ic_cancel"
                 android:layout_centerInParent="true"
                 android:text="Cancel"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 />
-        </RelativeLayout>
+      </RelativeLayout>
     </FrameLayout>
-</FrameLayout>
+
+</RelativeLayout>

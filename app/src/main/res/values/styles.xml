@@ -54,14 +54,12 @@
     <style name="FeedPostEvent" parent="android:Widget.TextView">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">10sp</item>
-        <item name="android:layout_marginTop">6dp</item>
-        <item name="android:fontFamily">@font/opensans</item>
+        <item name="android:layout_marginTop">0dp</item>
     </style>
 
     <style name="FeedPostSubEvent" parent="android:Widget.TextView">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">@font/opensans</item>
     </style>
 
     <style name="FeedPostContent" parent="android:Widget.TextView">

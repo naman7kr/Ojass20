@@ -46,12 +46,12 @@ public class GurugyanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gurugyan);
 
-        viewGroup = findViewById(R.id.gurugyan_pages);
-        viewPager = findViewById(R.id.gurugyan_viewPager);
-        progressBar = findViewById(R.id.gurugyan_progress_bar);
-        itemList = new ArrayList<>();
-        mCardSliderIndicator = findViewById(R.id.gurugyan_indicator);
-        mCardSliderViewPager = findViewById(R.id.gurugyan_viewPager);
+//        viewGroup = findViewById(R.id.gurugyan_pages);
+//        viewPager = findViewById(R.id.gurugyan_viewPager);
+//        progressBar = findViewById(R.id.gurugyan_progress_bar);
+//        itemList = new ArrayList<>();
+//        mCardSliderIndicator = findViewById(R.id.gurugyan_indicator);
+//        mCardSliderViewPager = findViewById(R.id.gurugyan_viewPager);
 
 //        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mCardSliderViewPager.getLayoutParams();
 //        layoutParams.height = (int) MainActivity.convertDpToPixel(600, getApplicationContext());
@@ -61,7 +61,7 @@ public class GurugyanActivity extends AppCompatActivity {
 //        layoutParams.setMargins(0, (int) MainActivity.convertDpToPixel(640, getApplicationContext()), 0, 0);
 //        mCardSliderIndicator.setLayoutParams(layoutParams);
 
-        setUpFirebaseListeners();
+//        setUpFirebaseListeners();
     }
 
     private void setUpFirebaseListeners() {
