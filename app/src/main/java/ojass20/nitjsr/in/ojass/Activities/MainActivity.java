@@ -573,7 +573,26 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         String nam = ds.child("name").getValue(String.class);
                         PrizeModel2 p2 = null;
                         PrizeModel1 p1 = null;
-                        if (checkPrizeType(nam)) {
+                        if(nam.equalsIgnoreCase("Hack-De-Science")){
+                            Long prizeT, prize1_F, prize2_F, prize3_F=null, prize1_S, prize2_S, prize3_S=null, prize1_T, prize2_T=null, prize3_T=null;
+                            prizeT = ds.child("prize").child("total").getValue(Long.class);
+                            prize1_F = ds.child("prize").child("App").child("first").getValue(Long.class);
+                            prize2_F = ds.child("prize").child("App").child("second").getValue(Long.class);
+                            //prize3_F = ds.child("prize").child("firstyear").child("third").getValue(Long.class);
+                            prize1_S = ds.child("prize").child("Web").child("first").getValue(Long.class);
+                            prize2_S = ds.child("prize").child("Web").child("second").getValue(Long.class);
+                            //prize3_S = ds.child("prize").child("secondyear").child("third").getValue(Long.class);
+                            prize1_T = ds.child("prize").child("Others").child("first").getValue(Long.class);
+                            //prize2_T = ds.child("prize").child("thirdyear").child("second").getValue(Long.class);
+                            //prize3_T = ds.child("prize").child("thirdyear").child("third").getValue(Long.class);
+                            p2 = new PrizeModel2(prizeT, prize1_F, prize2_F, prize3_F, prize1_S, prize2_S, prize3_S, prize1_T, prize2_T, prize3_T);
+
+
+                        }
+                        else if (checkPrizeType(nam)) {
+                            if(nam.equalsIgnoreCase("Agnikund")){
+                                Log.e( "23onDataChange: ","level 23");
+                            }
                             Long prize1 = ds.child("prize").child("first").getValue(Long.class);
                             Long prize2 = ds.child("prize").child("second").getValue(Long.class);
                             Long prize3 = ds.child("prize").child("third").getValue(Long.class);
@@ -581,9 +600,14 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                             Long prize5 = ds.child("prize").child("fifth").getValue(Long.class);
                             Long prize6 = ds.child("prize").child("sixth").getValue(Long.class);
                             Long prizeT = ds.child("prize").child("total").getValue(Long.class);
+
+                            Log.e("23onDataChange: ",""+prize1+" "+prize4);
+
                             p1 = new PrizeModel1(prize1, prize2, prize3, prize4, prize5, prize6, prizeT);
                         } else {
-
+                            if(nam.equalsIgnoreCase("Agnikund")){
+                                Log.e( "23onDataChange: ","level 24");
+                            }
                             Long prizeT, prize1_F, prize2_F, prize3_F, prize1_S, prize2_S, prize3_S, prize1_T, prize2_T, prize3_T;
                             prizeT = ds.child("prize").child("total").getValue(Long.class);
                             prize1_F = ds.child("prize").child("firstyear").child("first").getValue(Long.class);
@@ -638,16 +662,18 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     }
 
     private boolean checkPrizeType(String name) {
-        if ((name.compareToIgnoreCase("embetrix") == 0) ||
-                (name.compareToIgnoreCase("High Voltage Concepts") == 0) ||
-                (name.compareToIgnoreCase("electrospection") == 0) ||
-                (name.compareToIgnoreCase("Electro Scribble") == 0) ||
-                (name.compareToIgnoreCase("matsim") == 0) ||
-                (name.compareToIgnoreCase("Pro-Lo-Co") == 0) ||
-                (name.compareToIgnoreCase("Hack-De-Science") == 0) ||
-                (name.compareToIgnoreCase("agnikund") == 0) ||
-                (name.compareToIgnoreCase("knockout") == 0)
-        ) {
+        if(
+            //(name.compareToIgnoreCase("embetrix")==0 ) ||
+            (name.compareToIgnoreCase("High Voltage Concepts")==0) ||
+                (name.compareToIgnoreCase("electrospection")==0) ||
+                        (name.compareToIgnoreCase("Electro Scribble")==0) ||
+                        (name.compareToIgnoreCase("matsim")==0) ||
+                        (name.compareToIgnoreCase("Pro-Lo-Co")==0) ||
+                        (name.compareToIgnoreCase("Hack-De-Science")==0)
+            //||
+            //(name.compareToIgnoreCase("agnikund")==0) ||
+            //(name.compareToIgnoreCase("knockout")==0)
+        ){
             return false;
         }
         return true;
