@@ -12,6 +12,7 @@ public class EventModel {
     String branch;
     String details;
     String name;
+    String link;
 
 
 
@@ -20,7 +21,7 @@ public class EventModel {
     ArrayList<CoordinatorsModel> coordinatorsModelArrayList=new ArrayList<>();
     ArrayList<RulesModel> rulesModels=new ArrayList<>();
 
-    public EventModel(String about, String branch, String details, String name, PrizeModel1 p1,PrizeModel2 p2, ArrayList<CoordinatorsModel> coordinatorsModelArrayList, ArrayList<RulesModel> rulesModels) {
+    public EventModel(String about, String branch, String details, String name, PrizeModel1 p1,PrizeModel2 p2, ArrayList<CoordinatorsModel> coordinatorsModelArrayList, ArrayList<RulesModel> rulesModels, String link) {
         this.about=about;
         this.name = name;
         this.details=details;
@@ -29,6 +30,7 @@ public class EventModel {
         this.p2=p2;
         this.coordinatorsModelArrayList=coordinatorsModelArrayList;
         this.rulesModels=rulesModels;
+        this.link = link;
     }
     public EventModel()
     {
@@ -65,4 +67,7 @@ public class EventModel {
         return rulesModels;
     }
 
+    public String getLink() {
+        return link;
+    }
 }
