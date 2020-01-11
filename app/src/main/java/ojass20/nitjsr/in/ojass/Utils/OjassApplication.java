@@ -8,6 +8,8 @@ import android.util.Log;
 import com.google.firebase.database.FirebaseDatabase;
 import com.onesignal.OSNotificationOpenResult;
 import com.onesignal.OneSignal;
+import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.Picasso;
 
 import ojass20.nitjsr.in.ojass.Activities.NotificationActivity;
 import ojass20.nitjsr.in.ojass.Activities.SplashScreen;
@@ -30,6 +32,12 @@ public class OjassApplication extends Application {
                 .setNotificationOpenedHandler(new ExampleNotificationOpenedHandler())
                 .init();
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+        Picasso.Builder builder = new Picasso.Builder(this);
+        builder.downloader(new OkHttpDownloader(this, Integer.MAX_VALUE));
+        Picasso built = builder.build();
+        built.setIndicatorsEnabled(false);
+        Picasso.setSingletonInstance(built);
     }
 
     public static synchronized OjassApplication getInstance() {
