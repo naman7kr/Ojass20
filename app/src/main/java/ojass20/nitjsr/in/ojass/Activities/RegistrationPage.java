@@ -67,7 +67,6 @@ public class RegistrationPage extends AppCompatActivity {
         over_text.setText("Welcome "+mauth.getCurrentUser().getDisplayName());
         name_reg.setText(mauth.getCurrentUser().getDisplayName());
         email_reg.setText(mauth.getCurrentUser().getEmail());
-        
 
         register_button.setOnClickListener(new View.OnClickListener() {
             @Override
