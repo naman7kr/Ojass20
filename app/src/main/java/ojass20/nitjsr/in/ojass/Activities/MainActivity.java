@@ -1,5 +1,6 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -161,7 +162,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 //        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
         init();
         initializeInstanceVariables();
-
         setSlider();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -634,6 +634,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         rulesModelArrayList.clear();
                         try {
                             for (DataSnapshot d : ds.child("coordinators").getChildren()) {
+                                if(MainActivity.data.get(SubEventActivity.position).getName().compareTo("DISASSEMBLE")==0){
+                                    Log.e("LOL","LOL");
+                                }
                                 String n = d.child("name").getValue().toString();
                                 String p = d.child("phone").getValue().toString();
                                 coordinatorsModelArrayList.add(new CoordinatorsModel(n, p));
@@ -648,7 +651,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         } catch (Exception e) {
                             Log.d("hello", ds.child("name").getValue().toString());
                         }
-                        Log.e(LOG_TAG, branch);
+
                         data.add(new EventModel(about, branch, details, name, p1, p2, coordinatorsModelArrayList, rulesModelArrayList, link));
                         updateSubEventsArray();
                     }
@@ -998,7 +1001,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     @SuppressLint("WrongConstant")
     @Override
     public void onBackPressed() {
-        Log.d("hoe-hoe-hoe", "" + isCommentsFragmentOpen);
+
         if (isFragOpen || isCommentsFragmentOpen) {
             closeFragment();
             return;
@@ -1061,7 +1064,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         protected void onPostExecute(Void aVoid) {
             if (!TextUtils.isEmpty(currentVersion) && !TextUtils.isEmpty(latestVersion)) {
 //                Log.d("hello", doc.toString());
-                Log.d("hello", "Current : " + currentVersion + " Latest : " + latestVersion);
+//                Log.d("hello", "Current : " + currentVersion + " Latest : " + latestVersion);
                 if (currentVersion.compareTo(latestVersion) < 0) {
                     if (!isFinishing()) {
                         showUpdateDialog();
@@ -1073,27 +1076,45 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     }
 
     private void showUpdateDialog() {
-        //        Dialog  dialog = new Dialog(this);
-//        dialog.setContentView(R.lay);
-//        dialog.setCancelable(false);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("New update");
-        builder.setMessage("We have changed since we last met. Let's get the updates.");
-        builder.setCancelable(false);
-        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+        SharedPreferences pref = getSharedPreferences("updateFlag",MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean("update",false);
+        editor.commit();
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.update_dialog_layout);
+        dialog.setCancelable(false);
+        dialog.findViewById(R.id.update_later).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.findViewById(R.id.update).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=ojass20.nitjsr.in.ojass")));
                 dialog.dismiss();
             }
         });
-        builder.setNegativeButton("Later", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.show();
+        dialog.show();
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("New update");
+//        builder.setMessage("We have changed since we last met. Let's get the updates.");
+//        builder.setCancelable(false);
+//        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=ojass20.nitjsr.in.ojass")));
+//                dialog.dismiss();
+//            }
+//        });
+//        builder.setNegativeButton("Later", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//            }
+//        });
+//        builder.show();
     }
 
 //    public static void printHashKey(Context pContext) {

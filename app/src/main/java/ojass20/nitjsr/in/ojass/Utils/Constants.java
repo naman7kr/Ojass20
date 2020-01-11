@@ -13,26 +13,27 @@ public class Constants {
     public static final String FIREBASE_REF_IMG_SRC = "img_url";
 
     public static final int[] eventImg = new int[]{
-            R.mipmap.rise_of_machines,
-            R.mipmap.code_genesis,
-            R.mipmap.circuit_house,
-            R.mipmap.silicon_valley,
-            R.mipmap.arthashastra,
             R.mipmap.akriti,
-            R.mipmap.dxm,
-            R.mipmap.produs,
-            R.mipmap.paraphernalia,
-            R.mipmap.neo_drishti,
             R.mipmap.avartan,
             R.mipmap.armagedon,
-            R.mipmap.prayas,
-            R.mipmap.no_ground_zone,
-            R.mipmap.nscet,
+            R.mipmap.arthashastra,
+            R.mipmap.checkered_flag,
+            R.mipmap.circuit_house,
+            R.mipmap.dxm,
             R.mipmap.csgolive,
-            R.mipmap.exposicion,
-            R.mipmap.school_events
+            R.mipmap.paraphernalia,
+            R.mipmap.nscet,
+            R.mipmap.neo_drishti,
+            R.mipmap.no_ground_zone,
+            R.mipmap.prayas,
+            R.mipmap.produs,
+            R.mipmap.rise_of_machines,
+            R.mipmap.school_events,
+            R.mipmap.silicon_valley,
+//            R.mipmap.exposicion,
+            R.mipmap.code_genesis,
     };
-    //            R.mipmap.checkered_flag
+
 //    };
     public static final ArrayList<String> eventNames = new ArrayList<>();
     public static final HashMap<String, ArrayList<String>> SubEventsMap = new HashMap<>();

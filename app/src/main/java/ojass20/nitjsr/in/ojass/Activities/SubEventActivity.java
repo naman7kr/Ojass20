@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Handler;
+import android.text.Html;
 import android.util.Log;
 
 import android.util.Log;
@@ -46,10 +47,14 @@ import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import ojass20.nitjsr.in.ojass.Adapters.SubEventsAdapter;
 import ojass20.nitjsr.in.ojass.Fragments.EventBottomSheet;
@@ -112,11 +117,11 @@ public class SubEventActivity extends AppCompatActivity {
             }
         };
 
-//        if (mSubEventName != null) {
-//            showBottomSheet();
-//            bottomSheetOpen = true;
-//            getPostion(mSubEventName.get(0));
-//        }
+        if (mSubEventName != null) {
+            showBottomSheet();
+            bottomSheetOpen = true;
+            getPostion(mSubEventName.get(0));
+        }
 
         mAdapter = new SubEventsAdapter(this, getData(), mInterface);
         rView.setAdapter(mAdapter);
@@ -245,6 +250,7 @@ public class SubEventActivity extends AppCompatActivity {
                 if (bhNames.size() == 1) {
                     mLL.get(0).setVisibility(View.VISIBLE);
                     mName.get(0).setText(bhNames.get(0).getName());
+
                     final Intent intent = new Intent(Intent.ACTION_DIAL);
                     for (int j = 0; j < 1; j++) {
                         final int i = j;
@@ -264,6 +270,11 @@ public class SubEventActivity extends AppCompatActivity {
                                 startActivity(i);
                             }
                         });
+                        try{
+                            setPicassoImage(mProfile.get(i),bhNames.get(i).getImg());
+                        }catch (Exception e){
+                            Log.d("hello",bhNames.get(i).getName());
+                        }
                     }
                 } else if (bhNames.size() == 2) {
                     mLL.get(0).setVisibility(View.VISIBLE);
@@ -290,6 +301,11 @@ public class SubEventActivity extends AppCompatActivity {
                                 startActivity(i);
                             }
                         });
+                        try{
+                            setPicassoImage(mProfile.get(i),bhNames.get(i).getImg());
+                        }catch (Exception e){
+                            Log.d("hello",bhNames.get(i).getName());
+                        }
                     }
                 } else {
                     mLL.get(0).setVisibility(View.VISIBLE);
@@ -319,6 +335,11 @@ public class SubEventActivity extends AppCompatActivity {
                                 startActivity(i);
                             }
                         });
+                        try{
+                            setPicassoImage(mProfile.get(i),bhNames.get(i).getImg());
+                        }catch (Exception e){
+                            Log.d("hello",bhNames.get(i).getName());
+                        }
                     }
                 }
                 alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -355,7 +376,7 @@ public class SubEventActivity extends AppCompatActivity {
                 mHeading = dialogView.findViewById(R.id.heading);
                 String s = Constants.eventNames.get(mainEventPosition);
                 mHeading.setText(s);
-                mAbout.setText(MainActivity.branchData.get(Constants.eventNames.get(mainEventPosition)).getAbout());
+                mAbout.setText(Html.fromHtml(MainActivity.branchData.get(Constants.eventNames.get(mainEventPosition)).getAbout()));
 
                 alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
@@ -374,7 +395,19 @@ public class SubEventActivity extends AppCompatActivity {
         });
 
     }
+    private void setPicassoImage(final ImageView iv, final String img){
+        Picasso.with(this).load(img).placeholder(R.drawable.ic_account_circle_black_24dp).fit().networkPolicy(NetworkPolicy.OFFLINE).into(iv, new Callback() {
+            @Override
+            public void onSuccess() {
 
+            }
+
+            @Override
+            public void onError() {
+                Picasso.with(SubEventActivity.this).load(img).placeholder(R.drawable.ic_account_circle_black_24dp).fit().into(iv);
+            }
+        });
+    }
     private ValueAnimator changeRadius(final ImageView imageView) {
         ConstraintLayout.LayoutParams lP = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
         ValueAnimator anim = ValueAnimator.ofInt((int) lP.circleRadius, (int) MainActivity.convertDpToPixel(120, getApplicationContext()));
@@ -531,6 +564,8 @@ public class SubEventActivity extends AppCompatActivity {
             try {
                 if (subEvent.equalsIgnoreCase(MainActivity.data.get(i).getName().trim())) {
                     position = i;
+                    toolbar.setTitle(subEvent);
+
                     break;
                 }
             } catch (Exception e) {

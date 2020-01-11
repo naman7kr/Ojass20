@@ -49,7 +49,7 @@ public class HomeFragment extends Fragment implements
         GestureDetector.OnGestureListener, View.OnClickListener {
     private static final long ANIM_DURATION = 500;
     private HomeFragInterface fragInterface;
-    private TextView cancelBtn;
+    private RelativeLayout cancelBtn;
     private ArrayList<HomePage> mItems = new ArrayList<>();
     private int mInd;
     private ImageView bigCircle, c1, c2, c3, c4;
@@ -88,7 +88,7 @@ public class HomeFragment extends Fragment implements
 
     private void init(View view) {
         fragInterface = (HomeFragInterface) getActivity();
-        cancelBtn = view.findViewById(R.id.cancel_frag);
+        cancelBtn = view.findViewById(R.id.cancel_layout);
         bigCircle = view.findViewById(R.id.bg_circle);
         swipeArea = view.findViewById(R.id.swipe_area);
         swipeImage1 = view.findViewById(R.id.img_swipe1);

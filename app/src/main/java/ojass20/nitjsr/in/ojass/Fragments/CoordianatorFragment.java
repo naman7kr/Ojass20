@@ -3,6 +3,7 @@ package ojass20.nitjsr.in.ojass.Fragments;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,9 @@ public class CoordianatorFragment extends Fragment {
         rv=view.findViewById(R.id.rv_eventhead);
         body=view.findViewById(R.id.body);
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        if(MainActivity.data.get(SubEventActivity.position).getName().compareTo("DISASSEMBLE")==0){
+//            Log.e("TAG",MainActivity.data.get(SubEventActivity.position).getCoordinatorsModelArrayList().get(0).getName());
+//        }
         rv.setAdapter(new EventHeadAdapter(getActivity(), MainActivity.data.get(SubEventActivity.position).getCoordinatorsModelArrayList()));
         return view;
     }
