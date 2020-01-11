@@ -218,11 +218,16 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                     ArrayList<BranchHeadModal> bh_list = new ArrayList<>();
                     for (DataSnapshot d : ds.child("head").getChildren()) {
                         String cn, name, url, wn;
-                        name = d.child("name").getValue().toString();
-                        cn = d.child("cn").getValue().toString();
-                        wn = d.child("wn").getValue().toString();
-                        url = d.child("url").getValue().toString();
-                        bh_list.add(new BranchHeadModal(cn, name, url, wn));
+                        try{
+                            name = d.child("name").getValue().toString();
+                            cn = d.child("cn").getValue().toString();
+                            wn = d.child("wn").getValue().toString();
+                            url = d.child("url").getValue().toString();
+                            bh_list.add(new BranchHeadModal(cn, name, url, wn));
+                        }catch (Exception e){
+                            Log.d("hello",ds.getKey());
+                        }
+
                     }
                     branchData.put(ds.getKey(), new BranchModal(about, bh_list));
                 }
