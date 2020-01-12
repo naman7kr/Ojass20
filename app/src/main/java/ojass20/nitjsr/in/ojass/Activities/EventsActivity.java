@@ -254,7 +254,6 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
                 }
             }
         }
-
         return super.onOptionsItemSelected(item);
     }
 
