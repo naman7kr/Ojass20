@@ -183,6 +183,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         compareAppVersion();
 //        printHashKey(this);
         refresh();
+        Log.d("ak47", "onCreate: "+mauth.getCurrentUser().getEmail()+" "+mauth.getCurrentUser().getUid());
+
 
     }
 
@@ -881,6 +883,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
                 break;
+            case R.id.feedback:
+                 startActivity(new Intent(MainActivity.this, FeedbackActivity.class));
+                 break;
         }
 
         try {

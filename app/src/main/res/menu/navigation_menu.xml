@@ -40,6 +40,10 @@
             android:id="@+id/help"
             android:icon="@drawable/ic_live_help_black_24dp"
             android:title="@string/help" />
+        <item
+            android:id="@+id/feedback"
+            android:icon="@drawable/ic_live_help_black_24dp"
+            android:title="@string/feedback" />
 
         <item
             android:id="@+id/logout"

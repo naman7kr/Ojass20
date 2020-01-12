@@ -1,0 +1,168 @@
+package ojass20.nitjsr.in.ojass.Activities;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import android.annotation.SuppressLint;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+
+import ojass20.nitjsr.in.ojass.R;
+
+public class FeedbackActivity extends AppCompatActivity {
+    HashMap<String,String> formdata;
+    DatabaseReference ref;
+    Toolbar toolbar;
+    EditText name,email,subject,feedback;
+    Button Submit;
+    int Count=-1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_feedback);
+        /* to initialize data */
+        init();
+        setListner();
+
+    }
+    private boolean validate()
+    {
+        boolean check=true;
+        if(TextUtils.isEmpty(email.getText().toString().trim()))
+        {
+            Toast.makeText(this,"Email Empty",Toast.LENGTH_LONG).show();
+            check=false;
+        }
+        if(TextUtils.isEmpty(name.getText().toString().trim()))
+        {
+            Toast.makeText(this,"Name Empty",Toast.LENGTH_LONG).show();
+            check=false;
+        }
+        if(TextUtils.isEmpty(feedback.getText().toString().trim()))
+        {
+            Toast.makeText(this,"Feedback empty",Toast.LENGTH_LONG).show();
+            check=false;
+        }
+        if(TextUtils.isEmpty(subject.getText().toString().trim()))
+        {
+            Toast.makeText(this,"Subject empty",Toast.LENGTH_LONG).show();
+            check=false;
+        }
+        if(Count==-1)
+        {
+            Toast.makeText(this,"Try in a Bit!!!!",Toast.LENGTH_LONG).show();
+            check=false;
+        }
+        else if(Count>=5)
+        {
+            Toast.makeText(this,"Feedbacks Limit!!!!",Toast.LENGTH_LONG).show();
+            check=false;
+        }
+        return check;
+    }
+    private void set()
+    {
+        formdata=new HashMap<>();
+        formdata.put("email",email.getText().toString().trim());
+        formdata.put("name",name.getText().toString().trim());
+        formdata.put("message",feedback.getText().toString().trim());
+        formdata.put("subject",subject.getText().toString().trim());
+
+
+    }
+    private void submit()
+    {
+        ref.child("feedback").push().setValue(formdata).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                finish();
+            }
+        });
+    }
+    private void setListner()
+    {
+        Submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(validate())
+                {
+                    set();
+                    submit();
+                }
+
+            }
+        });
+    }
+
+    private void init() {
+        ref=FirebaseDatabase.getInstance().getReference();
+        name=findViewById(R.id.FeedBackName);
+        email=findViewById(R.id.FeedbackEmail);
+        subject=findViewById(R.id.FeedBackSubject);
+        feedback=findViewById(R.id.FeedbackFeedBack);
+        email.setText( FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        name.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        name.setKeyListener(null);
+        Submit=findViewById(R.id.FeedbackSubmit);
+        toolbar=findViewById(R.id.FeedBackPageToolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ref.child("Users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+
+                    HashMap<String,String> user=(HashMap<String,String>)dataSnapshot1.getValue();
+                    if(user.get("uid").equalsIgnoreCase(FirebaseAuth.getInstance().getCurrentUser().getUid()))
+                    {
+                        email.setText(user.get("email"));
+                        email.setKeyListener(null);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        ref.child("feedback").addValueEventListener(new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Count=0;
+                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                    HashMap<String,String> feedback=(HashMap<String,String>)dataSnapshot1.getValue();
+                    if(feedback.get("name").equalsIgnoreCase(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()))
+                    {
+                        Count++;
+                    }
+                }
+                Submit.setText("SUBMIT("+(5-Count)+")");
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+}
