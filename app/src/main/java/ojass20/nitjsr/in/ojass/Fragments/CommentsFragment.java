@@ -147,12 +147,39 @@ public class CommentsFragment extends Fragment {
         send_comment_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendComment();
+                user_can_comment_more();
             }
         });
 
         //onBackPress(container);
         return view;
+    }
+
+    private void user_can_comment_more() {
+        dref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int count=0;
+                for(DataSnapshot ds : dataSnapshot.getChildren())
+                {
+                    if(ds.child("senderId").getValue().toString().equals(mauth.getCurrentUser().getUid())){
+                        count++;
+                    }
+                }
+                if(count<5){
+                    sendComment();
+                }
+                else{
+                    Toast.makeText(context, "You have already reached your comment limit on this post.", Toast.LENGTH_SHORT).show();
+                    self_comment_text.setText("");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 //    private void findImageUrl(final String msenderid, final String mmsg, final String mtime, final String msendername, final String msenderurl) {

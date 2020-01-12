@@ -6,6 +6,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+
+import android.os.Handler;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
+
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -41,7 +46,7 @@ public class HomeFragment extends Fragment implements
         GestureDetector.OnGestureListener, View.OnClickListener {
     private static final long ANIM_DURATION = 500;
     private HomeFragInterface fragInterface;
-    private ImageView cancelBtn;
+    private RelativeLayout cancelBtn;
     private ArrayList<HomePage> mItems = new ArrayList<>();
     private int mInd;
     private ImageView bigCircle, c1, c2, c3, c4;
@@ -50,7 +55,7 @@ public class HomeFragment extends Fragment implements
     private RelativeLayout swipeArea;
     private ConstraintLayout cl;
     private ImageView swipeImage1, swipeImage2;
-    private TextView txt;
+    private TextView txt, mHeading;
 
     @Nullable
     @Override
@@ -59,7 +64,7 @@ public class HomeFragment extends Fragment implements
         init(view);
         onCancel();
         setUpArrayList();
-        swipeArea.setOnTouchListener(new View.OnTouchListener() {
+        mHeading.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (mDetector != null) {
@@ -71,17 +76,21 @@ public class HomeFragment extends Fragment implements
         });
         setUpView(0);
         detectBottomTabClick();
+
+        mHeading.setText(mItems.get(mInd).getmTitle());
+
         return view;
     }
 
 
     private void init(View view) {
         fragInterface = (HomeFragInterface) getActivity();
-        cancelBtn = view.findViewById(R.id.cancel_frag);
+        cancelBtn = view.findViewById(R.id.cancel_layout);
         bigCircle = view.findViewById(R.id.bg_circle);
         swipeArea = view.findViewById(R.id.swipe_area);
         swipeImage1 = view.findViewById(R.id.img_swipe1);
         swipeImage2 = view.findViewById(R.id.img_swipe2);
+        mHeading = view.findViewById(R.id.heading);
         txt = view.findViewById(R.id.home_frag_text);
         cl = view.findViewById(R.id.cl);
         c1 = view.findViewById(R.id.img1);
@@ -112,35 +121,32 @@ public class HomeFragment extends Fragment implements
     }
 
     private void detectBottomTabClick() {
-        c1.setOnClickListener(this);
-        c2.setOnClickListener(this);
-        c3.setOnClickListener(this);
-        c4.setOnClickListener(this);
+//        c1.setOnClickListener(this);
+//        c2.setOnClickListener(this);
+//        c3.setOnClickListener(this);
+//        c4.setOnClickListener(this);
     }
 
     private void swipeRight() {
         mInd++;
-        int counter = -1;
         if (mInd >= mItems.size()) {
             mInd = 0;
-            counter = -3;
-        }
-        imgAnimationRight();
-        setUpView(counter);
+            setUpView(-3);
+        } else
+            setUpView(-1);
+        setUpAnimationForTextView(-1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
         setTxtRight();
     }
 
     private void swipeLeft() {
         mInd--;
-        int counter = 1;
         if (mInd < 0) {
             mInd = mItems.size() - 1;
-            counter = 3;
-        }
-        imgAnimationLeft();
-        setUpView(counter);
+            setUpView(3);
+        } else
+            setUpView(1);
+        setUpAnimationForTextView(1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
         setTxtLeft();
-
     }
 
     private void setTxtRight() {
@@ -210,6 +216,45 @@ public class HomeFragment extends Fragment implements
         });
         swipeImage1.startAnimation(set1);
         swipeImage2.startAnimation(set2);
+    }
+
+    private void setUpAnimationForTextView(final int code, final long mainTime, String curr) {
+        long tempTime = System.currentTimeMillis();
+        if (tempTime - mainTime > 500) {
+            mHeading.setText(mItems.get(mInd).getmTitle());
+            return;
+        }
+        String temp = " ";
+        for (int i = 0; i < curr.length(); i++) {
+            char ch = curr.charAt(i);
+            if (code == 1) {
+                if (ch == 'Z')
+                    temp = temp + 'A';
+                else {
+                    int u = (int) ch;
+                    u++;
+                    temp = temp + (char) u;
+                }
+            } else {
+                if (ch == 'A')
+                    temp = temp + 'Z';
+                else {
+                    int u = (int) ch;
+                    u--;
+                    temp = temp + (char) u;
+                }
+            }
+        }
+        temp = temp.trim();
+        mHeading.setText(temp);
+        //Log.e(LOG_TAG, temp);
+        final String x = temp;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setUpAnimationForTextView(code, mainTime, x.toUpperCase());
+            }
+        }, 10);
     }
 
     private AnimationSet translateAnim(float fromTr, float toTr, float fromAl, float toAl) {
@@ -350,25 +395,21 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
-        float x = e.getX();
-        float y = e.getY();
-        if (x >= swipeImage1.getLeft() && x <= swipeImage1.getRight() && y >= swipeImage1.getTop() && y <= swipeImage1.getBottom()) {
-            switch (mInd) {
-                case 0:
-                    startActivity(new Intent(getContext(), EventsActivity.class));
-                    break;
-                case 1:
-                    startActivity(new Intent(getContext(), GurugyanActivity.class));
-                    break;
-                case 2:
-                    startActivity(new Intent(getContext(), ItineraryActivity.class));
-                    break;
-                case 3:
-                    startActivity(new Intent(getContext(), MapsActivity.class));
-                    break;
-                default:
-                    Log.e("LOL", "Bhai sahab ye kis line mein aa gye aap?");
-            }
+        switch (mInd) {
+            case 0:
+                startActivity(new Intent(getContext(), EventsActivity.class));
+                break;
+            case 1:
+                startActivity(new Intent(getContext(), GurugyanActivity.class));
+                break;
+            case 2:
+                startActivity(new Intent(getContext(), ItineraryActivity.class));
+                break;
+            case 3:
+                startActivity(new Intent(getContext(), MapsActivity.class));
+                break;
+            default:
+                Log.e("LOL", "Bhai sahab ye kis line mein aa gye aap?");
         }
         return true;
     }

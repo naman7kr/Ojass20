@@ -12,5 +12,8 @@
     <color name="black">#000</color>
     <color name="white">#FFF</color>
     <color name="blue">#047BD5</color>
-    <color name="transparent">#00000000</color>
+    <color name="transparent">#00CC6060</color>
+    <color name="red">#FF0000</color>
+    <color name="navHeader">#29363d</color>
+    <color name="fab">#ff3385</color>
 </resources>

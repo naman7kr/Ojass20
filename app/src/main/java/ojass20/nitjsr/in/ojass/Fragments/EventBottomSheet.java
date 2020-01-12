@@ -40,6 +40,12 @@ public class EventBottomSheet extends Fragment {
         tabLayout = view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         Log.e("this", "I'm lost");
+
+        int drawable_resources[] = {R.drawable.ic_event_about, R.drawable.ic_event_details, R.drawable.ic_event_rules, R.drawable.ic_event_coordinator, R.drawable.ic_event_prize};
+        for(int i = 0;i < tabLayout.getTabCount();i ++){
+            tabLayout.getTabAt(i).setIcon(drawable_resources[i]);
+        }
+
         return view;
     }
 

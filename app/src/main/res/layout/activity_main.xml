@@ -14,8 +14,9 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorAccent"
-        android:orientation="vertical">
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:id="@+id/parent_frame">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -34,7 +35,7 @@
                         layout="@layout/toolbar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_scrollFlags="scroll|enterAlways|snap" />
+                        />
 
                 </com.google.android.material.appbar.AppBarLayout>
 
@@ -42,20 +43,17 @@
                     android:id="@+id/swipe_refresh"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-
                     >
 
                     <androidx.core.widget.NestedScrollView
                         android:id="@+id/nested_scroll_main"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                       >
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-
                             >
 
                             <RelativeLayout
@@ -89,7 +87,9 @@
                                             android:layout_marginBottom="10dp"
                                             app:ci_drawable="@android:color/holo_red_dark" />
                                     </RelativeLayout>
+
                                 </androidx.cardview.widget.CardView>
+
                             </RelativeLayout>
 
                             <androidx.cardview.widget.CardView
@@ -98,15 +98,15 @@
                                 android:layout_below="@+id/poster_layout"
                                 android:layout_marginTop="60dp"
                                 android:elevation="2dp"
-                                android:nestedScrollingEnabled="false"
-                                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                              >
 
                                 <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/feed_recycler_view"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:nestedScrollingEnabled="false"
                                     android:scrollbars="none"
+                                    android:paddingTop="6dp"
+                                    android:paddingBottom="12dp"
                                     app:layout_behavior="@string/appbar_scrolling_view_behavior" />
                             </androidx.cardview.widget.CardView>
                         </RelativeLayout>
@@ -147,30 +147,31 @@
                             android:src="@drawable/up_24dp"
                             android:visibility="visible" />
 
-
                     </RelativeLayout>
                 </RelativeLayout>
 
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-            <!--home fragment and CommentFragment-->
-            <FrameLayout
-                android:id="@+id/home_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
         </RelativeLayout>
 
     </FrameLayout>
+
+    <!--home fragment and CommentFragment-->
+    <FrameLayout
+        android:id="@+id/home_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="120dp"/>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@android:color/white"
-        app:itemIconTint="@android:color/white"
+        android:background="#FFF"
+        app:itemIconTint="@color/navHeader"
         app:itemTextAppearance="@style/NavItemsStyle"
-        app:itemTextColor="@android:color/darker_gray"
+        app:itemTextColor="@color/navHeader"
         app:menu="@menu/navigation_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

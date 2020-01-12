@@ -12,35 +12,29 @@ public class EventModel {
     String branch;
     String details;
     String name;
+    String link;
 
 
 
-    Long prize1;
-    Long prize2;
-    Long prize3;
-    Long prizeT;
+    public PrizeModel1 p1;
+    public PrizeModel2 p2;
     ArrayList<CoordinatorsModel> coordinatorsModelArrayList=new ArrayList<>();
     ArrayList<RulesModel> rulesModels=new ArrayList<>();
 
-    public EventModel(String about, String branch, String details, String name, Long prize1, Long prize2, Long prize3, Long prizeT, ArrayList<CoordinatorsModel> coordinatorsModelArrayList, ArrayList<RulesModel> rulesModels) {
+    public EventModel(String about, String branch, String details, String name, PrizeModel1 p1,PrizeModel2 p2, ArrayList<CoordinatorsModel> coordinatorsModelArrayList, ArrayList<RulesModel> rulesModels, String link) {
         this.about=about;
         this.name = name;
         this.details=details;
         this.branch=branch;
-        this.prize1=prize1;
-        this.prize2=prize2;
-        this.prize3=prize3;
-        this.prizeT=prizeT;
+        this.p1 = p1;
+        this.p2=p2;
         this.coordinatorsModelArrayList=coordinatorsModelArrayList;
         this.rulesModels=rulesModels;
+        this.link = link;
     }
     public EventModel()
     {
 
-    }
-
-    public Long getPrize2() {
-        return prize2;
     }
 
     public String getAbout() {
@@ -59,24 +53,21 @@ public class EventModel {
         return name;
     }
 
-    public Long getPrize1() {
-        return prize1;
-    }
-
-    public Long getPrize3() {
-        return prize3;
-    }
-
-    public Long getPrizeT() {
-        return prizeT;
-    }
-
     public ArrayList<CoordinatorsModel> getCoordinatorsModelArrayList() {
         return coordinatorsModelArrayList;
     }
+    public PrizeModel1 getP1() {
+        return p1;
+    }
 
+    public PrizeModel2 getP2() {
+        return p2;
+    }
     public ArrayList<RulesModel> getRulesModels() {
         return rulesModels;
     }
 
+    public String getLink() {
+        return link;
+    }
 }

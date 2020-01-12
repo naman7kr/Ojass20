@@ -1,5 +1,6 @@
 package ojass20.nitjsr.in.ojass.Fragments;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -23,7 +24,7 @@ public class AboutFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
-        Toast.makeText(getContext(), "" + SubEventActivity.position, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "" + SubEventActivity.position, Toast.LENGTH_SHORT).show();
         createUI(view);
         return view;
     }

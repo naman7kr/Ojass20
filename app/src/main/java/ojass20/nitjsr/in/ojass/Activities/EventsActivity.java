@@ -3,6 +3,7 @@ package ojass20.nitjsr.in.ojass.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -34,18 +36,21 @@ import ojass20.nitjsr.in.ojass.Utils.PinchAlphaInterface;
 import ojass20.nitjsr.in.ojass.Utils.ZoomLayout;
 import ojass20.nitjsr.in.ojass.R;
 
+import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsList;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsMap;
+
 public class EventsActivity extends AppCompatActivity implements PinchAlphaInterface {
     private static final int NO_OF_COLUMNS = 4;
     private static final float INIT_ALPHA = 0.6f;
     ArrayList<EventsDisplayModel> data = new ArrayList<>();
     EventsGridAdapter mAdapter;
     int width;
-    float alphaVal=0;
+    float alphaVal = 0;
     RecyclerView gridLayout;
 
     private Toolbar toolbar;
     private LinearLayout event_search_layout;
-    private ImageView events_search_back_button, events_search_cleartext_button;
+    private ImageView events_search_cleartext_button;
     private AutoCompleteTextView event_search_text;
 
     private MenuItem search_menu_item;
@@ -54,7 +59,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
     private static boolean bottomSheetOpen = false;
     private static int toolbarIconColor = Color.BLACK;
 
-    String[] fruits = {"Apple", "Banana", "Cherry", "Date", "Grape", "Kiwi", "Mango", "Pear"};
+    ArrayList<String> subevents;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,18 +68,11 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         init();
 
         getSupportActionBar().setTitle("Events");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
 
         setZoomableGridView();
         bottomSheetOpen = false;
-
-        events_search_back_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                event_search_layout.setVisibility(View.GONE);
-                search_menu_item.setVisible(true);
-                closeKeyboard();
-            }
-        });
 
         events_search_cleartext_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,18 +82,37 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         });
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                (this, android.R.layout.select_dialog_item, fruits);
+                (this, android.R.layout.select_dialog_item, subevents);
 
+        event_search_text.setSingleLine(true);
         event_search_text.setThreshold(0);
         event_search_text.setAdapter(adapter);
 
         event_search_text.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(EventsActivity.this, "Open activity of "+fruits[position], Toast.LENGTH_SHORT).show();
+                //Toast.makeText(EventsActivity.this, "Open activity of "+subevents[position], Toast.LENGTH_SHORT).show();
+                int mainEventPosition = 0, pos = -1;
+                for (Map.Entry<Integer, ArrayList<String>> entry : SubEventsList.entrySet()) {
+                    ArrayList<String> temp = entry.getValue();
+                    for (int j = 0; j < temp.size(); j++) {
+                        if (temp.get(j).equalsIgnoreCase((String) parent.getItemAtPosition(position))) {
+                            mainEventPosition = entry.getKey();
+                            pos = j;
+                            break;
+                        }
+                    }
+                    if (pos != -1)
+                        break;
+                }
+                Intent intent = new Intent(EventsActivity.this, SubEventActivity.class);
+                intent.putExtra("event_id", mainEventPosition);
+                ArrayList<String> temp = new ArrayList<>();
+                temp.add((String) parent.getItemAtPosition(position));
+                intent.putStringArrayListExtra("sub_event_name", temp);
+                startActivity(intent);
                 closeKeyboard();
-                event_search_layout.setVisibility(View.GONE);
-                showBottomSheet();
+                event_search_text.setText("");
             }
         });
     }
@@ -112,7 +129,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_cancel);
         //getSupportActionBar().setLogo(R.drawable.ic_cancel);
-        toolbar.setBackgroundColor(Color.BLACK);
+        //toolbar.setBackgroundColor(Color.BLACK);
         toolbar.setTitle(event_search_text.getText().toString());
         event_search_text.setText("");
     }
@@ -129,13 +146,14 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
 //        Drawable backArrow =  getResources().getDrawable(R.drawable.ic_arrow_back);
 //        backArrow.setColorFilter(toolbarIconColor, PorterDuff.Mode.SRC_ATOP);
         //getSupportActionBar().setLogo(null);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        toolbar.setBackgroundColor(getResources().getColor(R.color.transparent));
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+//        toolbar.setBackgroundColor(getResources().getColor(R.color.transparent));
         toolbar.setTitle("Events");
     }
 
     private void setZoomableGridView() {
-        gridLayout.setLayoutManager(new GridLayoutManager(this,NO_OF_COLUMNS));
+        gridLayout.setLayoutManager(new GridLayoutManager(this, NO_OF_COLUMNS));
 
         //getting width of device
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -143,20 +161,26 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         width = displayMetrics.widthPixels;
 
         //getting event names and images
-        for (int i = 0; i < Constants.eventNames.length; i++) {
-            data.add(new EventsDisplayModel(Constants.eventImg[i], Constants.eventNames[i], INIT_ALPHA));
+        data.clear();
+        for (int i = 0; i < Constants.eventNames.size(); i++) {
+            data.add(new EventsDisplayModel(Constants.eventImg[i], Constants.eventNames.get(i), INIT_ALPHA));
         }
 
-        mAdapter = new EventsGridAdapter(this,width,data);
+        mAdapter = new EventsGridAdapter(this, width, data);
         gridLayout.setAdapter(mAdapter);
     }
 
-    void init(){
+    void init() {
+        subevents = new ArrayList<>();
+        for (Map.Entry<String, ArrayList<String>> entry : SubEventsMap.entrySet()) {
+
+            for (int i = 0; i < entry.getValue().size(); i++)
+                subevents.add(entry.getValue().get(i));
+        }
         gridLayout = findViewById(R.id.events_grid);
         toolbar = findViewById(R.id.events_toolbar);
         setSupportActionBar(toolbar);
         event_search_layout = toolbar.findViewById(R.id.event_search_layout_change);
-        events_search_back_button = toolbar.findViewById(R.id.event_search_back_button);
         events_search_cleartext_button = toolbar.findViewById(R.id.event_search_clear_text_button);
         event_search_text = toolbar.findViewById(R.id.event_search_text);
     }
@@ -172,8 +196,8 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         }
         data.clear();
 //        Log.e("TAG"," "+alphaVal);
-        for (int i = 0; i < Constants.eventNames.length; i++) {
-            data.add(new EventsDisplayModel(Constants.eventImg[i], Constants.eventNames[i], alphaVal));
+        for (int i = 0; i < Constants.eventNames.size(); i++) {
+            data.add(new EventsDisplayModel(Constants.eventImg[i], Constants.eventNames.get(i), alphaVal));
         }
         mAdapter.notifyDataSetChanged();
     }
@@ -210,6 +234,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         } else {
             //finishAfterTransition();
             super.onBackPressed();
+            finish();
         }
     }
 
@@ -220,8 +245,13 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
                 hideBottomSheet();
                 search_menu_item.setVisible(true);
             } else {
-                //go to EventsActivity with transition
-                //finishAfterTransition();
+                if (event_search_layout.getVisibility() == View.VISIBLE) {
+                    closeKeyboard();
+                    event_search_layout.setVisibility(View.GONE);
+                    search_menu_item.setVisible(true);
+                } else {
+                    finish();
+                }
             }
         }
 

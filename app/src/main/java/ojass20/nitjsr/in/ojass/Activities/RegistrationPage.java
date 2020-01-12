@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -41,6 +43,7 @@ public class RegistrationPage extends AppCompatActivity {
     private Spinner tshirt_size_spinner;
     private Button register_button;
     private CircleImageView self_image;
+    private TextView over_text;
 
     private String[] tshirt_sizes_list={"S","M","L","XL","XXL"};
 
@@ -61,10 +64,16 @@ public class RegistrationPage extends AppCompatActivity {
         mauth = FirebaseAuth.getInstance();
         current_user_id = mauth.getCurrentUser().getUid();
 
+        over_text.setText("Welcome "+mauth.getCurrentUser().getDisplayName());
+        name_reg.setText(mauth.getCurrentUser().getDisplayName());
+        email_reg.setText(mauth.getCurrentUser().getEmail());
+
         register_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                register_user();
+                if(validate()){
+                    register_user();
+                }
             }
         });
 
@@ -112,11 +121,13 @@ public class RegistrationPage extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Toast.makeText(RegistrationPage.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(RegistrationPage.this, MainActivity.class));
+                            finish();
                         }
                         else{
                             Toast.makeText(RegistrationPage.this, "Error: Not registered", Toast.LENGTH_SHORT).show();
                             Log.e("onComplete: "," "+task.getException().toString());
                             startActivity(new Intent(RegistrationPage.this, MainActivity.class));
+                            finish();
                         }
                     }
                 });
@@ -131,5 +142,44 @@ public class RegistrationPage extends AppCompatActivity {
         tshirt_size_spinner = findViewById(R.id.TShirt_Size_Registration_page);
         register_button = findViewById(R.id.register_button_Registration_page);
         self_image = findViewById(R.id.register_self_pic);
+        over_text = findViewById(R.id.overlap_text);
     }
+
+    public boolean validate(){
+
+        boolean valid=true;
+        if(email_reg.getText().toString().trim().isEmpty()||!Patterns.EMAIL_ADDRESS.matcher(email_reg.getText().toString().trim()).matches())
+        {
+            email_reg.setError("Please Enter Valid Email Address");
+            valid=false;
+        }
+        if(mobile_reg.getText().toString().trim().isEmpty()||!Patterns.PHONE.matcher(mobile_reg.getText().toString().trim()).matches() )
+        {
+            mobile_reg.setError("Please Enter Valid Mobile Number");
+            valid=false;
+        }
+
+        if(name_reg.getText().toString().trim().isEmpty() )
+        {
+            name_reg.setError("Please Enter Your Name");
+            valid=false;
+        }
+
+        if(college_reg.getText().toString().trim().isEmpty() )
+        {
+            college_reg.setError("Please Enter Your College");
+            valid=false;
+        }
+
+        if(branch_reg.getText().toString().trim().isEmpty() )
+        {
+            branch_reg.setError("Please Enter Your Branch");
+            valid=false;
+        }
+
+
+        return valid;
+    }
+
+
 }
