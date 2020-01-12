@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         progressDialog.dismiss();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Branches");
         ref.keepSynced(true);
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 branchData.clear();

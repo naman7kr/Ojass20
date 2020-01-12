@@ -1,5 +1,6 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,9 +19,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import ojass20.nitjsr.in.ojass.Adapters.TeamMemberAdapter;
 import ojass20.nitjsr.in.ojass.Models.TeamMember;
@@ -49,14 +57,51 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         check();
         //to set Listeners
         setListeners();
+
+
+        fetchData();
         //to set Team Member's data
-        setData();
+//        setData();
         //to set card
         setCard();
-
+        //Temporary push data
+//      fetch data
+//      pushData();
 
     }
 
+    private void fetchData() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Team");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                list.clear();
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    TeamMember m = ds.getValue(TeamMember.class);
+                    Log.d("pubg", "onDataChange: "+m.name);
+                    if(!list.contains(m))
+                        list.add(m);
+
+                }
+                filter();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    void pushData(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Team");
+
+        for(TeamMember m:list){
+            reference.push().setValue(m);
+        }
+
+    }
     private void devloperPage() {
         DEVELOPER=true;
         FILTER=100;
@@ -122,14 +167,18 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         list.add(new TeamMember("Naman","APP","","https://www.facebook.com/kumar.naman.707","","https://www.linkedin.com/in/kumar-naman-55b356128","","","https://lh3.googleusercontent.com/u/0/d/1wvqmAaNth0BY5fG6VspL1SsKrvffOaEm=w1157-h981-p-k-nu-iv1",100));
         list.add(new TeamMember("Anirudh","APP","","","","","","","https://lh3.googleusercontent.com/u/0/d/1sXbjGG2PhUYqKL5uApW4d0mXLm9ryuvZ=w1157-h981-p-k-nu-iv1",100));
 
-        filter();
+//        filter();
     }
 
     private void setCard()
     {
-        name.setText(MEMBER.name);
-        designation.setText(MEMBER.desig);
-        Glide.with(TeamActivity.this).asBitmap().load(MEMBER.img).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(profilepic);
+        if(MEMBER!=null)
+        {
+            name.setText(MEMBER.name);
+            designation.setText(MEMBER.desig);
+            Glide.with(TeamActivity.this).asBitmap().load(MEMBER.img).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(profilepic);
+        }
+
 
         //profilepic.setImageResource(MEMBER.img);
     }
@@ -179,6 +228,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         if(teamList.size()>0)
             onSelected(teamList.get(0));
         adapter.notifyDataSetChanged();
+        Log.e("TAG", String.valueOf(teamList.size()));
     }
 
     @Override
