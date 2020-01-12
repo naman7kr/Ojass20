@@ -39,6 +39,7 @@
     <string name="sponsor">Sponsor</string>
     <string name="backPress">Do you want to close the application</string>
     <string name="emergency_call">Emergency Call</string>
+    <string name="feedback">Feedback</string>
 
     <string-array name="team_names">
         <item>Technical Secretary</item>

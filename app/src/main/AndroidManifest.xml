@@ -15,9 +15,8 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.FaqActivity">
-
-        </activity>
+        <activity android:name=".Activities.FeedbackActivity" android:parentActivityName=".Activities.MainActivity"></activity>
+        <activity android:name=".Activities.FaqActivity"></activity>
         <activity android:name=".Activities.NotificationActivity" />
         <activity android:name=".Activities.WalkThroughActivity" />
         <activity android:name=".Activities.SplashScreen">
