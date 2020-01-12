@@ -173,7 +173,7 @@ public class RegistrationPage extends AppCompatActivity {
 
         if(branch_reg.getText().toString().trim().isEmpty() )
         {
-            branch_reg.setError("Please Enter Your College");
+            branch_reg.setError("Please Enter Your Branch");
             valid=false;
         }
 
