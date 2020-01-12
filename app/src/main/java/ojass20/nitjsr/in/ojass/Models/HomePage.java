@@ -1,4 +1,4 @@
-package ojass20.nitjsr.in.ojass.Helpers;
+package ojass20.nitjsr.in.ojass.Models;
 
 public class HomePage {
     public String mTitle;
