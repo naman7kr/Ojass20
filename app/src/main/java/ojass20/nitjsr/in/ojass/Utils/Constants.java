@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import ojass20.nitjsr.in.ojass.R;
@@ -34,7 +35,7 @@ public class Constants {
             R.mipmap.code_genesis,
     };
 
-//    };
+    //    };
     public static final ArrayList<String> eventNames = new ArrayList<>();
     public static final HashMap<String, ArrayList<String>> SubEventsMap = new HashMap<>();
     public static final String NOT_REGISTERED = "Not Registered";
@@ -61,6 +62,8 @@ public class Constants {
 //            "Checkered Flag"
 //    };
     public static HashMap<Integer, ArrayList<String>> SubEventsList = new HashMap<>();
+    public static HashSet<String> mBranchEvents = new HashSet<>();
+
 //        public static final String[][] SubEventsList = new String[][];
 //    {
 //            {"Mech-Trivia", "GURUTWA", "iANSYST", "BOX-CIPHER", "CORPORATE BYTES", "Junkyard Wars", "Prakshepan"},
@@ -87,6 +90,15 @@ public class Constants {
     public static final String FIREBASE_REF_NOTIF = "Notifications";
 
     public static void updateSubEventsArray() {
+        mBranchEvents.add("Aakriti");
+        mBranchEvents.add("Aavartan");
+        mBranchEvents.add("Circuit House");
+        mBranchEvents.add("Neo Drishti");
+        mBranchEvents.add("Produs");
+        mBranchEvents.add("Rise of Machines");
+        mBranchEvents.add("Silicon Valley");
+        mBranchEvents.add("Vishwa Code Genesis");
+
         SubEventsList.clear();
         int j = 0;
         for (Map.Entry<String, ArrayList<String>> entry : SubEventsMap.entrySet()) {

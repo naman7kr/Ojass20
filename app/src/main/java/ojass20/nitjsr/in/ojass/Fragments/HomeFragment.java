@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -64,7 +65,8 @@ public class HomeFragment extends Fragment implements
         init(view);
         onCancel();
         setUpArrayList();
-        mHeading.setOnTouchListener(new View.OnTouchListener() {
+
+        swipeArea.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (mDetector != null) {
@@ -74,6 +76,21 @@ public class HomeFragment extends Fragment implements
                 return false;
             }
         });
+
+        swipeArea.setOnClickListener(null);
+
+
+//        mHeading.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (mDetector != null) {
+//                    mDetector.onTouchEvent(event);
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+
         setUpView(0);
         detectBottomTabClick();
 
@@ -82,14 +99,12 @@ public class HomeFragment extends Fragment implements
         return view;
     }
 
-
     private void init(View view) {
         fragInterface = (HomeFragInterface) getActivity();
         cancelBtn = view.findViewById(R.id.cancel_layout);
         bigCircle = view.findViewById(R.id.bg_circle);
         swipeArea = view.findViewById(R.id.swipe_area);
         swipeImage1 = view.findViewById(R.id.img_swipe1);
-        swipeImage2 = view.findViewById(R.id.img_swipe2);
         mHeading = view.findViewById(R.id.heading);
         txt = view.findViewById(R.id.home_frag_text);
         cl = view.findViewById(R.id.cl);
@@ -121,10 +136,11 @@ public class HomeFragment extends Fragment implements
     }
 
     private void detectBottomTabClick() {
-//        c1.setOnClickListener(this);
-//        c2.setOnClickListener(this);
-//        c3.setOnClickListener(this);
-//        c4.setOnClickListener(this);
+        c1.setOnClickListener(this);
+        c2.setOnClickListener(this);
+        c3.setOnClickListener(this);
+        c4.setOnClickListener(this);
+        mHeading.setOnClickListener(this);
     }
 
     private void swipeRight() {
@@ -135,6 +151,8 @@ public class HomeFragment extends Fragment implements
         } else
             setUpView(-1);
         setUpAnimationForTextView(-1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_rotate_anticlock);
+        swipeImage1.startAnimation(animation);
         setTxtRight();
     }
 
@@ -146,6 +164,9 @@ public class HomeFragment extends Fragment implements
         } else
             setUpView(1);
         setUpAnimationForTextView(1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_rotate_clock);
+        animation.setFillAfter(true);
+        swipeImage1.startAnimation(animation);
         setTxtLeft();
     }
 
@@ -159,7 +180,6 @@ public class HomeFragment extends Fragment implements
 
     private void imgAnimationRight() {
         final int img = mItems.get(mInd).getmImageId();
-        swipeImage2.setImageResource(img);
         //img animation
         //translate swipeImg2 from right to center
         AnimationSet set1 = translateAnim(0, -200, 1, 0);
@@ -174,7 +194,7 @@ public class HomeFragment extends Fragment implements
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                swipeImage1.setImageResource(img);
+//                swipeImage1.setImageResource(img);
                 swipeImage2.setAlpha(0.0f);
                 swipeImage1.setAlpha(1.0f);
             }
@@ -190,7 +210,7 @@ public class HomeFragment extends Fragment implements
 
     private void imgAnimationLeft() {
         final int img = mItems.get(mInd).getmImageId();
-        swipeImage2.setImageResource(img);
+//        swipeImage2.setImageResource(img);
 
         AnimationSet set1 = translateAnim(0, 200, 1, 0);
         AnimationSet set2 = translateAnim(-200, 0, 0, 1);
@@ -204,7 +224,7 @@ public class HomeFragment extends Fragment implements
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                swipeImage1.setImageResource(img);
+//                swipeImage1.setImageResource(img);
                 swipeImage2.setAlpha(0.0f);
                 swipeImage1.setAlpha(1.0f);
             }
@@ -269,10 +289,7 @@ public class HomeFragment extends Fragment implements
     public void setUpView(int counter) {
         if (counter == 0) {
             txt.setText(mItems.get(mInd).getmTitle());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                swipeImage1.setImageDrawable(getActivity().getDrawable(mItems.get(mInd).getmImageId()));
-                swipeImage2.setImageDrawable(getActivity().getDrawable(mItems.get(mInd).getmImageId()));
-            }
+
         }
         ArrayList<ValueAnimator> animators = new ArrayList<>();
         for (int i = 0; i < mCircles.size(); i++) {
@@ -395,22 +412,22 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
-        switch (mInd) {
-            case 0:
-                startActivity(new Intent(getContext(), EventsActivity.class));
-                break;
-            case 1:
-                startActivity(new Intent(getContext(), GurugyanActivity.class));
-                break;
-            case 2:
-                startActivity(new Intent(getContext(), ItineraryActivity.class));
-                break;
-            case 3:
-                startActivity(new Intent(getContext(), MapsActivity.class));
-                break;
-            default:
-                Log.e("LOL", "Bhai sahab ye kis line mein aa gye aap?");
-        }
+//        switch (mInd) {
+//            case 0:
+//                startActivity(new Intent(getContext(), EventsActivity.class));
+//                break;
+//            case 1:
+//                startActivity(new Intent(getContext(), GurugyanActivity.class));
+//                break;
+//            case 2:
+//                startActivity(new Intent(getContext(), ItineraryActivity.class));
+//                break;
+//            case 3:
+//                startActivity(new Intent(getContext(), MapsActivity.class));
+//                break;
+//            default:
+//                Log.e("LOL", "Bhai sahab ye kis line mein aa gye aap?");
+//        }
         return true;
     }
 
@@ -436,6 +453,26 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onClick(View v) {
+        Log.e("Hey", "I'm called");
+        if (v.getId() == mHeading.getId()) {
+            switch (mInd) {
+                case 0:
+                    startActivity(new Intent(getContext(), EventsActivity.class));
+                    break;
+                case 1:
+                    startActivity(new Intent(getContext(), GurugyanActivity.class));
+                    break;
+                case 2:
+                    startActivity(new Intent(getContext(), ItineraryActivity.class));
+                    break;
+                case 3:
+                    startActivity(new Intent(getContext(), MapsActivity.class));
+                    break;
+                default:
+                    Log.e("LOL", "Bhai sahab ye kis line mein aa gye aap?");
+            }
+            return;
+        }
         int iClicked = -1;
         for (int i = 0; i < mCircles.size(); i++) {
             if (v.getId() == mCircles.get(i).getId()) {
@@ -447,6 +484,7 @@ public class HomeFragment extends Fragment implements
             swipeRight();
         else if (iClicked < mInd)
             swipeLeft();
+//        return true;
     }
 
     public interface HomeFragInterface {
