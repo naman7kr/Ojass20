@@ -1,6 +1,8 @@
 package ojass20.nitjsr.in.ojass.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +26,14 @@ public class TeamMemberAdapter extends RecyclerView.Adapter<TeamMemberAdapter.Te
     OnClickItem onClickItem;
     ArrayList<TeamMember> list;
     Context context;
+    boolean side,dev;
 
-    public TeamMemberAdapter(Context context,OnClickItem onClickItem, ArrayList<TeamMember> list) {
+    public TeamMemberAdapter(Context context,OnClickItem onClickItem, ArrayList<TeamMember> list,boolean side,boolean dev) {
         this.context=context;
         this.onClickItem = onClickItem;
         this.list = list;
+        this.side = side;
+        this.dev = dev;
     }
 
 
@@ -36,23 +41,62 @@ public class TeamMemberAdapter extends RecyclerView.Adapter<TeamMemberAdapter.Te
     @NonNull
     @Override
     public TeamMemberViewModel onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.single_team_member_item,parent,false);
-        TeamMemberViewModel viewModel=new TeamMemberViewModel(view);
+        View view;
+        if(side){
+            view= LayoutInflater.from(parent.getContext()).inflate(R.layout.single_team_member_item,parent,false);
+        }
+        else{
+            view= LayoutInflater.from(parent.getContext()).inflate(R.layout.team_page_upper_item,parent,false);
+        }
+        TeamMemberViewModel viewModel=new TeamMemberViewModel(view,side);
         return viewModel;
     }
 
-        @Override
-        public void onBindViewHolder(@NonNull TeamMemberViewModel holder, final int position) {
+    @Override
+    public void onBindViewHolder(@NonNull TeamMemberViewModel holder, final int position) {
+        if(side){
             holder.name.setText(list.get(position).name);
             holder.designation.setText(list.get(position).desig);
             holder.linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickItem.onSelected(list.get(position));
+                    onClickItem.onSelected(position);
                 }
             });
             Glide.with(context).asBitmap().fitCenter().load(list.get(position).img).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(holder.imageView);
             //holder.imageView.setImageResource(list.get(position).img);
+        }
+        else {
+            holder.name_upper.setText(list.get(position).name);
+            holder.designation_upper.setText(list.get(position).desig);
+            Glide.with(context).asBitmap().fitCenter().load(list.get(position).img).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(holder.profile_upper);
+            holder.call_upper.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String phone = list.get(position).call;
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+                    context.startActivity(intent);
+                }
+            });
+            holder.whatsapp_upper.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String url = "https://api.whatsapp.com/send?phone="+list.get(position).whatsapp;
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    context.startActivity(i);
+                }
+            });
+            holder.facebook_upper.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent viewIntent = new Intent("android.intent.action.VIEW",Uri.parse(list.get(position).facebook));
+                    if(dev)
+                        viewIntent=new Intent("android.intent.action.VIEW",Uri.parse(list.get(position).github));
+                    context.startActivity(viewIntent);
+                }
+            });
+        }
 
     }
 
@@ -65,15 +109,29 @@ public class TeamMemberAdapter extends RecyclerView.Adapter<TeamMemberAdapter.Te
         ImageView imageView;
         LinearLayout linearLayout;
         TextView name,designation;
-        public TeamMemberViewModel(@NonNull View itemView) {
+
+        ImageView profile_upper;
+        TextView name_upper,designation_upper;
+        ImageView call_upper,whatsapp_upper,facebook_upper;
+        public TeamMemberViewModel(@NonNull View itemView,boolean side) {
             super(itemView);
-            imageView=itemView.findViewById(R.id.single_team_member_image);
-            name=itemView.findViewById(R.id.single_team_member_name);
-            designation=itemView.findViewById(R.id.single_team_member_desig);
-            linearLayout=itemView.findViewById(R.id.singleItemTeamMember);
+            if (side) {
+                imageView=itemView.findViewById(R.id.single_team_member_image);
+                name=itemView.findViewById(R.id.single_team_member_name);
+                designation=itemView.findViewById(R.id.single_team_member_desig);
+                linearLayout=itemView.findViewById(R.id.singleItemTeamMember);
+            }
+            else {
+                profile_upper=itemView.findViewById(R.id.profile_image_team_member_upper);
+                name_upper=itemView.findViewById(R.id.team_member_name_upper);
+                designation_upper=itemView.findViewById(R.id.team_member_designation_upper);
+                call_upper=itemView.findViewById(R.id.team_member_call);
+                whatsapp_upper=itemView.findViewById(R.id.team_member_whatsapp);
+                facebook_upper=itemView.findViewById(R.id.team_member_facebook);
+            }
         }
     }
     public interface OnClickItem{
-        public void onSelected(TeamMember teamMember);
+        public void onSelected(int position);
     }
 }
