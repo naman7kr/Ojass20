@@ -112,11 +112,11 @@ public class SubEventActivity extends AppCompatActivity {
             }
         };
 
-//        if (mSubEventName != null) {
-//            showBottomSheet();
-//            bottomSheetOpen = true;
-//            getPostion(mSubEventName.get(0));
-//        }
+        if (mSubEventName != null) {
+            showBottomSheet();
+            bottomSheetOpen = true;
+            getPostion(mSubEventName.get(0));
+        }
 
         mAdapter = new SubEventsAdapter(this, getData(), mInterface);
         rView.setAdapter(mAdapter);
@@ -531,6 +531,7 @@ public class SubEventActivity extends AppCompatActivity {
             try {
                 if (subEvent.equalsIgnoreCase(MainActivity.data.get(i).getName().trim())) {
                     position = i;
+                    toolbar.setTitle(MainActivity.data.get(i).getName().trim());
                     break;
                 }
             } catch (Exception e) {

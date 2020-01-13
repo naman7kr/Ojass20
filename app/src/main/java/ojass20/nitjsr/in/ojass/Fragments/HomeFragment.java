@@ -67,6 +67,18 @@ public class HomeFragment extends Fragment implements
         init(view);
         onCancel();
         setUpArrayList();
+
+        swipeArea.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (mDetector != null) {
+                    mDetector.onTouchEvent(event);
+                    return true;
+                }
+                return false;
+            }
+        });
+
         mHeading.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -77,10 +89,12 @@ public class HomeFragment extends Fragment implements
                 return false;
             }
         });
+
         setUpView(0);
         detectBottomTabClick();
 
         mHeading.setText(mItems.get(mInd).getmTitle());
+        mHeading.setOnClickListener(this);
 
         return view;
     }
@@ -124,10 +138,10 @@ public class HomeFragment extends Fragment implements
     }
 
     private void detectBottomTabClick() {
-//        c1.setOnClickListener(this);
-//        c2.setOnClickListener(this);
-//        c3.setOnClickListener(this);
-//        c4.setOnClickListener(this);
+        c1.setOnClickListener(this);
+        c2.setOnClickListener(this);
+        c3.setOnClickListener(this);
+        c4.setOnClickListener(this);
     }
 
     private void swipeRight() {
@@ -439,6 +453,26 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onClick(View v) {
+        Log.e("Main", v.getId() + " " + mHeading.getId());
+        if (v.getId() == mHeading.getId()) {
+            switch (mInd) {
+                case 0:
+                    startActivity(new Intent(getContext(), EventsActivity.class));
+                    break;
+                case 1:
+                    startActivity(new Intent(getContext(), GurugyanActivity.class));
+                    break;
+                case 2:
+                    startActivity(new Intent(getContext(), ItineraryActivity.class));
+                    break;
+                case 3:
+                    startActivity(new Intent(getContext(), MapsActivity.class));
+                    break;
+                default:
+                    Log.e("LOL", "Bhai sahab ye kis line mein aa gye aap?");
+            }
+            return;
+        }
         int iClicked = -1;
         for (int i = 0; i < mCircles.size(); i++) {
             if (v.getId() == mCircles.get(i).getId()) {
@@ -450,6 +484,7 @@ public class HomeFragment extends Fragment implements
             swipeRight();
         else if (iClicked < mInd)
             swipeLeft();
+//        return true;
     }
 
     public interface HomeFragInterface {
