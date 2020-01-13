@@ -4,12 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/secondaryLightColor"
-    android:orientation="vertical"
-    android:elevation="200dp">
+    android:elevation="200dp"
+    android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <FrameLayout
         android:id="@+id/flContent"
@@ -52,39 +52,29 @@
                     android:textStyle="bold"
                     tools:text="Events" />
 
-                <ImageView
-                    android:id="@+id/img_swipe2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:alpha="0"
-                    tools:src="@drawable/ic_launcher_background"
-                    android:visibility="gone"/>
-
                 <TextView
                     android:id="@+id/heading"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="64dp"
                     android:fontFamily="@font/montserrat"
                     android:gravity="center"
+                    android:paddingBottom="16dp"
                     android:singleLine="true"
                     android:text="HEADING"
+                    android:textAllCaps="true"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="48sp"
-                    android:textAllCaps="true"
-                    android:visibility="visible"
-                    android:layout_centerInParent="true"
-                    android:paddingBottom="64dp"/>
-
+                    android:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/img_swipe1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:layout_centerInParent="true"
                     android:alpha="1"
-                    tools:src="@drawable/ic_launcher_foreground"
-                    android:visibility="gone"/>
+                    android:src="@drawable/square" />
+
             </RelativeLayout>
 
         </RelativeLayout>
@@ -189,21 +179,19 @@
             android:id="@+id/cancel_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/red"
-            >
+            android:background="@color/red">
 
             <TextView
                 android:id="@+id/cancel_frag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:layout_margin="5dp"
                 android:src="@drawable/ic_cancel"
-                android:layout_centerInParent="true"
                 android:text="Cancel"
                 android:textColor="@color/white"
-                android:textSize="18sp"
-                />
-      </RelativeLayout>
+                android:textSize="18sp" />
+        </RelativeLayout>
     </FrameLayout>
 
 </RelativeLayout>
