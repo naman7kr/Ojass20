@@ -68,6 +68,7 @@ import ojass20.nitjsr.in.ojass.Utils.Constants;
 import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
 
 import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsList;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.mBranchEvents;
 
 public class SubEventActivity extends AppCompatActivity {
     private ImageView mAboutLayout, mHeadLayout;
@@ -92,6 +93,7 @@ public class SubEventActivity extends AppCompatActivity {
     private View mDivider1, mDivider2;
     private ArrayList<String> mSubEventName;
     private SubEventsAdapter mAdapter;
+    private String mEventName;
 
     private ArrayList<ValueAnimator> animators;
 
@@ -103,14 +105,13 @@ public class SubEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sub_event);
         init();
 
-        setUpFabItems();
         //get intent get main event
         mainEventPosition = getIntent().getIntExtra("event_id", 0); //from intent
         mSubEventName = getIntent().getStringArrayListExtra("sub_event_name");
         rView.setLayoutManager(new LinearLayoutManager(this));
 
         manageToolbar();
-
+        setUpFabItems();
         //on item click
         RecyclerClickInterface mInterface = new RecyclerClickInterface() {
             @Override
@@ -335,6 +336,7 @@ public class SubEventActivity extends AppCompatActivity {
     }
 
     private void setUpFabItems() {
+        manageToolbar();
         sv_fab.addActionItem(new SpeedDialActionItem.Builder(R.id.item1, getResources().getDrawable(R.drawable.ic_info_black_24dp))
                 .setFabBackgroundColor(Color.WHITE)
                 .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.navHeader, getTheme()))
@@ -343,10 +345,14 @@ public class SubEventActivity extends AppCompatActivity {
                 .setLabelBackgroundColor(Color.WHITE)
                 .setLabelClickable(true)
                 .create());
+        String s = "Segment Head";
+        Log.e("Segment", mEventName);
+        if (mBranchEvents.contains(mEventName.trim()))
+            s = "Branch Head";
         sv_fab.addActionItem(new SpeedDialActionItem.Builder(R.id.item2, getResources().getDrawable(R.drawable.ic_group_black_24dp))
                 .setFabBackgroundColor(Color.WHITE)
                 .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.navHeader, getTheme()))
-                .setLabel("Branch Head")
+                .setLabel(s)
                 .setLabelColor(ResourcesCompat.getColor(getResources(), R.color.navHeader, getTheme()))
                 .setLabelBackgroundColor(Color.WHITE)
                 .setLabelClickable(true)
@@ -383,7 +389,7 @@ public class SubEventActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle(Constants.eventNames.get(mainEventPosition));
-
+        mEventName = Constants.eventNames.get(mainEventPosition);
         //manage toolbar icons and text color
         BitmapDrawable drawable = (BitmapDrawable) iv.getDrawable();
         Palette.from(drawable.getBitmap()).generate(new Palette.PaletteAsyncListener() {

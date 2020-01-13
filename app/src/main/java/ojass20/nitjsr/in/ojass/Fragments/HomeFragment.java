@@ -79,8 +79,10 @@ public class HomeFragment extends Fragment implements
         mHeading.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                mHeading.setOnClickListener(null);
                 if (mDetector != null) {
                     mDetector.onTouchEvent(event);
+                    setHeadingClickListener();
                     return true;
                 }
                 return false;
@@ -91,11 +93,13 @@ public class HomeFragment extends Fragment implements
         detectBottomTabClick();
 
         mHeading.setText(mItems.get(mInd).getmTitle());
-        mHeading.setOnClickListener(this);
 
         return view;
     }
 
+    private void setHeadingClickListener() {
+        mHeading.setOnClickListener(this);
+    }
 
     private void init(View view) {
         fragInterface = (HomeFragInterface) getActivity();
@@ -450,7 +454,6 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onClick(View v) {
-        Log.e("Main", v.getId() + " " + mHeading.getId());
         if (v.getId() == mHeading.getId()) {
             switch (mInd) {
                 case 0:
