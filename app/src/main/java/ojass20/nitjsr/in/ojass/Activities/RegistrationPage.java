@@ -43,6 +43,7 @@ public class RegistrationPage extends AppCompatActivity {
     private Spinner tshirt_size_spinner;
     private Button register_button;
     private CircleImageView self_image;
+    private TextView over_text;
 
     private String[] tshirt_sizes_list={"S","M","L","XL","XXL"};
 
@@ -62,6 +63,10 @@ public class RegistrationPage extends AppCompatActivity {
 
         mauth = FirebaseAuth.getInstance();
         current_user_id = mauth.getCurrentUser().getUid();
+
+        over_text.setText("Welcome "+mauth.getCurrentUser().getDisplayName());
+        name_reg.setText(mauth.getCurrentUser().getDisplayName());
+        email_reg.setText(mauth.getCurrentUser().getEmail());
 
         register_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +142,7 @@ public class RegistrationPage extends AppCompatActivity {
         tshirt_size_spinner = findViewById(R.id.TShirt_Size_Registration_page);
         register_button = findViewById(R.id.register_button_Registration_page);
         self_image = findViewById(R.id.register_self_pic);
+        over_text = findViewById(R.id.overlap_text);
     }
 
     public boolean validate(){
@@ -167,7 +173,7 @@ public class RegistrationPage extends AppCompatActivity {
 
         if(branch_reg.getText().toString().trim().isEmpty() )
         {
-            branch_reg.setError("Please Enter Your College");
+            branch_reg.setError("Please Enter Your Branch");
             valid=false;
         }
 

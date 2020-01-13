@@ -4,12 +4,13 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+
 import android.os.Handler;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -20,18 +21,15 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.LinearInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.fragment.app.Fragment;
@@ -41,15 +39,14 @@ import ojass20.nitjsr.in.ojass.Activities.GurugyanActivity;
 import ojass20.nitjsr.in.ojass.Activities.ItineraryActivity;
 import ojass20.nitjsr.in.ojass.Activities.MainActivity;
 import ojass20.nitjsr.in.ojass.Activities.MapsActivity;
-import ojass20.nitjsr.in.ojass.Helpers.HomePage;
+import ojass20.nitjsr.in.ojass.Models.HomePage;
 import ojass20.nitjsr.in.ojass.R;
-import ojass20.nitjsr.in.ojass.Utils.CircularLayout;
 
 public class HomeFragment extends Fragment implements
         GestureDetector.OnGestureListener, View.OnClickListener {
     private static final long ANIM_DURATION = 500;
     private HomeFragInterface fragInterface;
-    private TextView cancelBtn;
+    private RelativeLayout cancelBtn;
     private ArrayList<HomePage> mItems = new ArrayList<>();
     private int mInd;
     private ImageView bigCircle, c1, c2, c3, c4;
@@ -102,7 +99,7 @@ public class HomeFragment extends Fragment implements
 
     private void init(View view) {
         fragInterface = (HomeFragInterface) getActivity();
-        cancelBtn = view.findViewById(R.id.cancel_frag);
+        cancelBtn = view.findViewById(R.id.cancel_layout);
         bigCircle = view.findViewById(R.id.bg_circle);
         swipeArea = view.findViewById(R.id.swipe_area);
         swipeImage1 = view.findViewById(R.id.img_swipe1);

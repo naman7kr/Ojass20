@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Handler;
+import android.text.Html;
 import android.util.Log;
 
 import android.util.Log;
@@ -40,16 +41,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.leinardi.android.speeddial.SpeedDialActionItem;
+import com.leinardi.android.speeddial.SpeedDialView;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import ojass20.nitjsr.in.ojass.Adapters.SubEventsAdapter;
 import ojass20.nitjsr.in.ojass.Fragments.EventBottomSheet;
@@ -67,7 +75,6 @@ public class SubEventActivity extends AppCompatActivity {
     private ArrayList<SubEventsModel> data = new ArrayList<>();
     private int mainEventPosition;
     private ImageView iv;
-    private FloatingActionButton mFab;
     private FrameLayout frag_frame;
     private static boolean bottomSheetOpen = false;
     private static int toolbarIconColor = Color.BLACK;
@@ -88,12 +95,15 @@ public class SubEventActivity extends AppCompatActivity {
 
     private ArrayList<ValueAnimator> animators;
 
+    private SpeedDialView sv_fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub_event);
         init();
+
+        setUpFabItems();
         //get intent get main event
         mainEventPosition = getIntent().getIntExtra("event_id", 0); //from intent
         mSubEventName = getIntent().getStringArrayListExtra("sub_event_name");
@@ -123,290 +133,238 @@ public class SubEventActivity extends AppCompatActivity {
         //set Image
         iv.setImageResource(Constants.eventImg[mainEventPosition]);
 
-
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        sv_fab.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
             @Override
-            public void onClick(View v) {
-                if (isOpen) {
+            public boolean onActionSelected(SpeedDialActionItem actionItem) {
+                if (actionItem.getId() == R.id.item1) {
+                    //Toast.makeText(SubEventActivity.this, "About clicked dumbass", Toast.LENGTH_SHORT).show();
 
-                    if (animators.size() > 0)
-                        animators.clear();
-
-                    animators.add(changeRadius2(mHeadLayout));
-                    animators.add(changeRadius2(mAboutLayout));
-
-                    animators.get(0).start();
-                    animators.get(1).start();
-
-//                    mHeadLayout.startAnimation(fadeOut);
-//                    mAboutLayout.startAnimation(fadeOut);
-                    mHeadLayout.setVisibility(View.INVISIBLE);
-                    mAboutLayout.setVisibility(View.INVISIBLE);
-                    mHeadLayout.setClickable(false);
-                    mAboutLayout.setClickable(false);
-                    isOpen = false;
-
-                    //mFab.setBackgroundColor(Color.parseColor("#00ccff"));
-                    Animation manim = AnimationUtils.loadAnimation(SubEventActivity.this, R.anim.rotate_around_center_point);
-                    manim.setDuration(350);
-                    mFab.startAnimation(manim);
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mFab.setImageDrawable(getDrawable(R.drawable.ic_add_black_24dp));
-                            //mFab.setBackgroundColor(Color.WHITE);
-                        }
-                    }, 350);
-                } else {
-
-                    if (animators.size() > 0)
-                        animators.clear();
-
-                    animators.add(changeRadius(mHeadLayout));
-                    animators.add(changeRadius(mAboutLayout));
-
-                    animators.get(0).start();
-                    animators.get(1).start();
-
-//                    mHeadLayout.startAnimation(fadeIn);
-//                    mAboutLayout.startAnimation(fadeIn);
-                    mHeadLayout.setVisibility(View.VISIBLE);
-                    mAboutLayout.setVisibility(View.VISIBLE);
-                    mHeadLayout.setClickable(true);
-                    mAboutLayout.setClickable(true);
-                    isOpen = true;
-
-                    //mFab.setBackgroundColor(Color.parseColor("#00ccff"));
-                    Animation manim = AnimationUtils.loadAnimation(SubEventActivity.this, R.anim.rotate_around_center_point);
-                    manim.setDuration(350);
-                    mFab.startAnimation(manim);
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mFab.setImageDrawable(getDrawable(R.drawable.ic_close_fab_24dp));
-                            //mFab.setBackgroundColor(Color.WHITE);
-                        }
-                    }, 350);
-//                    TranslateAnimation tr = new TranslateAnimation(0.0f, 0.0f, 0, 30);
-//                    tr.setDuration(100);
-//                    mFab.startAnimation(tr);
-                }
-            }
-        });
-
-        mHeadLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Rect displayRectangle = new Rect();
-                Window window = SubEventActivity.this.getWindow();
-                window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
-                final AlertDialog.Builder builder = new AlertDialog.Builder(SubEventActivity.this, R.style.CustomAlertDialog);
-                ViewGroup viewGroup = findViewById(android.R.id.content);
-                View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_layout, viewGroup, false);
-                final ArrayList<BranchHeadModal> bhNames = MainActivity.branchData.get(Constants.eventNames.get(mainEventPosition)).getBranchHead();
-                dialogView.setMinimumWidth((int) (displayRectangle.width() / 1.5f * 1f));
-                dialogView.setMinimumHeight((int) (displayRectangle.height() / 5f * 1f));
-                builder.setView(dialogView);
-                final AlertDialog alertDialog = builder.create();
-                mLL = new ArrayList<>();
-                mProfile = new ArrayList<>();
-                mCall = new ArrayList<>();
-                mWhatsapp = new ArrayList<>();
-                mName = new ArrayList<>();
-                mHeading = dialogView.findViewById(R.id.heading);
-                String s = "Event Heads";
-                mHeading.setText(s);
-
-                mLL.add((LinearLayout) dialogView.findViewById(R.id.one));
-                mLL.add((LinearLayout) dialogView.findViewById(R.id.two));
-                mLL.add((LinearLayout) dialogView.findViewById(R.id.three));
-
-                mProfile.add((ImageView) dialogView.findViewById(R.id.img1));
-                mProfile.add((ImageView) dialogView.findViewById(R.id.img2));
-                mProfile.add((ImageView) dialogView.findViewById(R.id.img3));
-
-                mWhatsapp.add((ImageView) dialogView.findViewById(R.id.whatsapp1));
-                mWhatsapp.add((ImageView) dialogView.findViewById(R.id.whatsapp2));
-                mWhatsapp.add((ImageView) dialogView.findViewById(R.id.whatsapp3));
-
-                mName.add((TextView) dialogView.findViewById(R.id.name1));
-                mName.add((TextView) dialogView.findViewById(R.id.name2));
-                mName.add((TextView) dialogView.findViewById(R.id.name3));
-
-                mCall.add((ImageView) dialogView.findViewById(R.id.call1));
-                mCall.add((ImageView) dialogView.findViewById(R.id.call2));
-                mCall.add((ImageView) dialogView.findViewById(R.id.call3));
-
-                mDivider1 = dialogView.findViewById(R.id.divider1);
-                mDivider2 = dialogView.findViewById(R.id.divider2);
-                if (bhNames.size() == 1) {
-                    mLL.get(0).setVisibility(View.VISIBLE);
-                    mName.get(0).setText(bhNames.get(0).getName());
-                    final Intent intent = new Intent(Intent.ACTION_DIAL);
-                    for (int j = 0; j < 1; j++) {
-                        final int i = j;
-                        mCall.get(i).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                intent.setData(Uri.parse("tel:" + bhNames.get(i).getCn()));
-                                startActivity(intent);
-                            }
-                        });
-                        mWhatsapp.get(i).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                String url = "https://api.whatsapp.com/send?phone=" + "+91" + bhNames.get(i).getWn();
-                                Intent i = new Intent(Intent.ACTION_VIEW);
-                                i.setData(Uri.parse(url));
-                                startActivity(i);
-                            }
-                        });
-                    }
-                } else if (bhNames.size() == 2) {
-                    mLL.get(0).setVisibility(View.VISIBLE);
-                    mLL.get(1).setVisibility(View.VISIBLE);
-                    mName.get(0).setText(bhNames.get(0).getName());
-                    mName.get(1).setText(bhNames.get(1).getName());
-                    mDivider1.setVisibility(View.VISIBLE);
-                    final Intent intent = new Intent(Intent.ACTION_DIAL);
-                    for (int j = 0; j < 2; j++) {
-                        final int i = j;
-                        mCall.get(i).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                intent.setData(Uri.parse("tel:" + bhNames.get(i).getCn()));
-                                startActivity(intent);
-                            }
-                        });
-                        mWhatsapp.get(i).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                String url = "https://api.whatsapp.com/send?phone=" + "+91" + bhNames.get(i).getWn();
-                                Intent i = new Intent(Intent.ACTION_VIEW);
-                                i.setData(Uri.parse(url));
-                                startActivity(i);
-                            }
-                        });
-                    }
-                } else {
-                    mLL.get(0).setVisibility(View.VISIBLE);
-                    mLL.get(1).setVisibility(View.VISIBLE);
-                    mLL.get(2).setVisibility(View.VISIBLE);
-                    mDivider1.setVisibility(View.VISIBLE);
-                    mDivider2.setVisibility(View.VISIBLE);
-                    mName.get(0).setText(bhNames.get(0).getName());
-                    mName.get(1).setText(bhNames.get(1).getName());
-                    mName.get(2).setText(bhNames.get(2).getName());
-                    final Intent intent = new Intent(Intent.ACTION_DIAL);
-                    for (int j = 0; j < 3; j++) {
-                        final int i = j;
-                        mCall.get(i).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                intent.setData(Uri.parse("tel:" + bhNames.get(i).getCn()));
-                                startActivity(intent);
-                            }
-                        });
-                        mWhatsapp.get(i).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                String url = "https://api.whatsapp.com/send?phone=" + "+91" + bhNames.get(i).getWn();
-                                Intent i = new Intent(Intent.ACTION_VIEW);
-                                i.setData(Uri.parse(url));
-                                startActivity(i);
-                            }
-                        });
-                    }
-                }
-                alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-
-                ImageView dialogIcon = dialogView.findViewById(R.id.dialog_icon);
-                dialogIcon.setImageDrawable(getResources().getDrawable(R.drawable.dialog_head));
-                alertDialog.show();
-                ImageView dismiss_button = dialogView.findViewById(R.id.dismiss_dialog);
-                dismiss_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (alertDialog.isShowing()) alertDialog.dismiss();
-                    }
-                });
-            }
-        });
-
-        mAboutLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Rect displayRectangle = new Rect();
-                Window window = SubEventActivity.this.getWindow();
-                window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
-                final AlertDialog.Builder builder = new AlertDialog.Builder(SubEventActivity.this, R.style.CustomAlertDialog);
-                ViewGroup viewGroup = findViewById(android.R.id.content);
-                View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_layout, viewGroup, false);
+                    Rect displayRectangle = new Rect();
+                    Window window = SubEventActivity.this.getWindow();
+                    window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(SubEventActivity.this, R.style.CustomAlertDialog);
+                    ViewGroup viewGroup = findViewById(android.R.id.content);
+                    View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialog_layout, viewGroup, false);
 //                dialogView.setMinimumWidth((int) (displayRectangle.width() * 1f));
 //                dialogView.setMinimumHeight((int) (displayRectangle.height() * 1f));
-                builder.setView(dialogView);
-                final AlertDialog alertDialog = builder.create();
-                mAbout = dialogView.findViewById(R.id.about_data);
-                mAbout.setVisibility(View.VISIBLE);
-                mHeading = dialogView.findViewById(R.id.heading);
-                String s = Constants.eventNames.get(mainEventPosition);
-                mHeading.setText(s);
-                mAbout.setText(MainActivity.branchData.get(Constants.eventNames.get(mainEventPosition)).getAbout());
+                    builder.setView(dialogView);
+                    final AlertDialog alertDialog = builder.create();
+                    mAbout = dialogView.findViewById(R.id.about_data);
+                    mAbout.setVisibility(View.VISIBLE);
+                    mHeading = dialogView.findViewById(R.id.heading);
+                    String s = Constants.eventNames.get(mainEventPosition);
+                    mHeading.setText(s);
+                    mAbout.setText(Html.fromHtml(MainActivity.branchData.get(Constants.eventNames.get(mainEventPosition)).getAbout()));
 
-                alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                    alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
 
-                ImageView dialogIcon = dialogView.findViewById(R.id.dialog_icon);
-                dialogIcon.setImageDrawable(getResources().getDrawable(R.drawable.pinned_dialog));
-                alertDialog.show();
-                ImageView dismiss_button = dialogView.findViewById(R.id.dismiss_dialog);
-                dismiss_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (alertDialog.isShowing()) alertDialog.dismiss();
+                    ImageView dialogIcon = dialogView.findViewById(R.id.dialog_icon);
+                    dialogIcon.setImageDrawable(getResources().getDrawable(R.drawable.pinned_dialog));
+                    alertDialog.show();
+                    ImageView dismiss_button = dialogView.findViewById(R.id.dismiss_dialog);
+                    dismiss_button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (alertDialog.isShowing()) alertDialog.dismiss();
+                        }
+                    });
+
+                    return true;
+                }
+                if (actionItem.getId() == R.id.item2) {
+                    //Toast.makeText(SubEventActivity.this, "Heads clicked dumbass", Toast.LENGTH_SHORT).show();
+
+                    Rect displayRectangle = new Rect();
+                    Window window = SubEventActivity.this.getWindow();
+                    window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(SubEventActivity.this, R.style.CustomAlertDialog);
+                    ViewGroup viewGroup = findViewById(android.R.id.content);
+                    View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialog_layout, viewGroup, false);
+                    final ArrayList<BranchHeadModal> bhNames = MainActivity.branchData.get(Constants.eventNames.get(mainEventPosition)).getBranchHead();
+                    dialogView.setMinimumWidth((int) (displayRectangle.width() / 1.5f * 1f));
+                    dialogView.setMinimumHeight((int) (displayRectangle.height() / 5f * 1f));
+                    builder.setView(dialogView);
+                    final AlertDialog alertDialog = builder.create();
+                    mLL = new ArrayList<>();
+                    mProfile = new ArrayList<>();
+                    mCall = new ArrayList<>();
+                    mWhatsapp = new ArrayList<>();
+                    mName = new ArrayList<>();
+                    mHeading = dialogView.findViewById(R.id.heading);
+                    String s = "Event Heads";
+                    mHeading.setText(s);
+
+                    mLL.add((LinearLayout) dialogView.findViewById(R.id.one));
+                    mLL.add((LinearLayout) dialogView.findViewById(R.id.two));
+                    mLL.add((LinearLayout) dialogView.findViewById(R.id.three));
+
+                    mProfile.add((ImageView) dialogView.findViewById(R.id.img1));
+                    mProfile.add((ImageView) dialogView.findViewById(R.id.img2));
+                    mProfile.add((ImageView) dialogView.findViewById(R.id.img3));
+
+                    mWhatsapp.add((ImageView) dialogView.findViewById(R.id.whatsapp1));
+                    mWhatsapp.add((ImageView) dialogView.findViewById(R.id.whatsapp2));
+                    mWhatsapp.add((ImageView) dialogView.findViewById(R.id.whatsapp3));
+
+                    mName.add((TextView) dialogView.findViewById(R.id.name1));
+                    mName.add((TextView) dialogView.findViewById(R.id.name2));
+                    mName.add((TextView) dialogView.findViewById(R.id.name3));
+
+                    mCall.add((ImageView) dialogView.findViewById(R.id.call1));
+                    mCall.add((ImageView) dialogView.findViewById(R.id.call2));
+                    mCall.add((ImageView) dialogView.findViewById(R.id.call3));
+
+                    mDivider1 = dialogView.findViewById(R.id.divider1);
+                    mDivider2 = dialogView.findViewById(R.id.divider2);
+                    if (bhNames.size() == 1) {
+                        mLL.get(0).setVisibility(View.VISIBLE);
+                        mName.get(0).setText(bhNames.get(0).getName());
+
+                        final Intent intent = new Intent(Intent.ACTION_DIAL);
+                        for (int j = 0; j < 1; j++) {
+                            final int i = j;
+                            mCall.get(i).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    intent.setData(Uri.parse("tel:" + bhNames.get(i).getCn()));
+                                    startActivity(intent);
+                                }
+                            });
+                            mWhatsapp.get(i).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String url = "https://api.whatsapp.com/send?phone=" + "+91" + bhNames.get(i).getWn();
+                                    Intent i = new Intent(Intent.ACTION_VIEW);
+                                    i.setData(Uri.parse(url));
+                                    startActivity(i);
+                                }
+                            });
+                            try {
+                                setPicassoImage(mProfile.get(i), bhNames.get(i).getImg());
+                            } catch (Exception e) {
+                                Log.d("hello", bhNames.get(i).getName());
+                            }
+                        }
+                    } else if (bhNames.size() == 2) {
+                        mLL.get(0).setVisibility(View.VISIBLE);
+                        mLL.get(1).setVisibility(View.VISIBLE);
+                        mName.get(0).setText(bhNames.get(0).getName());
+                        mName.get(1).setText(bhNames.get(1).getName());
+                        mDivider1.setVisibility(View.VISIBLE);
+                        final Intent intent = new Intent(Intent.ACTION_DIAL);
+                        for (int j = 0; j < 2; j++) {
+                            final int i = j;
+                            mCall.get(i).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    intent.setData(Uri.parse("tel:" + bhNames.get(i).getCn()));
+                                    startActivity(intent);
+                                }
+                            });
+                            mWhatsapp.get(i).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String url = "https://api.whatsapp.com/send?phone=" + "+91" + bhNames.get(i).getWn();
+                                    Intent i = new Intent(Intent.ACTION_VIEW);
+                                    i.setData(Uri.parse(url));
+                                    startActivity(i);
+                                }
+                            });
+                            try {
+                                setPicassoImage(mProfile.get(i), bhNames.get(i).getImg());
+                            } catch (Exception e) {
+                                Log.d("hello", bhNames.get(i).getName());
+                            }
+                        }
+                    } else {
+                        mLL.get(0).setVisibility(View.VISIBLE);
+                        mLL.get(1).setVisibility(View.VISIBLE);
+                        mLL.get(2).setVisibility(View.VISIBLE);
+                        mDivider1.setVisibility(View.VISIBLE);
+                        mDivider2.setVisibility(View.VISIBLE);
+                        mName.get(0).setText(bhNames.get(0).getName());
+                        mName.get(1).setText(bhNames.get(1).getName());
+                        mName.get(2).setText(bhNames.get(2).getName());
+                        final Intent intent = new Intent(Intent.ACTION_DIAL);
+                        for (int j = 0; j < 3; j++) {
+                            final int i = j;
+                            mCall.get(i).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    intent.setData(Uri.parse("tel:" + bhNames.get(i).getCn()));
+                                    startActivity(intent);
+                                }
+                            });
+                            mWhatsapp.get(i).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String url = "https://api.whatsapp.com/send?phone=" + "+91" + bhNames.get(i).getWn();
+                                    Intent i = new Intent(Intent.ACTION_VIEW);
+                                    i.setData(Uri.parse(url));
+                                    startActivity(i);
+                                }
+                            });
+                            try {
+                                setPicassoImage(mProfile.get(i), bhNames.get(i).getImg());
+                            } catch (Exception e) {
+                                Log.d("hello", bhNames.get(i).getName());
+                            }
+                        }
                     }
-                });
+                    alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+
+                    ImageView dialogIcon = dialogView.findViewById(R.id.dialog_icon);
+                    dialogIcon.setImageDrawable(getResources().getDrawable(R.drawable.dialog_head));
+                    alertDialog.show();
+                    ImageView dismiss_button = dialogView.findViewById(R.id.dismiss_dialog);
+                    dismiss_button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (alertDialog.isShowing()) alertDialog.dismiss();
+                        }
+                    });
+
+                    return true;
+                }
+                return false;
             }
         });
 
     }
 
-    private ValueAnimator changeRadius(final ImageView imageView) {
-        ConstraintLayout.LayoutParams lP = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
-        ValueAnimator anim = ValueAnimator.ofInt((int) lP.circleRadius, (int) MainActivity.convertDpToPixel(120, getApplicationContext()));
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                int val = (Integer) valueAnimator.getAnimatedValue();
-                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
-                layoutParams.circleRadius = val;
-                imageView.setLayoutParams(layoutParams);
-            }
-        });
-        anim.setDuration(350);
-        anim.setInterpolator(new LinearInterpolator());
-        return anim;
+    private void setUpFabItems() {
+        sv_fab.addActionItem(new SpeedDialActionItem.Builder(R.id.item1, getResources().getDrawable(R.drawable.ic_info_black_24dp))
+                .setFabBackgroundColor(Color.WHITE)
+                .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.navHeader, getTheme()))
+                .setLabel("About")
+                .setLabelColor(ResourcesCompat.getColor(getResources(), R.color.navHeader, getTheme()))
+                .setLabelBackgroundColor(Color.WHITE)
+                .setLabelClickable(true)
+                .create());
+        sv_fab.addActionItem(new SpeedDialActionItem.Builder(R.id.item2, getResources().getDrawable(R.drawable.ic_group_black_24dp))
+                .setFabBackgroundColor(Color.WHITE)
+                .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.navHeader, getTheme()))
+                .setLabel("Branch Head")
+                .setLabelColor(ResourcesCompat.getColor(getResources(), R.color.navHeader, getTheme()))
+                .setLabelBackgroundColor(Color.WHITE)
+                .setLabelClickable(true)
+                .create());
     }
 
-    private ValueAnimator changeRadius2(final ImageView imageView) {
-        ConstraintLayout.LayoutParams lP = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
-        ValueAnimator anim = ValueAnimator.ofInt((int) MainActivity.convertDpToPixel(120, getApplicationContext()), (int) MainActivity.convertDpToPixel(0, getApplicationContext()));
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+    private void setPicassoImage(final ImageView iv, final String img) {
+        Picasso.with(this).load(img).placeholder(R.drawable.ic_account_circle_black_24dp).fit().networkPolicy(NetworkPolicy.OFFLINE).into(iv, new Callback() {
             @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                int val = (Integer) valueAnimator.getAnimatedValue();
-                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
-                layoutParams.circleRadius = val;
-                imageView.setLayoutParams(layoutParams);
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError() {
+                Picasso.with(SubEventActivity.this).load(img).placeholder(R.drawable.ic_account_circle_black_24dp).fit().into(iv);
             }
         });
-        anim.setDuration(350);
-        anim.setInterpolator(new LinearInterpolator());
-        return anim;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -442,13 +400,12 @@ public class SubEventActivity extends AppCompatActivity {
     }
 
     private void init() {
+        sv_fab = findViewById(R.id.speedDial);
+
         rView = findViewById(R.id.sub_rv);
         iv = findViewById(R.id.transition_img);
         frag_frame = findViewById(R.id.fragment_layout);
         toolbar = findViewById(R.id.toolbar);
-        mHeadLayout = findViewById(R.id.head_layout);
-        mAboutLayout = findViewById(R.id.about_layout);
-        mFab = findViewById(R.id.fab);
         isOpen = false;
         fadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
         fadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
@@ -532,6 +489,7 @@ public class SubEventActivity extends AppCompatActivity {
                 if (subEvent.equalsIgnoreCase(MainActivity.data.get(i).getName().trim())) {
                     position = i;
                     toolbar.setTitle(MainActivity.data.get(i).getName().trim());
+                    toolbar.setTitle(subEvent);
                     break;
                 }
             } catch (Exception e) {
