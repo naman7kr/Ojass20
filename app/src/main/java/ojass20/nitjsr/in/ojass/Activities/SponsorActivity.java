@@ -1,12 +1,14 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import ojass20.nitjsr.in.ojass.Adapters.SponserAdapter;
 import ojass20.nitjsr.in.ojass.R;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +23,14 @@ public class SponsorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sponser);
-        recyclerView=findViewById(R.id.sponser_list);
+
+        Toolbar toolbar = findViewById(R.id.generic_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Sponsors");
+
+
+        //recyclerView=findViewById(R.id.sponser_list);
 //        staggeredGridLayoutManager=new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL);
 //        recyclerView.setLayoutManager(staggeredGridLayoutManager);
 //         list=new ArrayList<Map<String,String>>();
@@ -37,4 +46,14 @@ public class SponsorActivity extends AppCompatActivity {
         }
        return list;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }

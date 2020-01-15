@@ -862,7 +862,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 startActivity(new Intent(MainActivity.this, TeamActivity.class));
                 break;
             case R.id.developers:
-                Intent intent = new Intent(MainActivity.this, TeamActivity.class);
+                Intent intent = new Intent(MainActivity.this, DeveloperActivity.class);
                 intent.putExtra("DEV", "DEV");
                 startActivity(intent);
                 break;
