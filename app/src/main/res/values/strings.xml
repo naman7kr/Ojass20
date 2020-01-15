@@ -81,7 +81,21 @@
         <item>Prayas</item>
         <item>LiveCS</item>
     </string-array>
-
+    <string-array name="eng_courses">
+        <item>Computer Science and Engineering</item>
+        <item>Electronics and Communication Engineering</item>
+        <item>Mechanical Engineering</item>
+        <item>Electrical Engineering</item>
+        <item>Civil Engineering</item>
+        <item>MMetallurgical Engineering and Material Science</item>
+        <item>Production Engineering and Management</item>
+        <item>Chemical Engineering</item>
+        <item>Biochemical / Biomedical Engineering</item>
+        <item>Aerospace / Aeronautical Engineering</item>
+        <item>Information Technology</item>
+        <item>Automation and Robotics</item>
+        <item>Others</item>
+    </string-array>
     <string name="Rs">\u20B9</string>
 
 </resources>
