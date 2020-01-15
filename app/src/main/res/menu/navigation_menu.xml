@@ -36,11 +36,11 @@
             android:icon="@drawable/ic_android_black_24dp"
             android:title="@string/faqs" />
 
-        <item
+        <!--<item
             android:id="@+id/help"
             android:icon="@drawable/ic_live_help_black_24dp"
             android:title="@string/help" />
-        <item
+        --><item
             android:id="@+id/feedback"
             android:icon="@drawable/ic_live_help_black_24dp"
             android:title="@string/feedback" />
