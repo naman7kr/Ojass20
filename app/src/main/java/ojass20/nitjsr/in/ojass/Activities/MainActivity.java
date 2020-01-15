@@ -682,9 +682,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 (name.compareToIgnoreCase("High Voltage Concepts") == 0) ||
                         (name.compareToIgnoreCase("electrospection") == 0) ||
                         (name.compareToIgnoreCase("Electro Scribble") == 0) ||
-                        (name.compareToIgnoreCase("matsim") == 0) ||
+                        (name.compareToIgnoreCase("MAT-SIM") == 0) ||
                         (name.compareToIgnoreCase("Pro-Lo-Co") == 0) ||
-                        (name.compareToIgnoreCase("Hack-De-Science") == 0)
+                        (name.compareToIgnoreCase("Hack-De-Science") == 0) ||
+                        (name.compareToIgnoreCase("FIFA") == 0)
             //||
             //(name.compareToIgnoreCase("agnikund")==0) ||
             //(name.compareToIgnoreCase("knockout")==0)

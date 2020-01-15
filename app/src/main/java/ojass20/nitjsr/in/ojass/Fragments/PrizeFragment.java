@@ -2,6 +2,7 @@ package ojass20.nitjsr.in.ojass.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ public class PrizeFragment extends Fragment {
     private TextView prize1,prize2,prize3,prize4,prize5,prize6,prizeT,prize1_F,prize2_F,prize3_F,prize1_S,prize2_S,prize3_S,prize1_T,prize2_T,prize3_T,prize1_Th,prize2_Th,prize3_Th;
     private LinearLayout first,second,third,fourth,fifth,sixth,director_cut_layout,no_ground_zone_layout;
     private LinearLayout first_first,first_second,first_third,second_first,second_second,second_third,third_first,third_second,third_third;
-    private TextView text_firstyear,text_secondyear,text_thirdyear;
+    private TextView text_firstyear,text_secondyear,text_thirdyear, text_view;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -62,9 +63,10 @@ public class PrizeFragment extends Fragment {
                 (name.compareToIgnoreCase("High Voltage Concepts")==0) ||
                 (name.compareToIgnoreCase("electrospection")==0) ||
                 (name.compareToIgnoreCase("Electro Scribble")==0) ||
-                (name.compareToIgnoreCase("matsim")==0) ||
+                (name.compareToIgnoreCase("MAT-SIM")==0) ||
                 (name.compareToIgnoreCase("Pro-Lo-Co")==0) ||
-                (name.compareToIgnoreCase("Hack-De-Science")==0)
+                (name.compareToIgnoreCase("Hack-De-Science")==0) ||
+                (name.compareToIgnoreCase("FIFA")==0)
                 //||
                 //(name.compareToIgnoreCase("agnikund")==0) ||
                 //(name.compareToIgnoreCase("knockout")==0)
@@ -83,6 +85,15 @@ public class PrizeFragment extends Fragment {
         }else{
             no_ground_zone_layout.setVisibility(View.GONE);
             director_cut_layout.setVisibility(View.GONE);
+        }
+
+        if(em.getName().compareToIgnoreCase("Mad-Ad") == 0){
+            text_view.setVisibility(View.VISIBLE);
+            text_view.setText("Other prizes  ₹ 1000");
+        }
+        if(em.getName().compareToIgnoreCase("Film Chaupaal") == 0){
+            text_view.setVisibility(View.VISIBLE);
+            text_view.setText("Other prizes  ₹ 8000");
         }
         PrizeModel1 p1 = em.getP1();
         if(p1.getPrize1()!=null && p1.getPrize1()!=Long.valueOf(0)) {
@@ -134,7 +145,16 @@ public class PrizeFragment extends Fragment {
             prize1_T.setVisibility(View.GONE);
             prize2_T.setVisibility(View.GONE);
             prize3_T.setVisibility(View.GONE);
-        }else{
+        }else if(em.getName().compareToIgnoreCase("FIFA")==0){
+            text_firstyear.setText("1v1");
+            text_secondyear.setText("2v2");
+            text_thirdyear.setVisibility(View.GONE);
+            first_third.setVisibility(View.GONE);
+            prize1_T.setVisibility(View.GONE);
+            prize2_T.setVisibility(View.GONE);
+            prize3_T.setVisibility(View.GONE);
+        }
+        else{
             text_firstyear.setText("First Year");
             text_secondyear.setText("Second Year");
             text_thirdyear.setText("Third Year");
@@ -142,6 +162,7 @@ public class PrizeFragment extends Fragment {
             prize2_T.setVisibility(View.GONE);
             prize3_T.setVisibility(View.GONE);
         }
+
         PrizeModel2 p2 = em.getP2();
         if(p2.getPrize1_F()!=null && p2.getPrize1_F()!=Long.valueOf(0)) {
             prize1_F.setText(String.valueOf(p2.getPrize1_F()));
@@ -158,6 +179,7 @@ public class PrizeFragment extends Fragment {
         if(p2.getPrize3_F()!=null && p2.getPrize3_F()!=Long.valueOf(0)) {
             prize3_F.setText(String.valueOf(p2.getPrize3_F()));
             third_first.setVisibility(View.VISIBLE);
+
         }else{
             third_first.setVisibility(View.GONE);
         }
@@ -183,7 +205,7 @@ public class PrizeFragment extends Fragment {
             prize1_Th.setText(String.valueOf(p2.getPrize1_T()));
             first_third.setVisibility(View.VISIBLE);
         }else{
-            third_first.setVisibility(View.GONE);
+            first_third.setVisibility(View.GONE);
         }
         if(p2.getPrize2_T()!=null && p2.getPrize2_T()!=Long.valueOf(0)) {
             prize2_Th.setText(String.valueOf(p2.getPrize2_T()));
@@ -216,6 +238,7 @@ public class PrizeFragment extends Fragment {
         director_cut_layout = view.findViewById(R.id.director_cut_layout);
         no_ground_zone_layout = view.findViewById(R.id.no_ground_zone_layout);
         prizeT = view.findViewById(R.id.total_prize);
+        text_view = view.findViewById(R.id.text_view);
     }
     void init2(View view){
         prize_layout = view.findViewById(R.id.prize_layout);
