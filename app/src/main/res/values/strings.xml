@@ -42,21 +42,23 @@
     <string name="feedback">Feedback</string>
 
     <string-array name="team_names">
-        <item>Technical Secretary</item>
-        <item>Joint Technical Secretary</item>
-        <item>General Secretary</item>
-        <item>Finance Secretary</item>
-        <item>Joint Secretary</item>
-        <item>Executive Secretary</item>
+        <item>Core</item>
         <item>Team Manager</item>
         <item>Spokesperson</item>
         <item>Planning &amp; Development</item>
         <item>Corporate Relations &amp; marketing</item>
-        <item>Workshop Planning</item>
+        <item>Workshop</item>
         <item>Digital PR &amp; Planning</item>
         <item>Application &amp; Web Development</item>
         <item>Creative Team</item>
         <item>Media Relations</item>
+        <item>Public Relations</item>
+        <item>Transport Head</item>
+        <item>Event Management</item>
+        <item>Logistics</item>
+        <item>Hospitality</item>
+        <item>Decoration</item>
+        <item>Robotics</item>
     </string-array>
 
     <string-array name="noti_channel">

@@ -4,22 +4,27 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,14 +35,17 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import androidx.recyclerview.widget.SnapHelper;
+import androidx.viewpager.widget.ViewPager;
 import ojass20.nitjsr.in.ojass.Adapters.TeamMemberAdapter;
 import ojass20.nitjsr.in.ojass.Models.TeamMember;
 import ojass20.nitjsr.in.ojass.R;
+import ojass20.nitjsr.in.ojass.Utils.OnSwipeTouchListener;
 
 public class TeamActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TeamMemberAdapter.OnClickItem, View.OnClickListener {
     private static final String TAG ="TeamActivity" ;
     Spinner teamSpinner;
-    RecyclerView recyclerView;
+    RecyclerView bottomList;
     TeamMemberAdapter adapter,upper_adapter;
     ArrayList<TeamMember> list,teamList;
     int FILTER=0;
@@ -45,83 +53,221 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
     TeamMember MEMBER=null;
     ImageView team_back_button;
     Toolbar toolbar;
-    RecyclerView team_upper_list;
-
+    LinearLayout swipeLayout;
+    LinearLayoutManager manager1,manager2;
+//    RecyclerView team_upper_list;
+    LinearSnapHelper btmSnap,topSnap;
+    TabLayout tabLayout;
+    ImageView imageView;
+    LinearLayout linearLayout;
+    ViewPager mPager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_team);
         //to Initialize all class variables
         init();
+
         //check for developer page
-        check();
         //to set Listeners
-        setListeners();
-
-
+       // setListeners();
+//        setBottomList();
+//        setUpperList();
+//        setSwipeLayout();
+        syncRecyclerViewsAndTabs();
         fetchData();
         //to set Team Member's data
 //        setData();
         //to set card
-        setCard();
+//        setCard();
         //Temporary push data
 //      fetch data
 //      pushData();
+        onBack();
+
+
+    }
+
+    private void init() {
+        swipeLayout = findViewById(R.id.swipe_layout);
+        list=new ArrayList<>();
+        teamList=new ArrayList<>();
+        teamSpinner=findViewById(R.id.team_name);
+//        bottomList=findViewById(R.id.teamMemberList);
+//        team_upper_list = findViewById(R.id.team_upper_recycler_view);
+        team_back_button = findViewById(R.id.team_back_button);
+        tabLayout = findViewById(R.id.tabs);
+        mPager = findViewById(R.id.team_viewpager);
+    }
+
+    private void setTabs(){
+
+        for(int i=0;i<teamList.size();i++){
+            tabLayout.addTab(tabLayout.newTab().setText("t"+(i+1)));
+        }
+        TeamMemberAdapter mAdapter = new TeamMemberAdapter(this,teamList);
+        mPager.setAdapter(mAdapter);
+        mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setupWithViewPager(mPager);
+
+        // set data
+        for(int i=0;i<teamList.size();i++){
+
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
+            tab.setCustomView(R.layout.item_team_tab);
+            imageView=tab.getCustomView().findViewById(R.id.single_team_member_image);
+            linearLayout=tab.getCustomView().findViewById(R.id.singleItemTeamMember);
+            linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    onClickItem.onSelected(position);
+                }
+            });
+            Glide.with(this).asBitmap().fitCenter().load(teamList.get(i).img).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(imageView);
+
+        }
+
+
+    }
+
+    private void onBack(){
         team_back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
-        syncRecyclerViewsAndSpinner();
-
     }
 
-    private void syncRecyclerViewsAndSpinner() {
-        final RecyclerView.OnScrollListener[] scrollListeners = new RecyclerView.OnScrollListener[2];
+    private void syncRecyclerViewsAndTabs(){
 
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()){
 
-        scrollListeners[0] = new RecyclerView.OnScrollListener( )
-        {
-            @Override
-            public void onScrolled(RecyclerView mrecyclerView, int dx, int dy)
-            {
-                super.onScrolled(mrecyclerView, dx, dy);
-                team_upper_list.removeOnScrollListener(scrollListeners[1]);
-                team_upper_list.scrollBy(dx, dy);
-                team_upper_list.addOnScrollListener(scrollListeners[1]);
+                }
             }
-        };
-        scrollListeners[1] = new RecyclerView.OnScrollListener( )
-        {
+
             @Override
-            public void onScrolled(RecyclerView mrecyclerView, int dx, int dy)
-            {
-                super.onScrolled(mrecyclerView, dx, dy);
-                recyclerView.removeOnScrollListener(scrollListeners[0]);
-                recyclerView.scrollBy(dx, dy);
-                recyclerView.addOnScrollListener(scrollListeners[0]);
+            public void onTabUnselected(TabLayout.Tab tab) {
+
             }
-        };
-        recyclerView.addOnScrollListener(scrollListeners[0]);
-        team_upper_list.addOnScrollListener(scrollListeners[1]);
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
+//    private void setBottomList(){
+//        adapter=new TeamMemberAdapter(TeamActivity.this,this,teamList,true,DEVELOPER);
+//        manager1 = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+//        bottomList.setLayoutManager(manager1);
+//        bottomList.setAdapter(adapter);
+//        btmSnap = new LinearSnapHelper();
+//        btmSnap.attachToRecyclerView(bottomList);
+////        bottomList.setNestedScrollingEnabled(false);
+////        bottomList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+////            @Override
+////            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+////                super.onScrollStateChanged(recyclerView, newState);
+////                if(newState == RecyclerView.SCROLL_STATE_IDLE){
+//
+////                }
+////            }
+////        });
+//    }
+//    private void setUpperList(){
+//        manager2 = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+//        upper_adapter=new TeamMemberAdapter(TeamActivity.this,this,teamList,false,DEVELOPER);
+//        team_upper_list.setLayoutManager(manager2);
+//        team_upper_list.setAdapter(upper_adapter);
+//
+//        topSnap = new LinearSnapHelper();
+//        topSnap.attachToRecyclerView(team_upper_list);
+//    }
+//    private void setSwipeLayout(){
+//        swipeLayout.setOnTouchListener(new OnSwipeTouchListener(this){
+//            @Override
+//            public void onSwipeRight() {
+//                super.onSwipeRight();
+//
+//                int pos = (manager1.findFirstVisibleItemPosition()+manager1.findLastCompletelyVisibleItemPosition())/2;
+//                Toast.makeText(TeamActivity.this, String.valueOf(pos), Toast.LENGTH_SHORT).show();
+//                bottomList.getLayoutManager().smoothScrollToPosition(bottomList,new RecyclerView.State(),pos-1);
+//            }
+//
+//            @Override
+//            public void onSwipeLeft() {
+//                super.onSwipeLeft();
+//                int pos = (int)(manager1.findFirstVisibleItemPosition()+manager1.findLastCompletelyVisibleItemPosition())/2+1;
+//                bottomList.getLayoutManager().smoothScrollToPosition(bottomList,new RecyclerView.State(),pos+1);
+//                Toast.makeText(TeamActivity.this, String.valueOf(pos), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+//    private void syncRecyclerViewsAndSpinner() {
+//        bottomList.scrollToPosition(5);
+//        final RecyclerView.OnScrollListener[] scrollListeners = new RecyclerView.OnScrollListener[2];
+//        DisplayMetrics displayMetrics = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//        int height = displayMetrics.heightPixels;
+//        final int width = displayMetrics.widthPixels;
+//        scrollListeners[0] = new RecyclerView.OnScrollListener( )
+//        {
+//
+//
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+////                team_upper_list.removeOnScrollListener(scrollListeners[1]);
+////                team_upper_list.scrollBy(dx, dy);
+////                team_upper_list.addOnScrollListener(scrollListeners[1]);
+//
+//            }
+//        };
+//        scrollListeners[1] = new RecyclerView.OnScrollListener( )
+//        {
+//            @Override
+//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//
+//                    View v = topSnap.findSnapView(manager2);
+//                    bottomList.removeOnScrollListener(scrollListeners[0]);
+//                    bottomList.scrollToPosition(manager2.getPosition(v));
+//                    bottomList.addOnScrollListener(scrollListeners[0]);
+//
+//            }
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                bottomList.removeOnScrollListener(scrollListeners[0]);
+//                bottomList.scrollBy((dx/(width/dpToPx(150))), dy);
+//                bottomList.addOnScrollListener(scrollListeners[0]);
+//            }
+//        };
+//        bottomList.addOnScrollListener(scrollListeners[0]);
+//        team_upper_list.addOnScrollListener(scrollListeners[1]);
+//    }
 
     private void fetchData() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Team");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                list.clear();
+                teamList.clear();
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
                     TeamMember m = ds.getValue(TeamMember.class);
                     Log.d("pubg", "onDataChange: "+m.name);
-                    if(!list.contains(m))
-                        list.add(m);
+                    if(!teamList.contains(m))
+                        teamList.add(m);
 
                 }
-                filter();
+                setTabs();
+//                adapter.notifyDataSetChanged();
+//                upper_adapter.notifyDataSetChanged();
+//                filter();
 
             }
 
@@ -131,30 +277,6 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
     }
-
-    void pushData(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Team");
-
-        for(TeamMember m:list){
-            reference.push().setValue(m);
-        }
-
-    }
-    private void devloperPage() {
-        DEVELOPER=true;
-        FILTER=100;
-        teamSpinner.setVisibility(View.INVISIBLE);
-        //facebook.setImageResource(R.drawable.github);
-        filter();
-    }
-
-    private void check() {
-        if(getIntent().hasExtra("DEV")){
-            devloperPage();
-        }
-    }
-
-
 
     private void setCard()
     {
@@ -177,33 +299,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
 //        facebook.setOnClickListener(this);
     }
 
-    private void init() {
-        list=new ArrayList<>();
-        teamList=new ArrayList<>();
-        teamSpinner=findViewById(R.id.team_name);
-        recyclerView=findViewById(R.id.teamMemberList);
-        team_upper_list = findViewById(R.id.team_upper_recycler_view);
-        adapter=new TeamMemberAdapter(TeamActivity.this,this,teamList,true,DEVELOPER);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
-        recyclerView.setAdapter(adapter);
 
-        upper_adapter=new TeamMemberAdapter(TeamActivity.this,this,teamList,false,DEVELOPER);
-        team_upper_list.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
-        team_upper_list.setAdapter(upper_adapter);
-
-        //profilepic=findViewById(R.id.profile_image_team_member);
-//        call=findViewById(R.id.team_member_call);
-//        facebook=findViewById(R.id.team_member_facebook);
-//        whatsapp=findViewById(R.id.team_member_whatsapp);
-
-//        name=findViewById(R.id.team_member_name);
-//        designation=findViewById(R.id.team_member_designation);
-
-        team_back_button = findViewById(R.id.team_back_button);
-        //toolbar=findViewById(R.id.teamPageToolbar);
-        //setSupportActionBar(toolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -233,7 +329,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onSelected(int position) {
         //MEMBER=teamMember;
-        team_upper_list.scrollToPosition(position);
+//        team_upper_list.scrollToPosition(position);
         setCard();
     }
 
