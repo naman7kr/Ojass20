@@ -117,6 +117,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private LinearLayoutManager mLinearLayoutManager;
     private Boolean isCommentsFragmentOpen;
 
+    private Boolean isRegistrationComplete = false;
+
     private DatabaseReference dref;
     private FirebaseAuth mauth;
     private ArrayList<FeedPost> listposts;
@@ -151,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("PostNo", Integer.toString(0));
         editor.apply();
+
         fetchBranchHead();
 //        eventStuff();
 
@@ -167,8 +170,58 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 //        printHashKey(this);
         refresh();
         Log.d("ak47", "onCreate: " + mauth.getCurrentUser().getEmail() + " " + mauth.getCurrentUser().getUid());
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchRegistrationStatus();
+    }
 
+    private void fetchRegistrationStatus(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users").
+                child(mauth.getUid());
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int fields = 0;
+                if(dataSnapshot.hasChild("email")){
+                    if(!(dataSnapshot.child("email").getValue().equals("")))
+                        fields ++;
+                }
+                if(dataSnapshot.hasChild("mobile")){
+                    if(!(dataSnapshot.child("mobile").getValue().equals("")))
+                        fields ++;
+                }
+                if(dataSnapshot.hasChild("college")){
+                    if(!(dataSnapshot.child("college").getValue().equals("")))
+                        fields ++;
+                }
+                if(dataSnapshot.hasChild("branch")){
+                    if(!(dataSnapshot.child("branch").getValue().equals("")))
+                        fields ++;
+                }
+                if(dataSnapshot.hasChild("tshirtSize")){
+                    if(!(dataSnapshot.child("tshirtSize").getValue().equals("")))
+                        fields ++;
+                }
+
+                Log.d(LOG_TAG, "this--> " + fields);
+                if(fields == 5){
+                    isRegistrationComplete = true;
+                    mDrwawerHeaderView.findViewById(R.id.nav_header_alert).setVisibility(View.GONE);
+                }
+                else{
+                    isRegistrationComplete = false;
+                    mDrwawerHeaderView.findViewById(R.id.nav_header_alert).setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void fetchBranchHead() {
@@ -523,6 +576,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
         data = new ArrayList<>();
 
+
+
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -799,12 +854,21 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
             }
         };
 
         profile_name.setOnClickListener(onClickListener);
         profile_picture.setOnClickListener(onClickListener);
+        mDrwawerHeaderView.findViewById(R.id.nav_header_alert).setOnClickListener(onClickListener);
+
+        if(!isRegistrationComplete){
+            mDrwawerHeaderView.findViewById(R.id.nav_header_alert).setVisibility(View.VISIBLE);
+        }
+        else{
+            mDrwawerHeaderView.findViewById(R.id.nav_header_alert).setVisibility(View.GONE);
+        }
 
         //mDrwawerHeaderView.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
 

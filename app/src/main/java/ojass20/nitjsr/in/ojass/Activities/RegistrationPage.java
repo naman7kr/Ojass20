@@ -28,9 +28,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -39,13 +43,15 @@ import ojass20.nitjsr.in.ojass.R;
 public class RegistrationPage extends AppCompatActivity {
 
     private TextInputEditText name_reg, email_reg,mobile_reg,
-        college_reg, branch_reg;
-    private Spinner tshirt_size_spinner;
-    private Button register_button;
+        college_reg;
+    private Spinner tshirt_size_spinner, branch_spinner;
+    private Button register_button, skip_button;
     private CircleImageView self_image;
     private TextView over_text;
 
-    private String[] tshirt_sizes_list={"S","M","L","XL","XXL"};
+    private boolean fromProfile;
+
+    private String[] tshirt_sizes_list={"S","M","L","XL","XXL"}, branch_list;
 
     private FirebaseAuth mauth;
     private String current_user_id;
@@ -57,6 +63,11 @@ public class RegistrationPage extends AppCompatActivity {
 
         init();
 
+        branch_list = getResources().getStringArray(R.array.eng_courses);
+        ArrayAdapter<String> branchAdapter = new ArrayAdapter<String>(this, android.R.layout.
+                simple_list_item_1, branch_list);
+        branch_spinner.setAdapter(branchAdapter);
+
         ArrayAdapter<String> madap = new ArrayAdapter<String>(
                 this,android.R.layout.simple_list_item_1,tshirt_sizes_list);
         tshirt_size_spinner.setAdapter(madap);
@@ -66,7 +77,18 @@ public class RegistrationPage extends AppCompatActivity {
 
         over_text.setText("Welcome "+mauth.getCurrentUser().getDisplayName());
         name_reg.setText(mauth.getCurrentUser().getDisplayName());
-        email_reg.setText(mauth.getCurrentUser().getEmail());
+
+        if(fromProfile){
+            register_button.setText("Update");
+            skip_button.setVisibility(View.GONE);
+        }
+        skip_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegistrationPage.this,  MainActivity.class));
+                finish();
+            }
+        });
 
         register_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +114,63 @@ public class RegistrationPage extends AppCompatActivity {
                     }
                 })
                 .into(self_image);
+
+        email_reg.setText("");
+        mobile_reg.setText("");
+        college_reg.setText("");
+        branch_spinner.setSelection(0);
+        tshirt_size_spinner.setSelection(0);
+        fetch_existing_data();
+
+    }
+
+    private void fetch_existing_data(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().
+                getReference("Users").child(mauth.getUid());
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild("email")){
+                    String email = dataSnapshot.child("email").getValue(String.class);
+                    if((email_reg.getText().toString()).equals(""))
+                        email_reg.setText(email);
+                }
+                if(dataSnapshot.hasChild("mobile")){
+                    String mobile = dataSnapshot.child("mobile").getValue(String.class);
+                    if((mobile_reg.getText().toString()).equals(""))
+                        mobile_reg.setText(mobile);
+                }
+                if(dataSnapshot.hasChild("college")){
+                    String college = dataSnapshot.child("college").getValue(String.class);
+                    if((college_reg.getText().toString()).equals(""))
+                        college_reg.setText(college);
+                }
+
+                if(dataSnapshot.hasChild("branch")){
+                    String branch = dataSnapshot.child("branch").getValue(String.class);
+                    for(int i = 0;i < branch_list.length;i ++){
+                        if(branch.equals(branch_list[i])){
+                            branch_spinner.setSelection(i);
+                            break;
+                        }
+                    }
+                }
+                if(dataSnapshot.hasChild("tshirtSize")){
+                    String tshirtSize = dataSnapshot.child("tshirtSize").getValue(String.class);
+                    for(int i = 0;i < tshirt_sizes_list.length;i ++){
+                        if(tshirtSize.equals(tshirt_sizes_list[i])){
+                            tshirt_size_spinner.setSelection(i);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void register_user() {
@@ -104,7 +183,7 @@ public class RegistrationPage extends AppCompatActivity {
         data.put("email",email_reg.getText().toString());
         data.put("mobile",mobile_reg.getText().toString());
         data.put("college",college_reg.getText().toString());
-        data.put("branch",branch_reg.getText().toString());
+        data.put("branch", branch_list[(int) branch_spinner.getSelectedItemId()]);
 
         data.put("tshirtSize",tshirt_sizes_list[tshirt_size_spinner.getSelectedItemPosition()]);
 
@@ -119,12 +198,17 @@ public class RegistrationPage extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            Toast.makeText(RegistrationPage.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(RegistrationPage.this, MainActivity.class));
+                            String toast_message = (fromProfile) ? "Updated Successfully" : "Registered Successfully";
+                            Toast.makeText(RegistrationPage.this, toast_message, Toast.LENGTH_SHORT).show();
+                            if(!fromProfile) {
+                                Intent intent = new Intent(RegistrationPage.this, MainActivity.class);
+                                startActivity(intent);
+                            }
                             finish();
                         }
                         else{
-                            Toast.makeText(RegistrationPage.this, "Error: Not registered", Toast.LENGTH_SHORT).show();
+                            String toast_message = (fromProfile) ? "Update Failed" : "Registered Failed";
+                            Toast.makeText(RegistrationPage.this, toast_message, Toast.LENGTH_SHORT).show();
                             Log.e("onComplete: "," "+task.getException().toString());
                             startActivity(new Intent(RegistrationPage.this, MainActivity.class));
                             finish();
@@ -134,15 +218,17 @@ public class RegistrationPage extends AppCompatActivity {
     }
 
     private void init() {
+        fromProfile = getIntent().getBooleanExtra("fromProfile", false);
         name_reg = findViewById(R.id.Name_Registration_page);
         email_reg = findViewById(R.id.Email_Registration_page);
         mobile_reg = findViewById(R.id.Mobile_Registration_page);
         college_reg = findViewById(R.id.College_Registration_page);
-        branch_reg = findViewById(R.id.Branch_Registration_page);
+        branch_spinner = findViewById(R.id.branch_registration_page);
         tshirt_size_spinner = findViewById(R.id.TShirt_Size_Registration_page);
         register_button = findViewById(R.id.register_button_Registration_page);
         self_image = findViewById(R.id.register_self_pic);
         over_text = findViewById(R.id.overlap_text);
+        skip_button = findViewById(R.id.skip_button_Registration_page);
     }
 
     public boolean validate(){
@@ -170,13 +256,6 @@ public class RegistrationPage extends AppCompatActivity {
             college_reg.setError("Please Enter Your College");
             valid=false;
         }
-
-        if(branch_reg.getText().toString().trim().isEmpty() )
-        {
-            branch_reg.setError("Please Enter Your Branch");
-            valid=false;
-        }
-
 
         return valid;
     }
