@@ -5,12 +5,18 @@ public class HomePage {
     private int mImageId;
     public String mCircleColor;
     public int mIndex;
+    private int mAngle;
+    private int mImageSpecificId;
+    private int mBackground;
 
-    public HomePage(String mTitle, String mCircleColor, int mIndex, int mImageId) {
+    public HomePage(String mTitle, String mCircleColor, int mIndex, int mImageId, int angle, int mImageSpecificId, int mBackground) {
         this.mTitle = mTitle;
         this.mImageId = mImageId;
         this.mCircleColor = mCircleColor;
         this.mIndex = mIndex;
+        mAngle = angle;
+        this.mImageSpecificId = mImageSpecificId;
+        this.mBackground = mBackground;
     }
 
     public String getmTitle() {
@@ -42,4 +48,15 @@ public class HomePage {
         this.mIndex = mIndex;
     }
 
+    public int getmAngle() {
+        return mAngle;
+    }
+
+    public int getmImageSpecificId() {
+        return mImageSpecificId;
+    }
+
+    public int getmBackground() {
+        return mBackground;
+    }
 }

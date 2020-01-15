@@ -1,6 +1,7 @@
 package ojass20.nitjsr.in.ojass.Fragments;
 
 import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
@@ -22,6 +23,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -55,7 +57,7 @@ public class HomeFragment extends Fragment implements
     private GestureDetectorCompat mDetector;
     private RelativeLayout swipeArea;
     private ConstraintLayout cl;
-    private ImageView swipeImage1, swipeImage2;
+    private ImageView swipeImage1, swipeImage2, mFakeBackground1, mFakeBackground2, mFakeImage;
     private TextView txt, mHeading;
 
     @Nullable
@@ -77,20 +79,6 @@ public class HomeFragment extends Fragment implements
             }
         });
 
-        swipeArea.setOnClickListener(null);
-
-
-//        mHeading.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                if (mDetector != null) {
-//                    mDetector.onTouchEvent(event);
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
-
         setUpView(0);
         detectBottomTabClick();
 
@@ -105,13 +93,19 @@ public class HomeFragment extends Fragment implements
         bigCircle = view.findViewById(R.id.bg_circle);
         swipeArea = view.findViewById(R.id.swipe_area);
         swipeImage1 = view.findViewById(R.id.img_swipe1);
+        swipeImage2 = view.findViewById(R.id.img_swipe2);
+        mFakeBackground1 = view.findViewById(R.id.fake_background1);
+        mFakeBackground2 = view.findViewById(R.id.fake_background2);
         mHeading = view.findViewById(R.id.heading);
+        mFakeImage = view.findViewById(R.id.fake_image);
+
         txt = view.findViewById(R.id.home_frag_text);
         cl = view.findViewById(R.id.cl);
         c1 = view.findViewById(R.id.img1);
         c2 = view.findViewById(R.id.img2);
         c3 = view.findViewById(R.id.img3);
         c4 = view.findViewById(R.id.img4);
+
         mCircles.add(c1);
         mCircles.add(c2);
         mCircles.add(c3);
@@ -129,10 +123,10 @@ public class HomeFragment extends Fragment implements
     }
 
     private void setUpArrayList() {
-        mItems.add(new HomePage("Events", "#FF0000", 0, R.drawable.ic_launcher_background));//red
-        mItems.add(new HomePage("Gurugyan", "#00FF00", 1, R.drawable.ic_launcher_foreground));//green
-        mItems.add(new HomePage("Itinerary", "#0000FF", 2, R.drawable.ic_launcher_background));//blue
-        mItems.add(new HomePage("Maps", "#FFCC00", 3, R.drawable.ic_launcher_foreground));//yellow
+        mItems.add(new HomePage("Events", "#9B03FB", 0, R.drawable.ic_launcher_background, 0, R.drawable.square_events_images, R.drawable.violet_back));//purple
+        mItems.add(new HomePage("Gurugyan", "#FB0303", 1, R.drawable.ic_launcher_foreground, -90, R.drawable.square_gurugyan_image, R.drawable.red_back));//red
+        mItems.add(new HomePage("Itinerary", "#03FB2C", 2, R.drawable.ic_launcher_background, -180, R.drawable.square_itinerary_image, R.drawable.green_back));//green
+        mItems.add(new HomePage("Maps", "#0F03FB", 3, R.drawable.ic_launcher_foreground, -270, R.drawable.square_maps_image, R.drawable.blue_back));//blue
     }
 
     private void detectBottomTabClick() {
@@ -140,33 +134,101 @@ public class HomeFragment extends Fragment implements
         c2.setOnClickListener(this);
         c3.setOnClickListener(this);
         c4.setOnClickListener(this);
-        mHeading.setOnClickListener(this);
     }
 
     private void swipeRight() {
+        int u = mInd;
         mInd++;
         if (mInd >= mItems.size()) {
             mInd = 0;
             setUpView(-3);
         } else
             setUpView(-1);
-        setUpAnimationForTextView(-1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
-        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_rotate_anticlock);
-        swipeImage1.startAnimation(animation);
+
+        mFakeBackground1.setImageDrawable(getActivity().getDrawable(mItems.get(u).getmBackground()));
+        mFakeBackground2.setImageDrawable(getActivity().getDrawable(mItems.get(mInd).getmBackground()));
+
+        imgAnimationLeft();
+        setUpAnimationForTextView(-1, System.currentTimeMillis(), txt.getText().toString().toUpperCase());
+        final RotateAnimation rotate = new RotateAnimation(mItems.get(u).getmAngle(), mItems.get(mInd).getmAngle(), Animation.RELATIVE_TO_SELF,
+                0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotate.setDuration(500);
+        rotate.setFillAfter(true);
+
+        final Animation fadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+        Animation fadeOut = AnimationUtils.loadAnimation(getContext(), R.anim.fade_out);
+
+        fadeIn.setFillAfter(true);
+        fadeOut.setFillAfter(true);
+        swipeImage2.startAnimation(fadeOut);
+
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                swipeImage1.startAnimation(rotate);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                swipeImage2.setImageDrawable(getActivity().getDrawable(mItems.get(mInd).getmImageSpecificId()));
+                swipeImage2.startAnimation(fadeIn);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
         setTxtRight();
     }
 
     private void swipeLeft() {
+        int u = mInd;
         mInd--;
         if (mInd < 0) {
             mInd = mItems.size() - 1;
             setUpView(3);
         } else
             setUpView(1);
-        setUpAnimationForTextView(1, System.currentTimeMillis(), mHeading.getText().toString().toUpperCase());
-        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_rotate_clock);
-        animation.setFillAfter(true);
-        swipeImage1.startAnimation(animation);
+
+        mFakeBackground1.setImageDrawable(getActivity().getDrawable(mItems.get(u).getmBackground()));
+        mFakeBackground2.setImageDrawable(getActivity().getDrawable(mItems.get(mInd).getmBackground()));
+
+        imgAnimationRight();
+        setUpAnimationForTextView(1, System.currentTimeMillis(), txt.getText().toString().toUpperCase());
+        final RotateAnimation rotate = new RotateAnimation(mItems.get(u).getmAngle(), mItems.get(mInd).getmAngle(), Animation.RELATIVE_TO_SELF,
+                0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotate.setDuration(500);
+        rotate.setFillAfter(true);
+//        swipeImage1.startAnimation(rotate);
+
+        final Animation fadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+        Animation fadeOut = AnimationUtils.loadAnimation(getContext(), R.anim.fade_out);
+
+        fadeIn.setFillAfter(true);
+        fadeOut.setFillAfter(true);
+        swipeImage2.startAnimation(fadeOut);
+
+
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                swipeImage1.startAnimation(rotate);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                swipeImage2.setImageDrawable(getActivity().getDrawable(mItems.get(mInd).getmImageSpecificId()));
+                swipeImage2.startAnimation(fadeIn);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
         setTxtLeft();
     }
 
@@ -178,70 +240,10 @@ public class HomeFragment extends Fragment implements
         txt.setText(mItems.get(mInd).getmTitle());
     }
 
-    private void imgAnimationRight() {
-        final int img = mItems.get(mInd).getmImageId();
-        //img animation
-        //translate swipeImg2 from right to center
-        AnimationSet set1 = translateAnim(0, -200, 1, 0);
-        AnimationSet set2 = translateAnim(200, 0, 0, 1);
-        set1.setDuration(ANIM_DURATION);
-        set2.setDuration(ANIM_DURATION);
-        set1.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-//                swipeImage1.setImageResource(img);
-                swipeImage2.setAlpha(0.0f);
-                swipeImage1.setAlpha(1.0f);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        swipeImage1.startAnimation(set1);
-        swipeImage2.startAnimation(set2);
-    }
-
-    private void imgAnimationLeft() {
-        final int img = mItems.get(mInd).getmImageId();
-//        swipeImage2.setImageResource(img);
-
-        AnimationSet set1 = translateAnim(0, 200, 1, 0);
-        AnimationSet set2 = translateAnim(-200, 0, 0, 1);
-        set1.setDuration(ANIM_DURATION);
-        set2.setDuration(ANIM_DURATION);
-        set1.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-//                swipeImage1.setImageResource(img);
-                swipeImage2.setAlpha(0.0f);
-                swipeImage1.setAlpha(1.0f);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        swipeImage1.startAnimation(set1);
-        swipeImage2.startAnimation(set2);
-    }
-
     private void setUpAnimationForTextView(final int code, final long mainTime, String curr) {
         long tempTime = System.currentTimeMillis();
         if (tempTime - mainTime > 500) {
-            mHeading.setText(mItems.get(mInd).getmTitle());
+            txt.setText(mItems.get(mInd).getmTitle());
             return;
         }
         String temp = " ";
@@ -266,7 +268,7 @@ public class HomeFragment extends Fragment implements
             }
         }
         temp = temp.trim();
-        mHeading.setText(temp);
+        txt.setText(temp);
         //Log.e(LOG_TAG, temp);
         final String x = temp;
         new Handler().postDelayed(new Runnable() {
@@ -277,13 +279,18 @@ public class HomeFragment extends Fragment implements
         }, 10);
     }
 
-    private AnimationSet translateAnim(float fromTr, float toTr, float fromAl, float toAl) {
-        AnimationSet set = new AnimationSet(true);
-        TranslateAnimation tr = new TranslateAnimation(fromTr, toTr, 0, 0);
-        set.addAnimation(tr);
-        AlphaAnimation al = new AlphaAnimation(fromAl, toAl);
-        set.addAnimation(al);
-        return set;
+    private void imgAnimationRight() {
+//        Animation leftExit = AnimationUtils.loadAnimation(getContext(), R.anim.exit_to_left);
+//        mFakeBackground1.startAnimation(leftExit);
+        Animation leftEntry = AnimationUtils.loadAnimation(getContext(), R.anim.enter_from_left);
+        mFakeBackground2.startAnimation(leftEntry);
+    }
+
+    private void imgAnimationLeft() {
+//        Animation rightExit = AnimationUtils.loadAnimation(getContext(), R.anim.exit_to_right);
+//        mFakeBackground1.startAnimation(rightExit);
+        Animation rightEntry = AnimationUtils.loadAnimation(getContext(), R.anim.enter_from_right);
+        mFakeBackground2.startAnimation(rightEntry);
     }
 
     public void setUpView(int counter) {
@@ -412,22 +419,27 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
-//        switch (mInd) {
-//            case 0:
-//                startActivity(new Intent(getContext(), EventsActivity.class));
-//                break;
-//            case 1:
-//                startActivity(new Intent(getContext(), GurugyanActivity.class));
-//                break;
-//            case 2:
-//                startActivity(new Intent(getContext(), ItineraryActivity.class));
-//                break;
-//            case 3:
-//                startActivity(new Intent(getContext(), MapsActivity.class));
-//                break;
-//            default:
-//                Log.e("LOL", "Bhai sahab ye kis line mein aa gye aap?");
-//        }
+        Log.e("HomeFrag", mFakeImage.getLeft() + " " + mFakeImage.getRight() + " " + mFakeImage.getTop() + " " + mFakeImage.getBottom());
+        Log.e("HomeFrag", e.getX() + " " + e.getY());
+        if (((int) e.getX() >= mFakeImage.getLeft() && (int) e.getX() <= mFakeImage.getRight()) && ((int) e.getY() >= mFakeImage.getTop() && (int) e.getY() <= mFakeImage.getBottom())) {
+            Log.e("HomeFrag", "I'm called");
+            switch (mInd) {
+                case 0:
+                    startActivity(new Intent(getContext(), EventsActivity.class));
+                    break;
+                case 1:
+                    startActivity(new Intent(getContext(), GurugyanActivity.class));
+                    break;
+                case 2:
+                    startActivity(new Intent(getContext(), ItineraryActivity.class));
+                    break;
+                case 3:
+                    startActivity(new Intent(getContext(), MapsActivity.class));
+                    break;
+                default:
+                    Log.e("LOL", "Bhai sahab ye kis line mein aa gye aap?");
+            }
+        }
         return true;
     }
 
@@ -453,26 +465,6 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onClick(View v) {
-        Log.e("Hey", "I'm called");
-        if (v.getId() == mHeading.getId()) {
-            switch (mInd) {
-                case 0:
-                    startActivity(new Intent(getContext(), EventsActivity.class));
-                    break;
-                case 1:
-                    startActivity(new Intent(getContext(), GurugyanActivity.class));
-                    break;
-                case 2:
-                    startActivity(new Intent(getContext(), ItineraryActivity.class));
-                    break;
-                case 3:
-                    startActivity(new Intent(getContext(), MapsActivity.class));
-                    break;
-                default:
-                    Log.e("LOL", "Bhai sahab ye kis line mein aa gye aap?");
-            }
-            return;
-        }
         int iClicked = -1;
         for (int i = 0; i < mCircles.size(); i++) {
             if (v.getId() == mCircles.get(i).getId()) {
