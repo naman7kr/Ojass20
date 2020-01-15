@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         compareAppVersion();
 //        printHashKey(this);
         refresh();
-        Log.d("ak47", "onCreate: "+mauth.getCurrentUser().getEmail()+" "+mauth.getCurrentUser().getUid());
+        Log.d("ak47", "onCreate: " + mauth.getCurrentUser().getEmail() + " " + mauth.getCurrentUser().getUid());
 
 
     }
@@ -194,12 +194,13 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         progressDialog.setMessage("Initialising App data...");
         progressDialog.setCancelable(false);
         progressDialog.show();
-        progressDialog.dismiss();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Branches");
         ref.keepSynced(true);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!progressDialog.isShowing())
+                    progressDialog.show();
                 branchData.clear();
                 boolean sizeUpdated = false;
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -220,18 +221,20 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                     ArrayList<BranchHeadModal> bh_list = new ArrayList<>();
                     for (DataSnapshot d : ds.child("head").getChildren()) {
                         String cn, name, url, wn;
-                        try{
+                        try {
                             name = d.child("name").getValue().toString();
                             cn = d.child("cn").getValue().toString();
                             wn = d.child("wn").getValue().toString();
                             url = d.child("url").getValue().toString();
                             bh_list.add(new BranchHeadModal(cn, name, url, wn));
-                        }catch (Exception e){
-                            Log.d("hello",ds.getKey());
+                        } catch (Exception e) {
+                            Log.d("hello", ds.getKey());
                         }
 
                     }
                     branchData.put(ds.getKey(), new BranchModal(about, bh_list));
+                    if (progressDialog.isShowing())
+                        progressDialog.dismiss();
                 }
                 if (eventNames.size() == 18 && sizeUpdated) {
                     eventStuff();
@@ -533,13 +536,15 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Initialising App data...");
         progressDialog.setCancelable(false);
-//        progressDialog.show();
+        progressDialog.show();
 
         data = new ArrayList<>();
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!progressDialog.isShowing())
+                    progressDialog.show();
                 data.clear();
                 try {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -580,8 +585,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         String nam = ds.child("name").getValue(String.class);
                         PrizeModel2 p2 = null;
                         PrizeModel1 p1 = null;
-                        if(nam.equalsIgnoreCase("Hack-De-Science")){
-                            Long prizeT, prize1_F, prize2_F, prize3_F=null, prize1_S, prize2_S, prize3_S=null, prize1_T, prize2_T=null, prize3_T=null;
+                        if (nam.equalsIgnoreCase("Hack-De-Science")) {
+                            Long prizeT, prize1_F, prize2_F, prize3_F = null, prize1_S, prize2_S, prize3_S = null, prize1_T, prize2_T = null, prize3_T = null;
                             prizeT = ds.child("prize").child("total").getValue(Long.class);
                             prize1_F = ds.child("prize").child("App").child("first").getValue(Long.class);
                             prize2_F = ds.child("prize").child("App").child("second").getValue(Long.class);
@@ -595,10 +600,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                             p2 = new PrizeModel2(prizeT, prize1_F, prize2_F, prize3_F, prize1_S, prize2_S, prize3_S, prize1_T, prize2_T, prize3_T);
 
 
-                        }
-                        else if (checkPrizeType(nam)) {
-                            if(nam.equalsIgnoreCase("Agnikund")){
-                                Log.e( "23onDataChange: ","level 23");
+                        } else if (checkPrizeType(nam)) {
+                            if (nam.equalsIgnoreCase("Agnikund")) {
+                                Log.e("23onDataChange: ", "level 23");
                             }
                             Long prize1 = ds.child("prize").child("first").getValue(Long.class);
                             Long prize2 = ds.child("prize").child("second").getValue(Long.class);
@@ -608,12 +612,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                             Long prize6 = ds.child("prize").child("sixth").getValue(Long.class);
                             Long prizeT = ds.child("prize").child("total").getValue(Long.class);
 
-                            Log.e("23onDataChange: ",""+prize1+" "+prize4);
+                            Log.e("23onDataChange: ", "" + prize1 + " " + prize4);
 
                             p1 = new PrizeModel1(prize1, prize2, prize3, prize4, prize5, prize6, prizeT);
                         } else {
-                            if(nam.equalsIgnoreCase("Agnikund")){
-                                Log.e( "23onDataChange: ","level 24");
+                            if (nam.equalsIgnoreCase("Agnikund")) {
+                                Log.e("23onDataChange: ", "level 24");
                             }
                             Long prizeT, prize1_F, prize2_F, prize3_F, prize1_S, prize2_S, prize3_S, prize1_T, prize2_T, prize3_T;
                             prizeT = ds.child("prize").child("total").getValue(Long.class);
@@ -636,8 +640,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         rulesModelArrayList.clear();
                         try {
                             for (DataSnapshot d : ds.child("coordinators").getChildren()) {
-                                if(MainActivity.data.get(SubEventActivity.position).getName().compareTo("DISASSEMBLE")==0){
-                                    Log.e("LOL","LOL");
+                                if (MainActivity.data.get(SubEventActivity.position).getName().compareTo("DISASSEMBLE") == 0) {
+                                    Log.e("LOL", "LOL");
                                 }
                                 String n = d.child("name").getValue().toString();
                                 String p = d.child("phone").getValue().toString();
@@ -661,7 +665,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                     if (progressDialog.isShowing()) progressDialog.dismiss();
 //                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-//                progressDialog.dismiss();
+                if (progressDialog.isShowing())
+                    progressDialog.dismiss();
             }
 
             @Override
@@ -672,18 +677,18 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     }
 
     private boolean checkPrizeType(String name) {
-        if(
+        if (
             //(name.compareToIgnoreCase("embetrix")==0 ) ||
-            (name.compareToIgnoreCase("High Voltage Concepts")==0) ||
-                (name.compareToIgnoreCase("electrospection")==0) ||
-                        (name.compareToIgnoreCase("Electro Scribble")==0) ||
-                        (name.compareToIgnoreCase("matsim")==0) ||
-                        (name.compareToIgnoreCase("Pro-Lo-Co")==0) ||
-                        (name.compareToIgnoreCase("Hack-De-Science")==0)
+                (name.compareToIgnoreCase("High Voltage Concepts") == 0) ||
+                        (name.compareToIgnoreCase("electrospection") == 0) ||
+                        (name.compareToIgnoreCase("Electro Scribble") == 0) ||
+                        (name.compareToIgnoreCase("matsim") == 0) ||
+                        (name.compareToIgnoreCase("Pro-Lo-Co") == 0) ||
+                        (name.compareToIgnoreCase("Hack-De-Science") == 0)
             //||
             //(name.compareToIgnoreCase("agnikund")==0) ||
             //(name.compareToIgnoreCase("knockout")==0)
-        ){
+        ) {
             return false;
         }
         return true;
@@ -884,8 +889,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 finish();
                 break;
             case R.id.feedback:
-                 startActivity(new Intent(MainActivity.this, FeedbackActivity.class));
-                 break;
+                startActivity(new Intent(MainActivity.this, FeedbackActivity.class));
+                break;
         }
 
         try {
@@ -1081,9 +1086,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     }
 
     private void showUpdateDialog() {
-        SharedPreferences pref = getSharedPreferences("updateFlag",MODE_PRIVATE);
+        SharedPreferences pref = getSharedPreferences("updateFlag", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-        editor.putBoolean("update",false);
+        editor.putBoolean("update", false);
         editor.commit();
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.update_dialog_layout);

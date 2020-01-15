@@ -193,7 +193,10 @@ public class SubEventActivity extends AppCompatActivity {
                     mWhatsapp = new ArrayList<>();
                     mName = new ArrayList<>();
                     mHeading = dialogView.findViewById(R.id.heading);
-                    String s = "Event Heads";
+                    String s = "Segment Head";
+                    Log.e("Segment", mEventName);
+                    if (mBranchEvents.contains(mEventName.trim()))
+                        s = "Branch Head";
                     mHeading.setText(s);
 
                     mLL.add((LinearLayout) dialogView.findViewById(R.id.one));
