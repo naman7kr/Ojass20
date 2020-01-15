@@ -15,5 +15,5 @@
     <color name="transparent">#00CC6060</color>
     <color name="red">#FF0000</color>
     <color name="navHeader">#29363d</color>
-    <color name="fab">#ff3385</color>
+    <color name="fab">@color/colorPrimary</color>
 </resources>
