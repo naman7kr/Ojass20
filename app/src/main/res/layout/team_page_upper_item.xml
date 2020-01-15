@@ -7,54 +7,61 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5">
+        android:layout_weight="8">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="1000dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/joker"
                 android:id="@+id/profile_image_team_member_upper"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/navHeader"
+                android:alpha="0.6"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="25sp"
+                    android:fontFamily="@font/opensans"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:id="@+id/team_member_name_upper"
+                    android:text="Name"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/opensans"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:id="@+id/team_member_designation_upper"
+                    android:text="Designation"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
 
     </LinearLayout>
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_weight="2"
-        android:weightSum="7">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_weight="3">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textSize="20sp"
-                android:fontFamily="@font/opensans"
-                android:textStyle="bold"
-                android:textColor="@color/navHeader"
-                android:id="@+id/team_member_name_upper"
-                android:text="Name"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:fontFamily="@font/opensans"
-                android:textStyle="bold"
-                android:textColor="@color/navHeader"
-                android:textSize="20sp"
-                android:id="@+id/team_member_designation_upper"
-                android:text="Designation"/>
+        android:layout_weight="2">
 
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="4"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:weightSum="3">
             <LinearLayout
                 android:layout_width="0dp"
@@ -62,10 +69,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="match_parent"
+                    android:layout_width="60dp"
                     android:id="@+id/team_member_call"
                     android:src="@drawable/call"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="60dp"/>
 
             </LinearLayout>
             <LinearLayout
@@ -74,10 +81,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="match_parent"
+                    android:layout_width="60dp"
                     android:src="@drawable/whatsapp"
                     android:id="@+id/team_member_whatsapp"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="60dp"/>
 
             </LinearLayout>
 
@@ -87,12 +94,12 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="match_parent"
+                    android:layout_width="60dp"
                     android:id="@+id/team_member_facebook"
                     android:src="@drawable/facebook_logo"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="60dp"/>
 
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

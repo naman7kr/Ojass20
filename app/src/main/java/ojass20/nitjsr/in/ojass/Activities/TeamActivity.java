@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -344,21 +345,30 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
                 team_no=(4+position);
             }
             if(team_no == teamList.get(i).team){
-                //mPager.setCurrentItem(5);
-                final int tempo=i;
-                mPager.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mPager.setCurrentItem(tempo);
-                    }
-                },100);
+                mPager.setCurrentItem(i);
+                break;
+//                final int tempo=i;
+//                mPager.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mPager.setCurrentItem(tempo);
+//                    }
+//                },100);
             }
+//            Handler handler= new Handler();
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    break;
+//                }
+//            },150);
 
 
             //Log.e("onItemSelected: ", "level 69 " + tm.team + " and " + position);
 //            if (tm.team == position) {
 //                mPager.setCurrentItem(position);
 //                break;
+            //not done
 //            }
         }
         //filter();
