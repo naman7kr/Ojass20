@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,30 +39,32 @@ import java.util.HashMap;
 
 import androidx.recyclerview.widget.SnapHelper;
 import androidx.viewpager.widget.ViewPager;
+
 import ojass20.nitjsr.in.ojass.Adapters.TeamMemberAdapter;
 import ojass20.nitjsr.in.ojass.Models.TeamMember;
 import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.OnSwipeTouchListener;
 
 public class TeamActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TeamMemberAdapter.OnClickItem, View.OnClickListener {
-    private static final String TAG ="TeamActivity" ;
+    private static final String TAG = "TeamActivity";
     Spinner teamSpinner;
     RecyclerView bottomList;
-    TeamMemberAdapter adapter,upper_adapter;
-    ArrayList<TeamMember> list,teamList;
-    int FILTER=0;
-    boolean DEVELOPER=false;
-    TeamMember MEMBER=null;
+    TeamMemberAdapter adapter, upper_adapter;
+    ArrayList<TeamMember> list, teamList;
+    int FILTER = 0;
+    boolean DEVELOPER = false;
+    TeamMember MEMBER = null;
     ImageView team_back_button;
     Toolbar toolbar;
     LinearLayout swipeLayout;
-    LinearLayoutManager manager1,manager2;
-//    RecyclerView team_upper_list;
-    LinearSnapHelper btmSnap,topSnap;
+    LinearLayoutManager manager1, manager2;
+    //    RecyclerView team_upper_list;
+    LinearSnapHelper btmSnap, topSnap;
     TabLayout tabLayout;
     ImageView imageView;
     LinearLayout linearLayout;
     ViewPager mPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,11 +74,11 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //check for developer page
         //to set Listeners
-       // setListeners();
+         setListeners();
 //        setBottomList();
 //        setUpperList();
 //        setSwipeLayout();
-        syncRecyclerViewsAndTabs();
+//        syncRecyclerViewsAndTabs();
         fetchData();
         //to set Team Member's data
 //        setData();
@@ -90,9 +94,9 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private void init() {
         swipeLayout = findViewById(R.id.swipe_layout);
-        list=new ArrayList<>();
-        teamList=new ArrayList<>();
-        teamSpinner=findViewById(R.id.team_name);
+        list = new ArrayList<>();
+        teamList = new ArrayList<>();
+        teamSpinner = findViewById(R.id.team_name);
 //        bottomList=findViewById(R.id.teamMemberList);
 //        team_upper_list = findViewById(R.id.team_upper_recycler_view);
         team_back_button = findViewById(R.id.team_back_button);
@@ -100,37 +104,41 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         mPager = findViewById(R.id.team_viewpager);
     }
 
-    private void setTabs(){
+    private void setTabs() {
 
-        for(int i=0;i<teamList.size();i++){
-            tabLayout.addTab(tabLayout.newTab().setText("t"+(i+1)));
+        for (int i = 0; i < teamList.size(); i++) {
+            tabLayout.addTab(tabLayout.newTab().setText("t" + (i + 1)));
         }
-        TeamMemberAdapter mAdapter = new TeamMemberAdapter(this,teamList);
+        TeamMemberAdapter mAdapter = new TeamMemberAdapter(this, teamList);
         mPager.setAdapter(mAdapter);
         mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setupWithViewPager(mPager);
 
         // set data
-        for(int i=0;i<teamList.size();i++){
+        for (int i = 0; i < teamList.size(); i++) {
+
+            final int temp = i;
 
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             tab.setCustomView(R.layout.item_team_tab);
-            imageView=tab.getCustomView().findViewById(R.id.single_team_member_image);
-            linearLayout=tab.getCustomView().findViewById(R.id.singleItemTeamMember);
+            imageView = tab.getCustomView().findViewById(R.id.single_team_member_image);
+            linearLayout = tab.getCustomView().findViewById(R.id.singleItemTeamMember);
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 //                    onClickItem.onSelected(position);
+                    mPager.setCurrentItem(temp);
                 }
             });
             Glide.with(this).asBitmap().fitCenter().load(teamList.get(i).img).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(imageView);
 
         }
+        syncRecyclerViewsAndTabs();
 
 
     }
 
-    private void onBack(){
+    private void onBack() {
         team_back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,19 +147,38 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         });
     }
 
-    private void syncRecyclerViewsAndTabs(){
+    private void syncRecyclerViewsAndTabs() {
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                switch (tab.getPosition()){
-
+//                switch (tab.getPosition()){
+//
+//                }
+                mPager.setCurrentItem(tab.getPosition());
+                TeamMember temp = teamList.get(tab.getPosition());
+                int team_no = temp.team;
+                if (team_no>=0 && team_no <=5){
+                    team_no=1;
                 }
+                else{
+                    team_no-=4;
+                }
+                teamSpinner.setSelection(team_no);
+                Log.e("onTabSelected: ", "selection continues..." + tab.getPosition());
+
+
+                Animation anim = AnimationUtils.loadAnimation(TeamActivity.this, R.anim.scale_in_tv);
+
+                tabLayout.getTabAt(tab.getPosition()).getCustomView().findViewById(R.id.singleItemTeamMember).startAnimation(anim);
+                anim.setFillAfter(true);
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                Animation anim = AnimationUtils.loadAnimation(TeamActivity.this, R.anim.scale_out_tv);
+                tabLayout.getTabAt(tab.getPosition()).getCustomView().findViewById(R.id.singleItemTeamMember).startAnimation(anim);
+                anim.setFillAfter(true);
             }
 
             @Override
@@ -159,6 +186,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
 
             }
         });
+
     }
 //    private void setBottomList(){
 //        adapter=new TeamMemberAdapter(TeamActivity.this,this,teamList,true,DEVELOPER);
@@ -257,10 +285,10 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 teamList.clear();
-                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     TeamMember m = ds.getValue(TeamMember.class);
-                    Log.d("pubg", "onDataChange: "+m.name);
-                    if(!teamList.contains(m))
+                    Log.d("pubg", "onDataChange: " + m.name);
+                    if (!teamList.contains(m))
                         teamList.add(m);
 
                 }
@@ -278,10 +306,8 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         });
     }
 
-    private void setCard()
-    {
-        if(MEMBER!=null)
-        {
+    private void setCard() {
+        if (MEMBER != null) {
 //            name.setText(MEMBER.name);
 //            designation.setText(MEMBER.desig);
             //Glide.with(TeamActivity.this).asBitmap().load(MEMBER.img).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(profilepic);
@@ -292,29 +318,60 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void setListeners() {
-        if(!DEVELOPER)
-        teamSpinner.setOnItemSelectedListener(this);
+        if (!DEVELOPER) {
+
+            teamSpinner.setOnItemSelectedListener(this);
+        }
 //        whatsapp.setOnClickListener(this);
 //        call.setOnClickListener(this);
 //        facebook.setOnClickListener(this);
     }
 
 
-
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        FILTER=position;
-        filter();
+        FILTER = position;
+        Log.e("onItemSelected: ", "level 167");
+        for (int i=0;i<teamList.size();i++) {
+            int team_no;
+            if(position==0){
+                team_no=1;
+            }
+            else if(position==1){
+                team_no=1;
+            }
+            else{
+                team_no=(4+position);
+            }
+            if(team_no == teamList.get(i).team){
+                //mPager.setCurrentItem(5);
+                final int tempo=i;
+                mPager.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPager.setCurrentItem(tempo);
+                    }
+                },100);
+            }
+
+
+            //Log.e("onItemSelected: ", "level 69 " + tm.team + " and " + position);
+//            if (tm.team == position) {
+//                mPager.setCurrentItem(position);
+//                break;
+//            }
+        }
+        //filter();
     }
 
     private void filter() {
-        Log.d(TAG, "filter: "+FILTER);
+        Log.d(TAG, "filter: " + FILTER);
         teamList.clear();
-        for(TeamMember member:list){
-            if(member.team==FILTER)
+        for (TeamMember member : list) {
+            if (member.team == FILTER)
                 teamList.add(member);
         }
-        if(teamList.size()>0)
+        if (teamList.size() > 0)
             onSelected(0);
         adapter.notifyDataSetChanged();
         upper_adapter.notifyDataSetChanged();
@@ -335,12 +392,11 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onClick(View v) {
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.team_member_facebook:
-                Intent viewIntent = new Intent("android.intent.action.VIEW",Uri.parse(MEMBER.facebook));
-                if(DEVELOPER)
-                    viewIntent=new Intent("android.intent.action.VIEW",Uri.parse(MEMBER.github));
+                Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(MEMBER.facebook));
+                if (DEVELOPER)
+                    viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(MEMBER.github));
                 startActivity(viewIntent);
                 break;
             case R.id.team_member_call:
@@ -349,7 +405,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
                 startActivity(intent);
                 break;
             case R.id.team_member_whatsapp:
-                String url = "https://api.whatsapp.com/send?phone="+MEMBER.whatsapp;
+                String url = "https://api.whatsapp.com/send?phone=" + MEMBER.whatsapp;
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);

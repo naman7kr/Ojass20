@@ -21,6 +21,7 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:padding="5dp"
             android:src="@mipmap/ic_launcher"
             android:id="@+id/single_team_member_image"
 

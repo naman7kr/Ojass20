@@ -18,15 +18,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:paddingStart="5dp"
             android:id="@+id/team_back_button"
             android:layout_marginStart="2dp"
             android:src="@drawable/ic_arrow_back"/>
         <Spinner
             android:id="@+id/team_name"
-            android:layout_width="match_parent"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="80dp"
+            android:layout_width="350dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="2dp"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:background="@drawable/spinner_background"
@@ -65,7 +67,6 @@
             android:layout_height="match_parent"
             android:id="@+id/tabs"
             app:tabMode="scrollable"
-            app:tabContentStart="96dp"
             >
 
         </com.google.android.material.tabs.TabLayout>
