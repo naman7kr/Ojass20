@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/secondaryLightColor"
     android:elevation="200dp"
     android:orientation="vertical">
 
@@ -16,6 +15,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+        <ImageView
+            android:id="@+id/fake_background1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/violet_back"></ImageView>
+
+        <ImageView
+            android:id="@+id/fake_background2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignRight="@id/fake_background1"
+            android:scaleType="centerCrop"
+            android:src="@drawable/violet_back"></ImageView>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -65,15 +80,33 @@
                     android:textAllCaps="true"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="48sp"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/img_swipe1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:alpha="1"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/square1" />
+
+                <ImageView
+                    android:id="@+id/img_swipe2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:alpha="1"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/square_events_images" />
+
+                <ImageView
+                    android:id="@+id/fake_image"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_centerInParent="true"
-                    android:alpha="1"
-                    android:src="@drawable/square" />
+                    android:alpha="0.0"
+                    android:src="@mipmap/ic_launcher"></ImageView>
 
             </RelativeLayout>
 
@@ -179,7 +212,8 @@
             android:id="@+id/cancel_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/red">
+            android:background="@color/red"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/cancel_frag"
@@ -192,6 +226,7 @@
                 android:textColor="@color/white"
                 android:textSize="18sp" />
         </RelativeLayout>
+
     </FrameLayout>
 
 </RelativeLayout>

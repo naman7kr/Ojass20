@@ -2,6 +2,7 @@
 
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -559,6 +560,15 @@
                                 android:textSize="15sp"
                                 />
                         </LinearLayout>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="20sp"
+                            tools:text="Other prizes : 2000"
+                            android:id="@+id/text_view"
+                            android:gravity="center"
+                            android:visibility="gone"
+                            android:textColor="@color/black"/>
 
                         <LinearLayout
                             android:layout_marginTop="20dp"
@@ -608,6 +618,7 @@
                             </LinearLayout>
 
                         </LinearLayout>
+
                     </LinearLayout>
                 </ScrollView>
             </LinearLayout>
