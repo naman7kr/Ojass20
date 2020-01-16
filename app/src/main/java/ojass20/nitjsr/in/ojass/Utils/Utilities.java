@@ -34,8 +34,7 @@ public class Utilities {
         Glide.with(context).load(imgSrc).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                Glide.with(context).load(imgSrc).placeholder(R.drawable.placeholder_sqaure).fitCenter().into(iv);
-                return true;
+                return false;
             }
 
             @Override

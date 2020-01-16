@@ -310,7 +310,7 @@
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_dev"
+                    android:src="@drawable/ic_edit"
                     android:tint="#fff" />
 
                 <TextView
@@ -318,7 +318,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/opensans"
-                    android:text="Developers"
+                    android:text="Edit Profile"
                     android:textColor="#fff"
                     android:textSize="14sp" />
             </LinearLayout>
