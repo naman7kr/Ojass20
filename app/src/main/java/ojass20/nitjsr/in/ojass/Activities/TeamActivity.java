@@ -87,8 +87,6 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         fetchData();
         //to set Team Member's data
 //        setData();
-        //to set card
-//        setCard();
         //Temporary push data
 //      fetch data
 //      pushData();
@@ -98,7 +96,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void init() {
-        swipeLayout = findViewById(R.id.swipe_layout);
+       // swipeLayout = findViewById(R.id.swipe_layout);
         list = new ArrayList<>();
         teamList = new ArrayList<>();
         teamSpinner = findViewById(R.id.team_name);
@@ -114,7 +112,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         for (int i = 0; i < teamList.size(); i++) {
             tabLayout.addTab(tabLayout.newTab().setText("t" + (i + 1)));
         }
-        TeamMemberAdapter mAdapter = new TeamMemberAdapter(this, teamList);
+        TeamMemberAdapter mAdapter = new TeamMemberAdapter(this,this, teamList);
         mPager.setAdapter(mAdapter);
         mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setupWithViewPager(mPager);
@@ -153,14 +151,39 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         });
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        FILTER = position;
+        Log.e("onItemSelected: ", "level 167");
+        if(spinner_bug_flag){
+            //no extra work needed
+            spinner_bug_flag=false;
+        }
+        else {
+            spinner_bug_flag_for_onTabselect = true;
+            for (int i = 0; i < teamList.size(); i++) {
+                int team_no;
+                if (position == 0) {
+                    team_no = 1;
+                } else if (position == 1) {
+                    team_no = 1;
+                } else {
+                    team_no = (4 + position);
+                }
+                if (team_no == teamList.get(i).team) {
+                    mPager.setCurrentItem(i);
+                    break;
+                }
+            }
+        }
+        //filter();
+    }
+
     private void syncRecyclerViewsAndTabs() {
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-//                switch (tab.getPosition()){
-//
-//                }
                 mPager.setCurrentItem(tab.getPosition());
                 TeamMember temp = teamList.get(tab.getPosition());
                 int team_no = temp.team;
@@ -316,76 +339,11 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         });
     }
 
-    private void setCard() {
-        if (MEMBER != null) {
-//            name.setText(MEMBER.name);
-//            designation.setText(MEMBER.desig);
-            //Glide.with(TeamActivity.this).asBitmap().load(MEMBER.img).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(profilepic);
-        }
-
-
-        //profilepic.setImageResource(MEMBER.img);
-    }
-
     private void setListeners() {
         if (!DEVELOPER) {
 
             teamSpinner.setOnItemSelectedListener(this);
         }
-//        whatsapp.setOnClickListener(this);
-//        call.setOnClickListener(this);
-//        facebook.setOnClickListener(this);
-    }
-
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        FILTER = position;
-        Log.e("onItemSelected: ", "level 167");
-        if(spinner_bug_flag){
-            //no extra work needed
-            spinner_bug_flag=false;
-        }
-        else {
-            spinner_bug_flag_for_onTabselect = true;
-            for (int i = 0; i < teamList.size(); i++) {
-                int team_no;
-                if (position == 0) {
-                    team_no = 1;
-                } else if (position == 1) {
-                    team_no = 1;
-                } else {
-                    team_no = (4 + position);
-                }
-                if (team_no == teamList.get(i).team) {
-                    mPager.setCurrentItem(i);
-                    break;
-//                final int tempo=i;
-//                mPager.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        mPager.setCurrentItem(tempo);
-//                    }
-//                },100);
-                }
-//            Handler handler= new Handler();
-//            handler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    break;
-//                }
-//            },150);
-
-
-                //Log.e("onItemSelected: ", "level 69 " + tm.team + " and " + position);
-//            if (tm.team == position) {
-//                mPager.setCurrentItem(position);
-//                break;
-                //not done
-//            }
-            }
-        }
-        //filter();
     }
 
     private void filter() {
@@ -396,7 +354,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
                 teamList.add(member);
         }
         if (teamList.size() > 0)
-            onSelected(0);
+            //onSelected(0);
         adapter.notifyDataSetChanged();
         upper_adapter.notifyDataSetChanged();
         Log.e("TAG", String.valueOf(teamList.size()));
@@ -408,10 +366,21 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     @Override
-    public void onSelected(int position) {
+    public void onSelected(int position,boolean side) {
         //MEMBER=teamMember;
 //        team_upper_list.scrollToPosition(position);
-        setCard();
+        //setCard();
+
+        if(side){
+            if(mPager.getCurrentItem()!=0){
+                mPager.setCurrentItem(mPager.getCurrentItem()-1);
+            }
+        }
+        else {
+            if(mPager.getCurrentItem()!=teamList.size()-1){
+                mPager.setCurrentItem(mPager.getCurrentItem()+1);
+            }
+        }
     }
 
     @Override

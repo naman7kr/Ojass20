@@ -32,11 +32,12 @@ public class TeamMemberAdapter extends PagerAdapter {
     boolean side,dev;
     ImageView profile_upper;
     TextView name_upper,designation_upper;
-    ImageView call_upper,whatsapp_upper,facebook_upper;
+    ImageView call_upper,whatsapp_upper,facebook_upper,arrow_left,arrow_right;
 
-    public TeamMemberAdapter(Context context,ArrayList<TeamMember> list){
+    public TeamMemberAdapter(Context context,OnClickItem monclick,ArrayList<TeamMember> list){
         this.context = context;
         this.list = list;
+        this.onClickItem=monclick;
     }
     @Override
     public int getCount() {
@@ -62,19 +63,27 @@ public class TeamMemberAdapter extends PagerAdapter {
         call_upper=v.findViewById(R.id.team_member_call);
         whatsapp_upper=v.findViewById(R.id.team_member_whatsapp);
         facebook_upper=v.findViewById(R.id.team_member_facebook);
+        arrow_left=v.findViewById(R.id.left_arrow_team);
+        arrow_right=v.findViewById(R.id.right_arrow_team);
+        if(position==0){
+            arrow_left.setVisibility(View.GONE);
+        }
+        if(position==list.size()-1){
+            arrow_right.setVisibility(View.GONE);
+        }
 
         name_upper.setText(list.get(position).name);
         designation_upper.setText(list.get(position).desig);
         setGlideImage(context,list.get(position).img,profile_upper);
 //        Glide.with(context).asBitmap().fitCenter().load(list.get(position).img).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(profile_upper);
-//        call_upper.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String phone = list.get(position).call;
-//                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
-//                context.startActivity(intent);
-//            }
-//        });
+        call_upper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String phone = list.get(position).call;
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+                context.startActivity(intent);
+            }
+        });
         whatsapp_upper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +100,18 @@ public class TeamMemberAdapter extends PagerAdapter {
                 if(dev)
                     viewIntent=new Intent("android.intent.action.VIEW",Uri.parse(list.get(position).github));
                 context.startActivity(viewIntent);
+            }
+        });
+        arrow_left.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickItem.onSelected(position,true);
+            }
+        });
+        arrow_right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickItem.onSelected(position,false);
             }
         });
         container.addView(v);
@@ -201,6 +222,6 @@ public class TeamMemberAdapter extends PagerAdapter {
 //        }
 //    }
     public interface OnClickItem{
-        public void onSelected(int position);
+        public void onSelected(int position,boolean side);
     }
 }
