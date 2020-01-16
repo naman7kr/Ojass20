@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
@@ -45,10 +46,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<ValueAnimator> mAnimators;
     private ArrayList<Integer> mAngles;
     private ArrayList<ImageView> mImageViews;
-    private ImageView mBack;
+    private ImageView mBack, mLogout;
     private CircleImageView user_image;
     private TextView user_name;
     private FirebaseAuth mauth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         mBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ProfileActivity.this, MainActivity.class));
                 finish();
             }
         });
@@ -78,6 +79,57 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         Glide.with(this).load(mauth.getCurrentUser().getPhotoUrl()).into(user_image);
         user_name.setText(mauth.getCurrentUser().getDisplayName());
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchRegistrationStatus();
+    }
+
+    private void fetchRegistrationStatus(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users").
+                child(mauth.getUid());
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int fields = 0;
+                if(dataSnapshot.hasChild("email")){
+                    if(!(dataSnapshot.child("email").getValue().equals("")))
+                        fields ++;
+                }
+                if(dataSnapshot.hasChild("mobile")){
+                    if(!(dataSnapshot.child("mobile").getValue().equals("")))
+                        fields ++;
+                }
+                if(dataSnapshot.hasChild("college")){
+                    if(!(dataSnapshot.child("college").getValue().equals("")))
+                        fields ++;
+                }
+                if(dataSnapshot.hasChild("branch")){
+                    if(!(dataSnapshot.child("branch").getValue().equals("")))
+                        fields ++;
+                }
+                if(dataSnapshot.hasChild("tshirtSize")){
+                    if(!(dataSnapshot.child("tshirtSize").getValue().equals("")))
+                        fields ++;
+                }
+
+                Log.d(LOG_TAG, "this--> " + fields);
+                if(fields == 5){
+                    findViewById(R.id.profile_alert).setVisibility(View.GONE);
+                }
+                else{
+                    findViewById(R.id.profile_alert).setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     private void initializeInstanceVariables() {
         mEventsInterested = findViewById(R.id.events);
@@ -90,6 +142,28 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         mAngles = new ArrayList<>();
         mImageViews = new ArrayList<>();
         mBack = findViewById(R.id.back_arrow);
+        mLogout = findViewById(R.id.profile_logout);
+
+        mLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mauth.signOut();
+                Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+
+        mDevelopers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, RegistrationPage.class);
+                intent.putExtra("fromProfile", true);
+                startActivity(intent);
+            }
+        });
 
         user_image = findViewById(R.id.image_profile_activity);
         user_name = findViewById(R.id.username_profile_activity);
