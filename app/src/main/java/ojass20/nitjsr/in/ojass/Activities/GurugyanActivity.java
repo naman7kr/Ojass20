@@ -1,6 +1,8 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,12 +49,7 @@ public class GurugyanActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gurugyan);
-
-
-        Toolbar toolbar = findViewById(R.id.generic_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Gurugyan");
+        setComingSoon();
 
 
 //        viewGroup = findViewById(R.id.gurugyan_pages);
@@ -72,7 +69,15 @@ public class GurugyanActivity extends AppCompatActivity {
 
 //        setUpFirebaseListeners();
     }
-
+    private void setComingSoon() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        final Drawable upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_white);
+        upArrow.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+        getSupportActionBar().setTitle("Sponsors");
+    }
     private void setUpFirebaseListeners() {
         setUpChildEventListener();
         FirebaseDatabase.getInstance().getReference().child("GuruGyan/count").

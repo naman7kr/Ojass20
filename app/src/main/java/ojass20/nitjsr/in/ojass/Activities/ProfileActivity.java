@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.animation.ValueAnimator;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -37,6 +39,9 @@ import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.Constants;
+import ojass20.nitjsr.in.ojass.Utils.Utilities;
+
+import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImage;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -60,7 +65,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         mauth=FirebaseAuth.getInstance();
         initializeInstanceVariables();
 
-        mQR.setOnClickListener(this);
+
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -69,17 +74,24 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             }
         }, 100);
 
+
+
+        setGlideImage(this,mauth.getCurrentUser().getPhotoUrl().toString(),user_image);
+        Glide.with(this).load(mauth.getCurrentUser().getPhotoUrl()).into(user_image);
+        user_name.setText(mauth.getCurrentUser().getDisplayName());
+
+        clickHandlers();
+    }
+
+    void clickHandlers(){
         mBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
-        Glide.with(this).load(mauth.getCurrentUser().getPhotoUrl()).into(user_image);
-        user_name.setText(mauth.getCurrentUser().getDisplayName());
+        mQR.setOnClickListener(this);
     }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -147,11 +159,22 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mauth.signOut();
-                Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
+                new AlertDialog.Builder(getApplicationContext())
+                        .setTitle("Log Out")
+                        .setMessage("Are you sure you want to logout")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mauth.signOut();
+                                Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("No",null)
+                        .show();
+
             }
         });
 

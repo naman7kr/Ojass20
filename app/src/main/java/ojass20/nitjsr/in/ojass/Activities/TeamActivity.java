@@ -46,6 +46,8 @@ import ojass20.nitjsr.in.ojass.Models.TeamMember;
 import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.OnSwipeTouchListener;
 
+import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImage;
+
 public class TeamActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, TeamMemberAdapter.OnClickItem, View.OnClickListener {
     private static final String TAG = "TeamActivity";
     Spinner teamSpinner;
@@ -131,7 +133,8 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
                     mPager.setCurrentItem(temp);
                 }
             });
-            Glide.with(this).asBitmap().fitCenter().load(teamList.get(i).img).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(imageView);
+            setGlideImage(this,teamList.get(i).img,imageView);
+//            Glide.with(this).asBitmap().fitCenter().load(teamList.get(i).img).into(imageView);
 
         }
         syncRecyclerViewsAndTabs();

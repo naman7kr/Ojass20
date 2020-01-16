@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark">
+    android:background="@mipmap/profile_background">
 
     <RelativeLayout
         android:id="@+id/toolbar"
@@ -55,7 +55,6 @@
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_marginLeft="-130dp"
-            android:background= "@drawable/profile_bg"
             android:visibility="visible" />
 
     </RelativeLayout>

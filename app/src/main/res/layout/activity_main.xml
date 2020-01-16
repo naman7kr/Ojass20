@@ -34,7 +34,7 @@
                     <include
                         layout="@layout/toolbar"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/toolbar_height"
                         />
 
                 </com.google.android.material.appbar.AppBarLayout>
@@ -43,6 +43,7 @@
                     android:id="@+id/swipe_refresh"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@color/colorAccent"
                     >
 
                     <androidx.core.widget.NestedScrollView
@@ -54,6 +55,7 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:background="@color/colorAccent"
                             >
 
                             <RelativeLayout
@@ -96,8 +98,9 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_below="@+id/poster_layout"
-                                android:layout_marginTop="60dp"
+                                android:layout_marginTop="@dimen/toolbar_height"
                                 android:elevation="2dp"
+                                android:background="@color/colorAccent"
                               >
 
                                 <androidx.recyclerview.widget.RecyclerView
@@ -105,8 +108,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:scrollbars="none"
-                                    android:paddingTop="6dp"
-                                    android:paddingBottom="12dp"
+                                    android:background="@color/colorAccent"
                                     android:overScrollMode="never"
                                     app:layout_behavior="@string/appbar_scrolling_view_behavior" />
                             </androidx.cardview.widget.CardView>
@@ -169,10 +171,11 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#FFF"
+        android:background="@color/colorAccent"
         app:itemIconTint="@color/navHeader"
         app:itemTextAppearance="@style/NavItemsStyle"
-        app:itemTextColor="@color/navHeader"
-        app:menu="@menu/navigation_menu" />
+        app:itemTextColor="@color/primaryTextColor"
+        app:menu="@menu/navigation_menu"
+        />
 
 </androidx.drawerlayout.widget.DrawerLayout>

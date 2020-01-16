@@ -7,22 +7,26 @@
     android:orientation="vertical"
     tools:context=".Activities.SponsorActivity">
 
-    <include
-        layout="@layout/generic_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <ImageView
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/coming_soon"
+                android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
+        <include
+            layout="@layout/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/coming_soon"
-            android:layout_centerInParent="true"/>
-
+            />
     </RelativeLayout>
 
 

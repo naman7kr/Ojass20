@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#263238</color>
-    <color name="colorPrimaryDark">#000a12</color>
-    <color name="colorAccent">#4f5b62</color>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#333333</color>
     <color name="navigationDrawerText">#616161</color>
     <color name="secondaryColor">#455a64</color>
     <color name="secondaryLightColor">#718792</color>
@@ -14,6 +14,6 @@
     <color name="blue">#047BD5</color>
     <color name="transparent">#00CC6060</color>
     <color name="red">#FF0000</color>
-    <color name="navHeader">#29363d</color>
+    <color name="navHeader">@color/colorPrimary</color>
     <color name="fab">@color/colorPrimary</color>
 </resources>

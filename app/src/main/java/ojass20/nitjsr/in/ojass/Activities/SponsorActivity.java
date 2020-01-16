@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import ojass20.nitjsr.in.ojass.Adapters.SponserAdapter;
 import ojass20.nitjsr.in.ojass.R;
 
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -23,13 +25,7 @@ public class SponsorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sponser);
-
-        Toolbar toolbar = findViewById(R.id.generic_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Sponsors");
-
-
+        setComingSoon();
         //recyclerView=findViewById(R.id.sponser_list);
 //        staggeredGridLayoutManager=new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL);
 //        recyclerView.setLayoutManager(staggeredGridLayoutManager);
@@ -37,6 +33,15 @@ public class SponsorActivity extends AppCompatActivity {
 //
 //        sponserAdapter=new SponserAdapter(getData(),this);
 //        recyclerView.setAdapter(sponserAdapter);
+    }
+    private void setComingSoon() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        final Drawable upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_white);
+        upArrow.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+        getSupportActionBar().setTitle("Sponsors");
     }
     ArrayList<Map<String,String>> getData(){
        for(int i=0;i<50;i++){

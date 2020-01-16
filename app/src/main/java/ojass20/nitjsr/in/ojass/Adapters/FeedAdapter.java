@@ -3,6 +3,8 @@ package ojass20.nitjsr.in.ojass.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -38,9 +40,12 @@ import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
 
+import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImage;
+import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImageWithoutCaching;
+
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHolder> {
 
-    private Context context;
+    public Context context;
     private ArrayList<FeedPost> feedPosts;
     private String mcurrentuid;
     private boolean is_already_liked=false;
@@ -73,6 +78,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
             comment_layout=itemView.findViewById(R.id.comments_post);
             share_layout=itemView.findViewById(R.id.feed_post_share);
             time = itemView.findViewById(R.id.feed_post_time);
+
         }
     }
 
@@ -106,27 +112,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         holder.content.setText(feedPosts.get(position).getContent());
         holder.like_text.setText(feedPosts.get(position).getLikes().size()+" Likes");
         holder.postImageView.setVisibility(View.VISIBLE);
-        holder.progressBar.setVisibility(View.VISIBLE);
+        holder.progressBar.setVisibility(View.GONE);
         Log.e("Hey", feedPosts.get(position).getImageURL());
         if (feedPosts.get(position).getImageURL() == null || feedPosts.get(position).getImageURL().equals("")) {
             holder.postImageView.setVisibility(View.GONE);
         } else {
-            Glide.with(context)
-                    .load(feedPosts.get(position).getImageURL())
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            holder.progressBar.setVisibility(View.GONE);
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            holder.progressBar.setVisibility(View.GONE);
-                            return false;
-                        }
-                    })
-                    .into(holder.postImage);
+            setGlideImageWithoutCaching(context,feedPosts.get(position).getImageURL(),holder.postImage);
         }
         mpost_id=feedPosts.get(position).getPostid();
 

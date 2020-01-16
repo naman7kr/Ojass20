@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_marginBottom="16dp"
+    android:background="@color/colorAccent"
     >
 
     <LinearLayout
@@ -18,31 +19,38 @@
             android:layout_height="52dp"
             android:layout_gravity="center_vertical"
             android:scaleType="centerCrop"
-            android:src="@drawable/temporary" />
+            android:src="@drawable/icon_ojass" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp">
 
             <TextView
                 android:id="@+id/feed_post_event_name"
                 style="@style/FeedPostEvent"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/primaryTextColor"
+                />
 
             <TextView
                 android:id="@+id/feed_post_sub_event_name"
                 style="@style/FeedPostSubEvent"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/primaryTextColor"
+                />
 
             <TextView
                 android:id="@+id/feed_post_time"
                 style="@style/FeedPostEvent"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/primaryTextColor"
+                />
 
         </LinearLayout>
 
@@ -82,7 +90,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:autoLink="phone|web|email"
-            android:autoSizeTextType="uniform" />
+            android:autoSizeTextType="uniform"
+            android:textColor="@color/primaryTextColor"
+            />
 
     </LinearLayout>
 
@@ -104,7 +114,9 @@
                 android:layout_marginBottom="8dp"
                 android:id="@+id/like_icon"
                 android:scaleType="centerCrop"
-                android:src="@drawable/upvote" />
+                android:src="@drawable/upvote"
+                android:textColor="@color/primaryTextColor"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -112,7 +124,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:gravity="clip_vertical"
-                android:text="@string/like" />
+                android:text="@string/like"
+                android:textColor="@color/primaryTextColor"
+                />
 
         </LinearLayout>
 
@@ -134,7 +148,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:gravity="clip_vertical"
-                android:text="@string/comment" />
+                android:text="@string/comment"
+                android:textColor="@color/primaryTextColor"
+                />
 
         </LinearLayout>
 
@@ -156,7 +172,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:gravity="clip_vertical"
-                android:text="@string/share" />
+                android:text="@string/share"
+                android:textColor="@color/primaryTextColor"
+                />
 
         </LinearLayout>
 

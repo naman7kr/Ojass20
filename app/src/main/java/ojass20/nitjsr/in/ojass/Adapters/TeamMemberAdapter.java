@@ -22,6 +22,8 @@ import androidx.viewpager.widget.PagerAdapter;
 import ojass20.nitjsr.in.ojass.Models.TeamMember;
 import ojass20.nitjsr.in.ojass.R;
 
+import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImage;
+
 public class TeamMemberAdapter extends PagerAdapter {
 
     OnClickItem onClickItem;
@@ -63,15 +65,16 @@ public class TeamMemberAdapter extends PagerAdapter {
 
         name_upper.setText(list.get(position).name);
         designation_upper.setText(list.get(position).desig);
-        Glide.with(context).asBitmap().fitCenter().load(list.get(position).img).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(profile_upper);
-        call_upper.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String phone = list.get(position).call;
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
-                context.startActivity(intent);
-            }
-        });
+        setGlideImage(context,list.get(position).img,profile_upper);
+//        Glide.with(context).asBitmap().fitCenter().load(list.get(position).img).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(profile_upper);
+//        call_upper.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String phone = list.get(position).call;
+//                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+//                context.startActivity(intent);
+//            }
+//        });
         whatsapp_upper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

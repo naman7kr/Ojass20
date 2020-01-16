@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -51,7 +53,6 @@ public class EventsGridAdapter extends RecyclerView.Adapter<EventsGridAdapter.My
         final EventsDisplayModel data = list.get(position);
         float alphaVal = data.getAlphaVal();
         holder.iv.setImageResource(data.getEvImg());
-        holder.rl.getLayoutParams().width = width / 4;
         holder.tv.setText(data.getEvName());
         holder.iv.setAlpha(alphaVal);
         holder.tv.setAlpha(1);
@@ -84,6 +85,11 @@ public class EventsGridAdapter extends RecyclerView.Adapter<EventsGridAdapter.My
             iv = itemView.findViewById(R.id.events_icon);
             rl = itemView.findViewById(R.id.events_layout);
             tv = itemView.findViewById(R.id.events_name);
+            WindowManager manager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+            Display display = manager.getDefaultDisplay();
+            int width = display.getWidth()/3;
+            int height = width;
+            rl.setLayoutParams(new RelativeLayout.LayoutParams(width,height));
 
         }
     }

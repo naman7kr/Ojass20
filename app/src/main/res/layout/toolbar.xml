@@ -7,6 +7,5 @@
     android:fitsSystemWindows="true"
     android:minHeight="?attr/actionBarSize"
     app:theme="@style/AppTheme"
-    app:title="@string/feeds"
     app:titleTextAppearance="@style/OpenSansTextStyle"
     app:titleTextColor="@color/white" />

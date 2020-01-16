@@ -40,7 +40,7 @@ import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsList;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsMap;
 
 public class EventsActivity extends AppCompatActivity implements PinchAlphaInterface {
-    private static final int NO_OF_COLUMNS = 4;
+    private static final int NO_OF_COLUMNS = 3;
     private static final float INIT_ALPHA = 0.6f;
     ArrayList<EventsDisplayModel> data = new ArrayList<>();
     EventsGridAdapter mAdapter;
@@ -74,12 +74,17 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         setZoomableGridView();
         bottomSheetOpen = false;
 
+        handleSearchStuffs();
+
+    }
+    public void handleSearchStuffs(){
         events_search_cleartext_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 event_search_text.setText("");
             }
         });
+
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
                 (this, android.R.layout.select_dialog_item, subevents);
@@ -116,7 +121,6 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
             }
         });
     }
-
     public void showBottomSheet() {
         bottomSheetOpen = true;
         EventBottomSheet bottomSheet = new EventBottomSheet();
