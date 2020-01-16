@@ -68,6 +68,8 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
     LinearLayout linearLayout;
     ViewPager mPager;
 
+    boolean spinner_bug_flag = false, spinner_bug_flag_for_onTabselect = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -168,6 +170,10 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
                 else{
                     team_no-=4;
                 }
+                if(!spinner_bug_flag_for_onTabselect) {
+                    spinner_bug_flag = true;
+                }
+                else spinner_bug_flag_for_onTabselect=false;
                 teamSpinner.setSelection(team_no);
                 Log.e("onTabSelected: ", "selection continues..." + tab.getPosition());
 
@@ -336,20 +342,24 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         FILTER = position;
         Log.e("onItemSelected: ", "level 167");
-        for (int i=0;i<teamList.size();i++) {
-            int team_no;
-            if(position==0){
-                team_no=1;
-            }
-            else if(position==1){
-                team_no=1;
-            }
-            else{
-                team_no=(4+position);
-            }
-            if(team_no == teamList.get(i).team){
-                mPager.setCurrentItem(i);
-                break;
+        if(spinner_bug_flag){
+            //no extra work needed
+            spinner_bug_flag=false;
+        }
+        else {
+            spinner_bug_flag_for_onTabselect = true;
+            for (int i = 0; i < teamList.size(); i++) {
+                int team_no;
+                if (position == 0) {
+                    team_no = 1;
+                } else if (position == 1) {
+                    team_no = 1;
+                } else {
+                    team_no = (4 + position);
+                }
+                if (team_no == teamList.get(i).team) {
+                    mPager.setCurrentItem(i);
+                    break;
 //                final int tempo=i;
 //                mPager.postDelayed(new Runnable() {
 //                    @Override
@@ -357,7 +367,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
 //                        mPager.setCurrentItem(tempo);
 //                    }
 //                },100);
-            }
+                }
 //            Handler handler= new Handler();
 //            handler.postDelayed(new Runnable() {
 //                @Override
@@ -367,12 +377,13 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
 //            },150);
 
 
-            //Log.e("onItemSelected: ", "level 69 " + tm.team + " and " + position);
+                //Log.e("onItemSelected: ", "level 69 " + tm.team + " and " + position);
 //            if (tm.team == position) {
 //                mPager.setCurrentItem(position);
 //                break;
-            //not done
+                //not done
 //            }
+            }
         }
         //filter();
     }
