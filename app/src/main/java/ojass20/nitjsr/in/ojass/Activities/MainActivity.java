@@ -39,6 +39,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -91,6 +92,7 @@ import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsMap;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.eventNames;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.updateSubEventsArray;
 import static ojass20.nitjsr.in.ojass.Utils.StringEqualityPercentCheckUsingJaroWinklerDistance.getSimilarity;
+import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImage;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragInterface, ViewPager.OnPageChangeListener, FeedAdapter.CommentClickInterface {
     private static final String LOG_TAG = "Main";
@@ -843,18 +845,19 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
+        getSupportActionBar().setTitle("Ojass'20");
         TextView profile_name = mDrwawerHeaderView.findViewById(R.id.user_profile_name);
         profile_name.setText(mauth.getCurrentUser().getDisplayName());
         ImageView profile_picture = mDrwawerHeaderView.findViewById(R.id.user_profile_picture);
         if (mauth.getCurrentUser().getPhotoUrl() != null) {
             profile_picture.setImageDrawable(null);
-            Glide.with(this).load(mauth.getCurrentUser().getPhotoUrl()).into(profile_picture);
+            setGlideImage(this,mauth.getCurrentUser().getPhotoUrl().toString(),profile_picture);
         }
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mDrawer.closeDrawer(GravityCompat.START);
                 Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                 startActivity(intent);
             }

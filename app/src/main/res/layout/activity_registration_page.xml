@@ -44,7 +44,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_centerHorizontal="true"
                 android:padding="8dp"
-                android:src="@drawable/joker"/>
+                />
 
         </RelativeLayout>
 

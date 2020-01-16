@@ -281,21 +281,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        Picasso.with(ProfileActivity.this).load("https://api.qrserver.com/v1/create-qr-code/?data=" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "&size=240x240&margin=10").placeholder(R.drawable.placeholder_sqaure).fit().networkPolicy(NetworkPolicy.OFFLINE).into(ivQR, new Callback() {
-                            @Override
-                            public void onSuccess() {
-
-                            }
-
-                            @Override
-                            public void onError() {
-                                Picasso.with(ProfileActivity.this).load("https://api.qrserver.com/v1/create-qr-code/?data=" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "&size=240x240&margin=10").placeholder(R.drawable.placeholder_sqaure).fit().into(ivQR);
-                            }
-                        });
+                        setGlideImage(ProfileActivity.this,"https://api.qrserver.com/v1/create-qr-code/?data=" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "&size=240x240&margin=10",ivQR);
                         tvOjassId.setText("Payment Due");
                         tvOjassId.setTextColor(getResources().getColor(R.color.red));
                     } else {
-                        ivQR.setImageResource(R.drawable.placeholder_sqaure);
+                        ivQR.setImageResource(R.mipmap.ic_placeholder);
                         tvOjassId.setText(Constants.NOT_REGISTERED);
                         tvOjassId.setTextColor(Color.RED);
                     }
@@ -307,7 +297,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 }
             });
         } else {
-            ivQR.setImageResource(R.drawable.placeholder_sqaure);
+            ivQR.setImageResource(R.mipmap.ic_placeholder);
             tvOjassId.setText(Constants.NOT_REGISTERED);
             tvOjassId.setTextColor(Color.RED);
         }
