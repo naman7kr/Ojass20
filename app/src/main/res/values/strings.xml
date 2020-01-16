@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ojass</string>
+    <string name="app_name">Ojass\'20, NIT Jamshedpur</string>
     <string name="feeds">Feeds</string>
     <string name="comments">Comments</string>
     <string name="faqs">FAQs</string>
@@ -57,6 +57,14 @@
         <item>Application &amp; Web Development</item>
         <item>Creative Team</item>
         <item>Media Relations</item>
+        <item>Public Relations</item>
+        <item>Transport Head</item>
+        <item>Event Management</item>
+        <item>Logistics</item>
+        <item>Hospitality</item>
+        <item>Decoration</item>
+        <item>Robotics</item>
+
     </string-array>
 
     <string-array name="noti_channel">

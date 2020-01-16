@@ -51,7 +51,7 @@ public class TeamMemberAdapter extends RecyclerView.Adapter<TeamMemberAdapter.Te
                     onClickItem.onSelected(list.get(position));
                 }
             });
-            Glide.with(context).asBitmap().fitCenter().load(list.get(position).img).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(holder.imageView);
+            Glide.with(context).asBitmap().fitCenter().load(list.get(position).img).diskCacheStrategy(DiskCacheStrategy.RESOURCE).skipMemoryCache(true).into(holder.imageView);
             //holder.imageView.setImageResource(list.get(position).img);
 
     }

@@ -116,7 +116,6 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
             }
         });
     }
-
     public void showBottomSheet() {
         bottomSheetOpen = true;
         EventBottomSheet bottomSheet = new EventBottomSheet();

@@ -66,13 +66,13 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         setCard();
         //Temporary push data
 //      fetch data
-//      pushData();
+ //    pushData();
 
     }
 
     private void fetchData() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Team");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 list.clear();
@@ -95,9 +95,52 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     void pushData(){
+
+        list.add(new TeamMember("Gaurav Mridul","Public Relations","","","","","","","https://lh3.googleusercontent.com/u/0/d/1pbHtBjxGSmf-4S6PpBSPWyMR_GeK8V3r=w1157-h981-p-k-nu-iv1",15));
+        list.add(new TeamMember("Divyansh","Public Relations","","","","","","","https://lh3.googleusercontent.com/u/0/d/1OO1JHid54Uw5JjcL0QNc8u8AHA3Jzdu5=w1157-h981-p-k-nu-iv1",15));
+        list.add(new TeamMember("Banoth Kishore","Public Relations","","","","","","","",15));
+        list.add(new TeamMember("Prachi Fulzele","Public Relations","","","","","","","https://lh3.googleusercontent.com/u/0/d/1r0PnQSCOUgo7Ay9ID8Yx1uTuCGT0oo9C=w1157-h981-p-k-nu-iv1",15));
+
+        list.add(new TeamMember("Aditya Parihar","Transport Head","","","","","","","",16));
+
+        list.add(new TeamMember("Amarnath Singh","Event Management","","","","","","","https://lh3.googleusercontent.com/u/0/d/1r51AN0IIdN51mjEcZB9VMgqZXHQmN0xM=w1157-h981-p-k-nu-iv1",17));
+        list.add(new TeamMember("Guntupalli Pavan Kumar","Event Management","","","","","","","https://lh3.googleusercontent.com/u/0/d/18ThS5VNOVqKVqNKUqYqGlKAt3Zysbl7L=w1157-h981-p-k-nu-iv1",17));
+        list.add(new TeamMember("Kotla Venkata Sai Krishna Dheeraj","Event Management","","","","","","","https://lh3.googleusercontent.com/u/0/d/1tWQvePtTdGY_DS1CIIx84gQGD1q2N270=w1157-h981-p-k-nu-iv1",17));
+        list.add(new TeamMember("Boya Sai Nikhil","Event Management","","","","","","","https://lh3.googleusercontent.com/u/0/d/1yIC9vu7nMZuSiP-GIkQSLiPwrLI61gRo=w1157-h981-p-k-nu-iv1",17));
+        list.add(new TeamMember("Kilaru Sai Venkata Raaman","Event Management","","","","","","","https://lh3.googleusercontent.com/u/0/d/1mqhEhj2YkQk8hHnTEEFcXojSOeSRJwtn=w1157-h981-p-k-nu-iv1",17));
+
+        list.add(new TeamMember("Katamnuni Rahul","Logistics","","","","","","","https://lh3.googleusercontent.com/u/0/d/1VvMfcf5T0GsYHwWJyRytE_cx3Warnrzt=w1157-h981-p-k-nu-iv1",18));
+        list.add(new TeamMember("Boya Kalyan","Logistics","","","","","","","",18));
+        list.add(new TeamMember("Dannana Bhargav","Logistics","","","","","","","https://lh3.googleusercontent.com/u/0/d/1M-G2tHu528M0ZEBRwOu_yBkvLEvz5yEr=w1157-h981-p-k-nu-iv1",18));
+        list.add(new TeamMember("Paidi Mohan Sai","Logistics","","","","","","","https://lh3.googleusercontent.com/u/0/d/1P64ggOKLt-SlPpaZMI7hxB-NpklQqOFM=w1157-h981-p-k-nu-iv1",18));
+        list.add(new TeamMember("Cheerala Ganesh","Logistics","","","","","","","",18));
+
+        list.add(new TeamMember("Mansi","Hospitality","","","","","","","https://lh3.googleusercontent.com/u/0/d/1xmQlCjgCdwxTLs9f9FDw-dENJYNdpjIw=w1157-h981-p-k-nu-iv1",19));
+        list.add(new TeamMember("Shashi Bhushan Chandel","Hospitality","","","","","","","https://lh3.googleusercontent.com/u/0/d/1-wioSlWIBmECKq1t2TnQepwNxXAZfNVv=w1157-h981-p-k-nu-iv1",19));
+        list.add(new TeamMember("Sanjeev Suman","Hospitality","","","","","","","https://lh3.googleusercontent.com/u/0/d/13jtjvbv7qf7YdnNCHl84gwc94wdJ6gc3=w1157-h981-p-k-nu-iv1",19));
+        list.add(new TeamMember("Mallikarjun","Hospitality","","","","","","","https://lh3.googleusercontent.com/u/0/d/14bCQ8Rx8Hm0JoztlxSeScCi6_7R4sfpv=w1157-h981-p-k-nu-iv1",19));
+        list.add(new TeamMember("Uday Kumar Reddy","Hospitality","","","","","","","",19));
+
+        list.add(new TeamMember("Parwez Akhtar","Decoration","","","","","","","https://lh3.googleusercontent.com/u/0/d/1V7NpnldwckjTbQGc3Ddmx3bTRkKuI3dO=w1157-h981-p-k-nu-iv1",20));
+        list.add(new TeamMember("Jajjuvarapur Sushma","Decoration","","","","","","","",20));
+        list.add(new TeamMember("Pranathi","Decoration","","","","","","","",20));
+        list.add(new TeamMember("Nadiminti Manohar","Decoration","","","","","","","https://lh3.googleusercontent.com/u/0/d/1H99ISkPUFuA-BIbtuXUSfs46LaJlgrCj=w1157-h981-p-k-nu-iv1",20));
+
+        list.add(new TeamMember("Syed Sahil","Robotics","","","","","","","https://lh3.googleusercontent.com/u/0/d/1dqUwz4mubgMmLuY1Rbd3Ae8JavWCj9rY=w1157-h981-p-k-nu-iv1",21));
+        list.add(new TeamMember("Injam Praveen Chodhary","Robotics","","","","","","","https://lh3.googleusercontent.com/u/0/d/18CHMN0Bl0q7NkSqhV-xspluCvOYVGIK7=w1157-h981-p-k-nu-iv1",21));
+        list.add(new TeamMember("Cherukuri Pawan Sai","Robotics","","","","","","","https://lh3.googleusercontent.com/u/0/d/18uSb0nzUL6rBd1_IGPt7yuvd6X8Pxiyc=w1157-h981-p-k-nu-iv1",21));
+        list.add(new TeamMember("Subham Kumar","Robotics","","","","","","","https://lh3.googleusercontent.com/u/0/d/1eu7wnxyQ65TFfVvpG4pC71AgWmT5x9nC=w1157-h981-p-k-nu-iv1",21));
+        list.add(new TeamMember("Ketan Kumar Patel","Robotics","","","","","","","https://lh3.googleusercontent.com/u/0/d/1eP8su-KlMaPMK8yLws0C5ubXU2Ib4Z4x=w1157-h981-p-k-nu-iv1",21));
+
+
+
+
+
+
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Team");
 
         for(TeamMember m:list){
+            Log.d("pushdata", "pushData: "+m.name);
             reference.push().setValue(m);
         }
 

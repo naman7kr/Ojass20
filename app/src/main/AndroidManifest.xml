@@ -26,11 +26,6 @@
             android:name="com.onesignal.NotificationOpened.DEFAULT"
             android:value="DISABLE" />
 
-        <activity android:name=".Activities.FaqActivity">
-
-        </activity>
-        <activity android:name=".Activities.NotificationActivity"></activity>
-
         <activity android:name=".Activities.WalkThroughActivity" />
         <activity android:name=".Activities.SplashScreen">
             <intent-filter>
