@@ -1,12 +1,20 @@
 package ojass20.nitjsr.in.ojass.Adapters;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +27,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
@@ -184,13 +194,33 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
             @Override
             public void onClick(View v) {
 
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT,feedPosts.get(position).getEvent()+"\n"+
-                        feedPosts.get(position).getSubEvent()+"\n"+
-                        feedPosts.get(position).getContent() );
-                sendIntent.setType("text/plain");
-                context.startActivity(Intent.createChooser(sendIntent,"Share this article via:"));
+                if(ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+                {
+                    // Log.e(TAG, "setxml: peremission prob");
+                    ActivityCompat.requestPermissions((Activity) context,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
+
+
+                }
+                else {
+                    Uri imgUri = null;
+                    Drawable dr = ((ImageView) holder.postImage).getDrawable();
+                    if (dr != null) {
+                        Bitmap imgBitmap = drawableToBitmap(dr);
+                        String imgBitmapPath = MediaStore.Images.Media.insertImage(context.getContentResolver(), imgBitmap, "title", null);
+                        imgUri = Uri.parse(imgBitmapPath);
+
+
+                    }
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_STREAM, imgUri);
+
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, feedPosts.get(position).getEvent() + "\n" +
+                            feedPosts.get(position).getSubEvent() + "\n" +
+                            feedPosts.get(position).getContent());
+                    sendIntent.setType("*/*");
+                    context.startActivity(Intent.createChooser(sendIntent, "Share this article via:"));
+                }
 
             }
         });
@@ -218,6 +248,28 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
 
             }
         });
+
+    }
+    public  Bitmap drawableToBitmap (Drawable drawable) {
+        Bitmap bitmap = null;
+
+        if (drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            if(bitmapDrawable.getBitmap() != null) {
+                return bitmapDrawable.getBitmap();
+            }
+        }
+
+        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
 
     }
     public interface CommentClickInterface{
