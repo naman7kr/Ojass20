@@ -57,7 +57,7 @@ public class HomeFragment extends Fragment implements
     private GestureDetectorCompat mDetector;
     private RelativeLayout swipeArea;
     private ConstraintLayout cl;
-    private ImageView swipeImage1, swipeImage2, mFakeBackground1, mFakeBackground2, mFakeImage;
+    private ImageView swipeImage1, swipeImage2, mFakeBackground1, mFakeBackground2, mFakeImage, mLeftArrow, mRightArrow;
     private TextView txt, mHeading;
 
     @Nullable
@@ -76,6 +76,30 @@ public class HomeFragment extends Fragment implements
                     return true;
                 }
                 return false;
+            }
+        });
+
+        if (mInd == 0)
+            mLeftArrow.setColorFilter(Color.parseColor("#a9a9a9"));
+        else
+            mLeftArrow.setColorFilter(Color.parseColor("#fff"));
+
+        if (mInd == mItems.size() - 1)
+            mRightArrow.setColorFilter(Color.parseColor("#a9a9a9"));
+        else
+            mRightArrow.setColorFilter(Color.parseColor("#fff"));
+
+        mLeftArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                swipeLeft();
+            }
+        });
+
+        mRightArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                swipeRight();
             }
         });
 
@@ -98,6 +122,8 @@ public class HomeFragment extends Fragment implements
         mFakeBackground2 = view.findViewById(R.id.fake_background2);
         mHeading = view.findViewById(R.id.heading);
         mFakeImage = view.findViewById(R.id.fake_image);
+        mLeftArrow = view.findViewById(R.id.left_arrow);
+        mRightArrow = view.findViewById(R.id.right_arrow);
 
         txt = view.findViewById(R.id.home_frag_text);
         cl = view.findViewById(R.id.cl);
@@ -145,6 +171,11 @@ public class HomeFragment extends Fragment implements
         } else
             setUpView(-1);
 
+        if (mInd == mItems.size() - 1)
+            mRightArrow.setColorFilter(Color.parseColor("#a9a9a9"));
+        else
+            mRightArrow.setColorFilter(Color.parseColor("#fff"));
+
         mFakeBackground1.setImageDrawable(getActivity().getDrawable(mItems.get(u).getmBackground()));
         mFakeBackground2.setImageDrawable(getActivity().getDrawable(mItems.get(mInd).getmBackground()));
 
@@ -191,6 +222,11 @@ public class HomeFragment extends Fragment implements
             setUpView(3);
         } else
             setUpView(1);
+
+        if (mInd == 0)
+            mLeftArrow.setColorFilter(Color.parseColor("#a9a9a9"));
+        else
+            mLeftArrow.setColorFilter(Color.parseColor("#fff"));
 
         mFakeBackground1.setImageDrawable(getActivity().getDrawable(mItems.get(u).getmBackground()));
         mFakeBackground2.setImageDrawable(getActivity().getDrawable(mItems.get(mInd).getmBackground()));
