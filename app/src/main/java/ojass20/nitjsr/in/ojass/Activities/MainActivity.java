@@ -936,22 +936,27 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 break;
             case R.id.logout:
                 mDrawer.closeDrawer(GravityCompat.START);
-                new android.app.AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Log Out")
-                        .setMessage("Are you sure you want to logout")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mauth.signOut();
-                                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                Toast.makeText(MainActivity.this, "Sign Out Successful", Toast.LENGTH_SHORT).show();
-                                startActivity(intent);
-                                finish();
-                            }
-                        })
-                        .setNegativeButton("No",null)
-                        .show();
+                final Dialog dialog = new Dialog(this);
+                dialog.setContentView(R.layout.dialog_logout);
+                dialog.findViewById(R.id.logout_cancel).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.findViewById(R.id.dialog_logout).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mauth.signOut();
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        Toast.makeText(MainActivity.this, "Sign Out Successful", Toast.LENGTH_SHORT).show();
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+                dialog.show();
+                dialog.getWindow().setLayout(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
                 break;
             case R.id.feedback:
                 startActivity(new Intent(MainActivity.this, FeedbackActivity.class));
@@ -1172,6 +1177,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             }
         });
         dialog.show();
+        dialog.getWindow().setLayout(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
 //        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 //        builder.setTitle("New update");
 //        builder.setMessage("We have changed since we last met. Let's get the updates.");
