@@ -67,9 +67,7 @@ public class FaqActivity extends AppCompatActivity {
 
                         }
 
-                        adapter = new FAQAdapter(FaqActivity.this,initData());
-                        adapter.setParentClickableViewAnimationDefaultDuration();
-                        adapter.setParentAndIconExpandOnClick(true);
+                        adapter = new FAQAdapter(FaqActivity.this, data);
                         recyclerView.setAdapter(adapter);
 
                     } catch (Exception e){
@@ -84,7 +82,8 @@ public class FaqActivity extends AppCompatActivity {
 
             }
         });
-        adapter=new FAQAdapter(FaqActivity.this,initData());
+
+        adapter=new FAQAdapter(FaqActivity.this, data);
 
         recyclerView.setAdapter(adapter);
 
@@ -98,18 +97,4 @@ public class FaqActivity extends AppCompatActivity {
 
     }
 
-    private List<ParentObject> initData() {
-        TitleCreater titleCreater= new TitleCreater(FaqActivity.this);
-        List<TitleParent> titles= TitleCreater._titleParents;
-        List<ParentObject> parentObject = new ArrayList<>();
-        int i=0;
-        for(TitleParent title:titles)
-        {
-            List<Object> childList = new ArrayList<>();
-            childList.add(new TitleChild(data.get(i++).getAns()));
-            title.setChildObjectList(childList);
-            parentObject.add(title);
-        }
-        return parentObject;
-    }
 }
