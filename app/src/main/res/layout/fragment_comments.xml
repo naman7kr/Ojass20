@@ -102,9 +102,10 @@
                 android:layout_weight="2"
                 android:text="post"
                 android:textAllCaps="true"
-                android:textColor="@color/white"
+                android:textColor="@color/primaryTextColor"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColorHint="@color/secondaryTextColor"/>
 
         </LinearLayout>
 

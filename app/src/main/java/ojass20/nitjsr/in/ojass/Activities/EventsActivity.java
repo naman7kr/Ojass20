@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -39,7 +40,7 @@ import ojass20.nitjsr.in.ojass.R;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsList;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsMap;
 
-public class EventsActivity extends AppCompatActivity implements PinchAlphaInterface {
+public class EventsActivity extends AppCompatActivity implements PinchAlphaInterface, EventsGridAdapter.ItemClickInterface {
     private static final int NO_OF_COLUMNS = 3;
     private static final float INIT_ALPHA = 0.6f;
     ArrayList<EventsDisplayModel> data = new ArrayList<>();
@@ -81,7 +82,14 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         events_search_cleartext_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(event_search_text.getText().toString().compareTo("")==0){
+                    event_search_layout.setVisibility(View.GONE);
+                    search_menu_item.setVisible(true);
+                    getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+                    closeKeyboard();
+                }else{
                 event_search_text.setText("");
+                }
             }
         });
 
@@ -110,6 +118,9 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
                     if (pos != -1)
                         break;
                 }
+                event_search_layout.setVisibility(View.GONE);
+                search_menu_item.setVisible(true);
+                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
                 Intent intent = new Intent(EventsActivity.this, SubEventActivity.class);
                 intent.putExtra("event_id", mainEventPosition);
                 ArrayList<String> temp = new ArrayList<>();
@@ -170,7 +181,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
             data.add(new EventsDisplayModel(Constants.eventImg[i], Constants.eventNames.get(i), INIT_ALPHA));
         }
 
-        mAdapter = new EventsGridAdapter(this, width, data);
+        mAdapter = new EventsGridAdapter(this, width, data,this);
         gridLayout.setAdapter(mAdapter);
     }
 
@@ -269,5 +280,16 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
     public void closeKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+    }
+
+    @Override
+    public void EventsItemClick(int position, ImageView iv) {
+        Intent intent = new Intent(this, SubEventActivity.class);
+        intent.putExtra("event_id",position);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+        iv,"SubEventImg");
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        startActivity(intent,options.toBundle());
+
     }
 }

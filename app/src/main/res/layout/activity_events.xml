@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark">
+    android:background="@mipmap/events_background">
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -10,8 +10,7 @@
         android:layout_height="match_parent"
         android:focusable="true"
         android:paddingTop="66dp"
-
-        ></androidx.recyclerview.widget.RecyclerView>
+        />
 
     <include
         android:id="@+id/events_toolbar"

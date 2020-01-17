@@ -6,7 +6,6 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
     android:background="@color/white"
     tools:context=".Activities.MainActivity">
 
@@ -172,10 +171,11 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/colorAccent"
-        app:itemIconTint="@color/navHeader"
+        app:itemIconTint="@color/white"
         app:itemTextAppearance="@style/NavItemsStyle"
         app:itemTextColor="@color/primaryTextColor"
         app:menu="@menu/navigation_menu"
         />
+
 
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -83,7 +83,7 @@
     <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@drawable/popup_background</item>
     </style>
-    <style name="UpdateButton" parent="Widget.AppCompat.Button.Colored"></style>
+    <style name="UpdateButton" parent="@android:style/Widget.Holo.DropDownItem.Spinner"></style>
 
     <style name="pop_up_anim">
         <item name="android:windowEnterAnimation">@anim/fade_in</item>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ojass\'20, NIT Jamshedpur</string>
+    <string name="app_name">Ojass\'20</string>
     <string name="feeds">Feeds</string>
     <string name="comments">Comments</string>
     <string name="faqs">FAQs</string>
@@ -89,16 +89,23 @@
         <item>Mechanical Engineering</item>
         <item>Electrical Engineering</item>
         <item>Civil Engineering</item>
-        <item>MMetallurgical Engineering and Material Science</item>
+        <item>Metallurgical Engineering and Material Science</item>
         <item>Production Engineering and Management</item>
         <item>Chemical Engineering</item>
         <item>Biochemical / Biomedical Engineering</item>
         <item>Aerospace / Aeronautical Engineering</item>
         <item>Information Technology</item>
         <item>Automation and Robotics</item>
-        <item>Others</item>
+        <item>Other</item>
     </string-array>
     <string name="Rs">\u20B9</string>
-
+    <string-array name="tshirt_size_list">
+        <item>S</item>
+        <item>M</item>
+        <item>L</item>
+        <item>XL</item>
+        <item>XXL</item>
+        <item>XXXL</item>
+    </string-array>
 
 </resources>

@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,6 +46,7 @@ import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImage;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private static final long ANIM_DUR = 300;
     private LinearLayout mEventsInterested, mMyEvents, mMerchandise, mQR, mDevelopers;
     private static final String LOG_TAG = "Profile";
     private RelativeLayout mDetailsLayout;
@@ -159,7 +161,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(getApplicationContext())
+                new AlertDialog.Builder(ProfileActivity.this)
                         .setTitle("Log Out")
                         .setMessage("Are you sure you want to logout")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -168,6 +170,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 mauth.signOut();
                                 Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                Toast.makeText(ProfileActivity.this, "Sign Out Successful", Toast.LENGTH_SHORT).show();
                                 startActivity(intent);
                                 finish();
                             }
@@ -199,11 +202,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         mAngles.add(118);
         mAngles.add(145);
 
-        mAnimators.add(animateView(mEventsInterested, 1000, 0));
-        mAnimators.add(animateView(mMyEvents, 1000, 1));
-        mAnimators.add(animateView(mMerchandise, 1000, 2));
-        mAnimators.add(animateView(mQR, 1000, 3));
-        mAnimators.add(animateView(mDevelopers, 1000, 4));
+        mAnimators.add(animateView(mEventsInterested, ANIM_DUR, 0));
+        mAnimators.add(animateView(mMyEvents, ANIM_DUR, 1));
+        mAnimators.add(animateView(mMerchandise, ANIM_DUR, 2));
+        mAnimators.add(animateView(mQR, ANIM_DUR, 3));
+        mAnimators.add(animateView(mDevelopers, ANIM_DUR, 4));
 
         recursiveAnimate(0);
 

@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -35,10 +37,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
 
+import androidx.appcompat.widget.Toolbar;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ojass20.nitjsr.in.ojass.R;
+
+import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImage;
 
 public class RegistrationPage extends AppCompatActivity {
 
@@ -51,10 +57,11 @@ public class RegistrationPage extends AppCompatActivity {
 
     private boolean fromProfile;
 
-    private String[] tshirt_sizes_list={"S","M","L","XL","XXL"}, branch_list;
+    private String[] tshirt_sizes_list, branch_list;
 
     private FirebaseAuth mauth;
     private String current_user_id;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,21 +71,24 @@ public class RegistrationPage extends AppCompatActivity {
         init();
 
         branch_list = getResources().getStringArray(R.array.eng_courses);
-        ArrayAdapter<String> branchAdapter = new ArrayAdapter<String>(this, android.R.layout.
-                simple_list_item_1, branch_list);
+        Arrays.sort(branch_list);
+        ArrayAdapter<String> branchAdapter = new ArrayAdapter<String>(this, R.layout.
+                spinner_item, branch_list);
         branch_spinner.setAdapter(branchAdapter);
-
-        ArrayAdapter<String> madap = new ArrayAdapter<String>(
-                this,android.R.layout.simple_list_item_1,tshirt_sizes_list);
+        tshirt_sizes_list = getResources().getStringArray(R.array.tshirt_size_list);
+        ArrayAdapter<String> madap = new ArrayAdapter<>(
+                this,R.layout.spinner_item,tshirt_sizes_list);
         tshirt_size_spinner.setAdapter(madap);
 
-        mauth = FirebaseAuth.getInstance();
+        initData();
         current_user_id = mauth.getCurrentUser().getUid();
 
-        over_text.setText("Welcome "+mauth.getCurrentUser().getDisplayName());
-        name_reg.setText(mauth.getCurrentUser().getDisplayName());
+
 
         if(fromProfile){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+            getSupportActionBar().setTitle("");
             register_button.setText("Update");
             skip_button.setVisibility(View.GONE);
         }
@@ -98,32 +108,28 @@ public class RegistrationPage extends AppCompatActivity {
                 }
             }
         });
+        setGlideImage(this,mauth.getCurrentUser().getPhotoUrl().toString(),self_image);
 
-        Glide.with(this)
-                .load(mauth.getCurrentUser().getPhotoUrl().toString())
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        self_image.setImageResource(R.drawable.ic_mood_black_24dp);
-                        return false;
-                    }
+        fetch_existing_data();
 
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-                .into(self_image);
+    }
+    private void initData(){
+        over_text.setText(mauth.getCurrentUser().getDisplayName().split(" ")[0]);
+        name_reg.setText(mauth.getCurrentUser().getDisplayName());
+        String email = mauth.getCurrentUser().getEmail();
+        if(email!=null && email.compareTo("")!=0) {
+            email_reg.setText(email);
 
-        email_reg.setText("");
+            Log.e("LOL",mauth.getCurrentUser().getEmail());
+        }else{
+            email_reg.setText("");
+            email_reg.setEnabled(true);
+        }
         mobile_reg.setText("");
         college_reg.setText("");
         branch_spinner.setSelection(0);
         tshirt_size_spinner.setSelection(0);
-        fetch_existing_data();
-
     }
-
     private void fetch_existing_data(){
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().
                 getReference("Users").child(mauth.getUid());
@@ -132,8 +138,13 @@ public class RegistrationPage extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.hasChild("email")){
                     String email = dataSnapshot.child("email").getValue(String.class);
-                    if((email_reg.getText().toString()).equals(""))
+                    if(email_reg!=null && (email_reg.getText().toString()).compareTo("")!=0) {
                         email_reg.setText(email);
+                        email_reg.setEnabled(false);
+//                        Toast.makeText(RegistrationPage.this, email_reg.getText().toString(), Toast.LENGTH_SHORT).show();
+                    }else{
+                        email_reg.setEnabled(true);
+                    }
                 }
                 if(dataSnapshot.hasChild("mobile")){
                     String mobile = dataSnapshot.child("mobile").getValue(String.class);
@@ -218,6 +229,7 @@ public class RegistrationPage extends AppCompatActivity {
     }
 
     private void init() {
+        mauth = FirebaseAuth.getInstance();
         fromProfile = getIntent().getBooleanExtra("fromProfile", false);
         name_reg = findViewById(R.id.Name_Registration_page);
         email_reg = findViewById(R.id.Email_Registration_page);
@@ -229,6 +241,10 @@ public class RegistrationPage extends AppCompatActivity {
         self_image = findViewById(R.id.register_self_pic);
         over_text = findViewById(R.id.overlap_text);
         skip_button = findViewById(R.id.skip_button_Registration_page);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        //hide keyboard
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     public boolean validate(){
@@ -260,5 +276,12 @@ public class RegistrationPage extends AppCompatActivity {
         return valid;
     }
 
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

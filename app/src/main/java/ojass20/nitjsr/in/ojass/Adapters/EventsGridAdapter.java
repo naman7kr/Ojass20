@@ -32,13 +32,14 @@ public class EventsGridAdapter extends RecyclerView.Adapter<EventsGridAdapter.My
     private LayoutInflater mInflater;
     ArrayList<EventsDisplayModel> list;
     int width;
+    ItemClickInterface itemClickInterface;
 
-
-    public EventsGridAdapter(Context context, int width, ArrayList<EventsDisplayModel> list){
+    public EventsGridAdapter(Context context, int width, ArrayList<EventsDisplayModel> list, ItemClickInterface mClickInterface){
         this.mContext = context;
         this.list = list;
         mInflater = LayoutInflater.from(context);
         this.width = width;
+        this.itemClickInterface = mClickInterface;
     }
 
     @NonNull
@@ -59,11 +60,8 @@ public class EventsGridAdapter extends RecyclerView.Adapter<EventsGridAdapter.My
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, SubEventActivity.class);
-                intent.putExtra("event_id",position);
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((EventsActivity) mContext,
-                        holder.iv,"SubEventImg");
-                mContext.startActivity(intent,options.toBundle());
+                itemClickInterface.EventsItemClick(position,holder.iv);
+
             }
         });
 
@@ -92,5 +90,8 @@ public class EventsGridAdapter extends RecyclerView.Adapter<EventsGridAdapter.My
             rl.setLayoutParams(new RelativeLayout.LayoutParams(width,height));
 
         }
+    }
+    public interface ItemClickInterface{
+        void EventsItemClick(int position, ImageView iv);
     }
 }

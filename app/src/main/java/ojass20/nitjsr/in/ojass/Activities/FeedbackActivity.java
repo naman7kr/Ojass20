@@ -5,9 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -31,14 +35,15 @@ public class FeedbackActivity extends AppCompatActivity {
     EditText name,email,subject,feedback;
     Button Submit;
     int Count=-1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
         /* to initialize data */
         init();
+        initToolbar();
         setListner();
+        closeKeyboard();
 
     }
     private boolean validate()
@@ -91,6 +96,8 @@ public class FeedbackActivity extends AppCompatActivity {
         ref.child("feedback").push().setValue(formdata).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                Toast.makeText(FeedbackActivity.this, "Feedback submitted successfully", Toast.LENGTH_SHORT).show();
+                closeKeyboard();
                 finish();
             }
         });
@@ -120,9 +127,8 @@ public class FeedbackActivity extends AppCompatActivity {
         name.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         name.setKeyListener(null);
         Submit=findViewById(R.id.FeedbackSubmit);
-        toolbar=findViewById(R.id.FeedBackPageToolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         ref.child("Users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -165,4 +171,24 @@ public class FeedbackActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    private void initToolbar(){
+        toolbar=findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Feedback");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+    }
+    public void closeKeyboard() {
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
+
 }

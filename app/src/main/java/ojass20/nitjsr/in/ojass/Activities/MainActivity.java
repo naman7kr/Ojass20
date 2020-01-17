@@ -19,6 +19,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -559,7 +560,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         });
 
         initializeInstanceVariables();
-        setUpNavigationDrawer();
         //setUpRecyclerView();
 
 //        setUpArrayList();
@@ -935,9 +935,23 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 startActivity(intent);
                 break;
             case R.id.logout:
-                mauth.signOut();
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                finish();
+                mDrawer.closeDrawer(GravityCompat.START);
+                new android.app.AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Log Out")
+                        .setMessage("Are you sure you want to logout")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mauth.signOut();
+                                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                Toast.makeText(MainActivity.this, "Sign Out Successful", Toast.LENGTH_SHORT).show();
+                                startActivity(intent);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("No",null)
+                        .show();
                 break;
             case R.id.feedback:
                 startActivity(new Intent(MainActivity.this, FeedbackActivity.class));

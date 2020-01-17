@@ -47,7 +47,7 @@
             android:id="@+id/sub_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#263238"
+            android:background="@mipmap/events_background"
             android:paddingTop="15dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
@@ -64,6 +64,12 @@
 
             </LinearLayout>
         </RelativeLayout>
+        <FrameLayout
+            android:id="@+id/fragment_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/toolbar_height"
+            />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
     <RelativeLayout
@@ -80,15 +86,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginEnd="5dp"
-
         app:sdMainFabClosedSrc="@drawable/ic_add_black_24dp" />
     </RelativeLayout>
-    <FrameLayout
-        android:id="@+id/fragment_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="76dp"
-        />
 
 
 
