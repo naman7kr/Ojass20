@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.header.setText(datalist.get(datalist.size()-1-position).getHeader());
         holder.body.setText(datalist.get(datalist.size()-1-position).getBody());
+        holder.root.getBackground().setAlpha(50);
 
         boolean isExpanded = datalist.get(datalist.size()-1-position).isExplandable();
         holder.body.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
@@ -47,11 +49,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout root;
         TextView header,body;
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             header = itemView.findViewById(R.id.header);
             body = itemView.findViewById(R.id.body);
+            root = itemView.findViewById(R.id.root);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
