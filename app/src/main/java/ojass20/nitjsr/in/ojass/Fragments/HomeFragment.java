@@ -82,12 +82,12 @@ public class HomeFragment extends Fragment implements
         if (mInd == 0)
             mLeftArrow.setColorFilter(Color.parseColor("#a9a9a9"));
         else
-            mLeftArrow.setColorFilter(Color.parseColor("#fff"));
+            mLeftArrow.setColorFilter(Color.parseColor("#ffffff"));
 
         if (mInd == mItems.size() - 1)
             mRightArrow.setColorFilter(Color.parseColor("#a9a9a9"));
         else
-            mRightArrow.setColorFilter(Color.parseColor("#fff"));
+            mRightArrow.setColorFilter(Color.parseColor("#ffffff"));
 
         mLeftArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,7 +174,7 @@ public class HomeFragment extends Fragment implements
         if (mInd == mItems.size() - 1)
             mRightArrow.setColorFilter(Color.parseColor("#a9a9a9"));
         else
-            mRightArrow.setColorFilter(Color.parseColor("#fff"));
+            mRightArrow.setColorFilter(Color.parseColor("#ffffff"));
 
         mFakeBackground1.setImageDrawable(getActivity().getDrawable(mItems.get(u).getmBackground()));
         mFakeBackground2.setImageDrawable(getActivity().getDrawable(mItems.get(mInd).getmBackground()));
@@ -226,7 +226,7 @@ public class HomeFragment extends Fragment implements
         if (mInd == 0)
             mLeftArrow.setColorFilter(Color.parseColor("#a9a9a9"));
         else
-            mLeftArrow.setColorFilter(Color.parseColor("#fff"));
+            mLeftArrow.setColorFilter(Color.parseColor("#ffffff"));
 
         mFakeBackground1.setImageDrawable(getActivity().getDrawable(mItems.get(u).getmBackground()));
         mFakeBackground2.setImageDrawable(getActivity().getDrawable(mItems.get(mInd).getmBackground()));
