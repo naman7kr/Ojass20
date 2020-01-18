@@ -5,9 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.animation.ValueAnimator;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -32,23 +30,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.Constants;
-import ojass20.nitjsr.in.ojass.Utils.Utilities;
 
 import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImage;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final long ANIM_DUR = 300;
-    private LinearLayout mEventsInterested, mMyEvents, mMerchandise, mQR, mDevelopers;
+    private LinearLayout mEventsInterested, mMyEvents, mMerchandise, mQR, mEditProfile;
     private static final String LOG_TAG = "Profile";
     private RelativeLayout mDetailsLayout;
     private ArrayList<ValueAnimator> mAnimators;
@@ -94,6 +88,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
         mQR.setOnClickListener(this);
+        mEventsInterested.setOnClickListener(this);
+        mMyEvents.setOnClickListener(this);
+        mMerchandise.setOnClickListener(this);
+        mEditProfile.setOnClickListener(this);
     }
     @Override
     protected void onResume() {
@@ -151,7 +149,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         mMyEvents = findViewById(R.id.comp);
         mMerchandise = findViewById(R.id.merch);
         mQR = findViewById(R.id.qr);
-        mDevelopers = findViewById(R.id.dev);
+        mEditProfile = findViewById(R.id.dev);
         mDetailsLayout = findViewById(R.id.details);
         mAnimators = new ArrayList<>();
         mAngles = new ArrayList<>();
@@ -188,15 +186,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         });
 
 
-        mDevelopers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, RegistrationPage.class);
-                intent.putExtra("fromProfile", true);
-                startActivity(intent);
-            }
-        });
-
         user_image = findViewById(R.id.image_profile_activity);
         user_name = findViewById(R.id.username_profile_activity);
     }
@@ -212,7 +201,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         mAnimators.add(animateView(mMyEvents, ANIM_DUR, 1));
         mAnimators.add(animateView(mMerchandise, ANIM_DUR, 2));
         mAnimators.add(animateView(mQR, ANIM_DUR, 3));
-        mAnimators.add(animateView(mDevelopers, ANIM_DUR, 4));
+        mAnimators.add(animateView(mEditProfile, ANIM_DUR, 4));
 
         recursiveAnimate(0);
 
@@ -264,8 +253,24 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        if(view == mQR){
+        //QR
+        if(view.getId() == R.id.qr){
             showQrDialog();
+        }//Events Interested
+        else if(view.getId()==R.id.events){
+            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
+        }
+        //My Events
+        else if(view.getId() == R.id.comp){
+            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
+        }//Merchandise
+        else if(view.getId() == R.id.merch){
+            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
+        }//edit profile
+        else{
+            Intent intent = new Intent(ProfileActivity.this, RegistrationPage.class);
+            intent.putExtra("fromProfile", true);
+            startActivity(intent);
         }
     }
     public void showQrDialog() {

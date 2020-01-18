@@ -76,7 +76,6 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_team);
         //to Initialize all class variables
         init();
-
         //check for developer page
         //to set Listeners
          setListeners();

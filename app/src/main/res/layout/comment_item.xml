@@ -15,7 +15,7 @@
             android:padding="5dp"
             android:layout_gravity="center"
             android:layout_height="55dp"
-            android:src="@drawable/dp_default"
+            android:src="@mipmap/ic_placeholder"
             />
         <LinearLayout
             android:layout_width="match_parent"

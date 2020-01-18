@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import ojass20.nitjsr.in.ojass.Adapters.NotificationAdapter;
 import ojass20.nitjsr.in.ojass.Models.NotificationModal;
 import ojass20.nitjsr.in.ojass.R;
+import ojass20.nitjsr.in.ojass.Utils.Constants;
 import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
 
 import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_NOTIF;
@@ -48,12 +50,26 @@ public class NotificationActivity extends AppCompatActivity {
 //            finish();
 //        }
         setContentView(R.layout.activity_notification);
-        recyclerView = findViewById(R.id.recycler_view);
-        spinner = findViewById(R.id.spinner_feed);
+        init();
+        setSpinner();
 
-        p = new ProgressDialog(this);
-        data = new ArrayList<>();
 
+
+        findViewById(R.id.ib_back_feed).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(NotificationActivity.this, MainActivity.class));
+                finish();
+            }
+        });
+
+    }
+
+    private void setSpinner() {
+        ArrayList<String> notiList = Constants.eventNames;
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this,R.layout.spinner_item, notiList);
+        arrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+        spinner.setAdapter(arrayAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -68,15 +84,14 @@ public class NotificationActivity extends AppCompatActivity {
             }
         });
 
+    }
 
-        findViewById(R.id.ib_back_feed).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(NotificationActivity.this, MainActivity.class));
-                finish();
-            }
-        });
+    private void init() {
+        recyclerView = findViewById(R.id.recycler_view);
+        spinner = findViewById(R.id.spinner_feed);
 
+        p = new ProgressDialog(this);
+        data = new ArrayList<>();
     }
 
     public void onItemSelect() {

@@ -59,7 +59,8 @@ public class HomeFragment extends Fragment implements
     private ConstraintLayout cl;
     private ImageView swipeImage1, swipeImage2, mFakeBackground1, mFakeBackground2, mFakeImage;
     private TextView txt, mHeading;
-
+    TranslateAnimation mAnimation;
+    private ImageView mPullDown;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,7 +68,7 @@ public class HomeFragment extends Fragment implements
         init(view);
         onCancel();
         setUpArrayList();
-
+        setUpAnimationForImageView(mPullDown);
         swipeArea.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -98,7 +99,7 @@ public class HomeFragment extends Fragment implements
         mFakeBackground2 = view.findViewById(R.id.fake_background2);
         mHeading = view.findViewById(R.id.heading);
         mFakeImage = view.findViewById(R.id.fake_image);
-
+        mPullDown = view.findViewById(R.id.pull_down);
         txt = view.findViewById(R.id.home_frag_text);
         cl = view.findViewById(R.id.cl);
         c1 = view.findViewById(R.id.img1);
@@ -112,9 +113,21 @@ public class HomeFragment extends Fragment implements
         mCircles.add(c4);
         mDetector = new GestureDetectorCompat(getContext(), this);
     }
+    private void setUpAnimationForImageView(ImageView mImageView) {
 
+        mAnimation = new TranslateAnimation(
+                TranslateAnimation.ABSOLUTE, 0f,
+                TranslateAnimation.ABSOLUTE, 0f,
+                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
+                TranslateAnimation.RELATIVE_TO_PARENT, 0.005f);
+        mAnimation.setDuration(700);
+        mAnimation.setRepeatCount(-1);
+        mAnimation.setRepeatMode(Animation.REVERSE);
+        mAnimation.setInterpolator(new LinearInterpolator());
+        mPullDown.startAnimation(mAnimation);
+    }
     private void onCancel() {
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
+        mPullDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fragInterface.onCancel();
