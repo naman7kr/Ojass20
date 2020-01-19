@@ -13,8 +13,12 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,17 +31,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -49,12 +48,14 @@ import ojass20.nitjsr.in.ojass.Fragments.CommentsFragment;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.R;
 import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
-
+import static ojass20.nitjsr.in.ojass.Utils.Utilities.makeTextViewResizable;
 import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImage;
 import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImageWithoutCaching;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHolder> {
 
+    private static final int MAX_LINES = 3;
+    private static final String TWO_SPACES = "  ";
     public Context context;
     private ArrayList<FeedPost> feedPosts;
     private String mcurrentuid;
@@ -62,12 +63,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
     private String mpost_id="";
     public CommentClickInterface clickInterface;
     private FragmentManager manager;
-
+    private RecyclerView recyclerView;
     private MainActivity mainActivity;
 
     public static class CustomViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout feedLayout;
-        public TextView subevent_name,like_text,eventname,content, time;
+        public TextView subevent_name,like_text,eventname, time,content;
         public ImageView like_icon,postImage;
         public LinearLayout like_layout,comment_layout,share_layout;
         RelativeLayout postImageView;
@@ -100,13 +101,14 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         return new CustomViewHolder(feedLayout);
     }
 
-    public FeedAdapter(Context context, FragmentManager manager, ArrayList<FeedPost> mfeedPosts, String currentuid, MainActivity mainActivity) {
+    public FeedAdapter(Context context, FragmentManager manager, ArrayList<FeedPost> mfeedPosts, String currentuid, MainActivity mainActivity,RecyclerView recyclerView) {
         this.context = context;
         this.feedPosts = mfeedPosts;
         this.mcurrentuid = currentuid;
         this.manager = manager;
         this.mainActivity = mainActivity;
         clickInterface = (CommentClickInterface) context;
+        this.recyclerView = recyclerView;
         Log.e("VIVZ", "FeedAdapter: called COUNT = " + mfeedPosts.size());
     }
 
@@ -120,6 +122,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         holder.eventname.setText(feedPosts.get(position).getEvent());
         holder.subevent_name.setText(feedPosts.get(position).getSubEvent());
         holder.content.setText(feedPosts.get(position).getContent());
+        makeTextViewResizable(holder.content,3,"read more",true,recyclerView,position);
         holder.like_text.setText(feedPosts.get(position).getLikes().size()+" Likes");
         holder.postImageView.setVisibility(View.VISIBLE);
         holder.progressBar.setVisibility(View.GONE);

@@ -33,6 +33,7 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.fragment.app.Fragment;
@@ -93,11 +94,14 @@ public class HomeFragment extends Fragment implements
         mLeftArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                swipeLeft();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    swipeLeft();
+                }
             }
         });
 
         mRightArrow.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
                 swipeRight();
@@ -176,6 +180,7 @@ public class HomeFragment extends Fragment implements
         c4.setOnClickListener(this);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void swipeRight() {
         int u = mInd;
         mInd++;
@@ -228,6 +233,7 @@ public class HomeFragment extends Fragment implements
         setTxtRight();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void swipeLeft() {
         int u = mInd;
         mInd--;
@@ -503,6 +509,7 @@ public class HomeFragment extends Fragment implements
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         if (e1.getX() < e2.getX()) {
@@ -513,6 +520,7 @@ public class HomeFragment extends Fragment implements
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onClick(View v) {
         int iClicked = -1;

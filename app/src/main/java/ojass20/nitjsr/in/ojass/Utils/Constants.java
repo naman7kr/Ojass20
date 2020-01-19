@@ -1,6 +1,13 @@
 package ojass20.nitjsr.in.ojass.Utils;
 
+import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +19,7 @@ import ojass20.nitjsr.in.ojass.R;
 public class Constants {
     public static final String FIREBASE_REF_POSTERIMAGES = "PosterImages";
     public static final String FIREBASE_REF_IMG_SRC = "img_url";
-
+    public static final String OTP_API_KEY = "3e01d6ec-3a86-11ea-9fa5-0200cd936042";
     public static final int[] eventImg = new int[]{
             R.mipmap.akriti,
             R.mipmap.avartan,
@@ -112,4 +119,7 @@ public class Constants {
         }
         Log.e("cons", "" + SubEventsList.size());
     }
+    public static ArrayList<String> subscribedEvents = new ArrayList<>();
+
+
 }

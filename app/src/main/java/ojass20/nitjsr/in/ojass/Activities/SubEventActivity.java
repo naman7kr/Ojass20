@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -23,6 +24,7 @@ import android.util.Log;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +41,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
@@ -48,11 +52,17 @@ import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.common.api.Batch;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 import com.squareup.picasso.Callback;
@@ -68,7 +78,10 @@ import ojass20.nitjsr.in.ojass.Utils.Constants;
 import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
 
 import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsList;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.eventNames;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.mBranchEvents;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.subscribedEvents;
+import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImage;
 
 public class SubEventActivity extends AppCompatActivity {
     private ImageView mAboutLayout, mHeadLayout;
@@ -94,9 +107,9 @@ public class SubEventActivity extends AppCompatActivity {
     private ArrayList<String> mSubEventName;
     private SubEventsAdapter mAdapter;
     private String mEventName;
-
+    private FirebaseAuth mAuth;
     private ArrayList<ValueAnimator> animators;
-
+    private Menu menu;
     private SpeedDialView sv_fab;
 
     @Override
@@ -245,7 +258,7 @@ public class SubEventActivity extends AppCompatActivity {
                                 }
                             });
                             try {
-                                setPicassoImage(mProfile.get(i), bhNames.get(i).getImg());
+                                setGlideImage(SubEventActivity.this, bhNames.get(i).getImg(),mProfile.get(i));
                             } catch (Exception e) {
                                 Log.d("hello", bhNames.get(i).getName());
                             }
@@ -276,7 +289,7 @@ public class SubEventActivity extends AppCompatActivity {
                                 }
                             });
                             try {
-                                setPicassoImage(mProfile.get(i), bhNames.get(i).getImg());
+                                setGlideImage(SubEventActivity.this,bhNames.get(i).getImg(),mProfile.get(i));
                             } catch (Exception e) {
                                 Log.d("hello", bhNames.get(i).getName());
                             }
@@ -310,7 +323,7 @@ public class SubEventActivity extends AppCompatActivity {
                                 }
                             });
                             try {
-                                setPicassoImage(mProfile.get(i), bhNames.get(i).getImg());
+                                setGlideImage(SubEventActivity.this, bhNames.get(i).getImg(),mProfile.get(i));
                             } catch (Exception e) {
                                 Log.d("hello", bhNames.get(i).getName());
                             }
@@ -336,6 +349,7 @@ public class SubEventActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
     private void setUpFabItems() {
@@ -360,20 +374,6 @@ public class SubEventActivity extends AppCompatActivity {
                 .setLabelBackgroundColor(Color.WHITE)
                 .setLabelClickable(true)
                 .create());
-    }
-
-    private void setPicassoImage(final ImageView iv, final String img) {
-        Picasso.with(this).load(img).placeholder(R.drawable.ic_account_circle_black_24dp).fit().networkPolicy(NetworkPolicy.OFFLINE).into(iv, new Callback() {
-            @Override
-            public void onSuccess() {
-
-            }
-
-            @Override
-            public void onError() {
-                Picasso.with(SubEventActivity.this).load(img).placeholder(R.drawable.ic_account_circle_black_24dp).fit().into(iv);
-            }
-        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -410,7 +410,7 @@ public class SubEventActivity extends AppCompatActivity {
 
     private void init() {
         sv_fab = findViewById(R.id.speedDial);
-
+        mAuth = FirebaseAuth.getInstance();
         rView = findViewById(R.id.sub_rv);
         iv = findViewById(R.id.transition_img);
         frag_frame = findViewById(R.id.fragment_layout);
@@ -419,6 +419,7 @@ public class SubEventActivity extends AppCompatActivity {
         fadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
         fadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
         animators = new ArrayList<>();
+
     }
 
     ArrayList<SubEventsModel> getData() {
@@ -458,9 +459,21 @@ public class SubEventActivity extends AppCompatActivity {
         toolbar.setTitle(Constants.eventNames.get(mainEventPosition));
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.subevents_menu,menu);
+        this.menu = menu;
+        if(checkSubscribe()){
+            menu.findItem(R.id.subscribe).setIcon(R.drawable.ic_subscibed);
+        }else{
+            menu.findItem(R.id.subscribe).setIcon(R.drawable.ic_unsubscribed);
+        }
+        return true;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             if (bottomSheetOpen) {
                 hideBottomSheet();
@@ -470,11 +483,88 @@ public class SubEventActivity extends AppCompatActivity {
                 //go to EventsActivity with transition
                 finishAfterTransition();
             }
+        }else if(item.getItemId() == R.id.subscribe){
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("SubscribedEvents");
+            //onSubscribe
+            Log.e("SUBSCRIBE", eventNames.get(mainEventPosition));
+            item.setEnabled(false);
+//            final MenuItem menuItem = menu.findItem(R.id.subscribe);
+//            showDialog
+            if(checkSubscribe()){
+                //unsubscribe
+                Log.e("TAB","LOL");
+
+                unSubscribeEvent(ref);
+            }else{
+                //subscribe
+
+                String key = ref.push().getKey();
+                Map<String,String> val = new HashMap<>();
+                val.put("name",eventNames.get(mainEventPosition));
+                val.put("uid",mAuth.getUid());
+                ref.child(key).setValue(val).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        subscribedEvents.add(eventNames.get(mainEventPosition));
+                        Toast.makeText(SubEventActivity.this, "Subscribed to "+ eventNames.get(mainEventPosition), Toast.LENGTH_SHORT).show();
+                        menu.findItem(R.id.subscribe).setIcon(R.drawable.ic_subscibed);
+                        item.setEnabled(true);
+                    }
+                });
+
+            }
+
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void unSubscribeEvent(final DatabaseReference ref) {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                try {
+                    for(DataSnapshot ds: dataSnapshot.getChildren()){
+                        if(ds.child("uid").getValue(String.class).compareTo(mAuth.getUid())==0
+                            && ds.child("name").getValue(String.class).compareTo(eventNames.get(mainEventPosition))==0
+                        ){
+                            ds.getRef().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    menu.findItem(R.id.subscribe).setIcon(R.drawable.ic_unsubscribed);
+                                    menu.findItem(R.id.subscribe).setEnabled(true);
+                                    Toast.makeText(SubEventActivity.this, "Unsubscribed from "+eventNames.get(mainEventPosition), Toast.LENGTH_SHORT).show();
+                                    Iterator<String> it = subscribedEvents.iterator();
+                                    while (it.hasNext()) {
+                                        String s = it.next();
+                                        if(s.compareTo(eventNames.get(mainEventPosition))==0)
+                                            it.remove();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }catch (Exception e){
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private boolean checkSubscribe() {
+
+        if(subscribedEvents.contains(eventNames.get(mainEventPosition))){
+            return true;
+
+        }
+        return false;
+    }
     public void getPostion(int pos) {
         String event = SubEventsList.get(mainEventPosition).get(pos).trim();
         Log.e("this", "" + event);

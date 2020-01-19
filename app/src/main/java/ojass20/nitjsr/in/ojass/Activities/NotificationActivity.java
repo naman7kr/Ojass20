@@ -1,5 +1,6 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import ojass20.nitjsr.in.ojass.Adapters.NotificationAdapter;
 import ojass20.nitjsr.in.ojass.Models.NotificationModal;
@@ -31,6 +33,8 @@ import ojass20.nitjsr.in.ojass.Utils.Constants;
 import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
 
 import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_NOTIF;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.eventNames;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.subscribedEvents;
 
 public class NotificationActivity extends AppCompatActivity {
 
@@ -38,43 +42,123 @@ public class NotificationActivity extends AppCompatActivity {
     ProgressDialog p;
     Spinner spinner;
     DatabaseReference ref;
-    ArrayList<NotificationModal> data;
-
+    ArrayList<NotificationModal> data,displayData=new ArrayList<>();
+    NotificationAdapter adapter;
+    TextView no_noti_text;
+    ArrayList<String> notiList = new ArrayList<>();
+    private boolean firstTymOpen = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        int val = getIntent().getIntExtra("Caller", -1);
-//        if (val == -1) {
-//            Intent intent = new Intent(NotificationActivity.this, SplashScreen.class);
-//            startActivity(intent);
-//            finish();
-//        }
+        firstTymOpen = getIntent().getBooleanExtra("nottap",false);
         setContentView(R.layout.activity_notification);
+
         init();
-        setSpinner();
-
-
+        getEventList();
+        setRecyclerView();
 
         findViewById(R.id.ib_back_feed).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(NotificationActivity.this, MainActivity.class));
-                finish();
+                if(firstTymOpen) {
+                    startActivity(new Intent(NotificationActivity.this, MainActivity.class));
+                    finish();
+                }else{
+                    finish();
+                }
             }
         });
 
     }
 
+    private void getEventList() {
+        if(eventNames.size()!=18 ){
+            eventNames.clear();
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Branches");
+            ref.keepSynced(true);
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        if (ds.getKey().equalsIgnoreCase("National College Film Festival"))
+                            continue;
+                        boolean z = false;
+                        for (int i = 0; i < eventNames.size(); i++) {
+                            if (eventNames.get(i).equals(ds.getKey())) {
+                                z = true;
+                                break;
+                            }
+                        }
+                        if (!z) {
+                            eventNames.add(ds.getKey());
+                        }
+                    }
+                    setSpinner();
+                    getData();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+        else {
+            setSpinner();
+            getData();
+        }
+    }
+
+    private void getData() {
+        p.setMessage("Loading Feed....");
+        p.setCancelable(true);
+        p.show();
+        ref = FirebaseDatabase.getInstance().getReference().child(FIREBASE_REF_NOTIF);
+        ref.keepSynced(true);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                p.dismiss();
+                data.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    NotificationModal model = ds.getValue(NotificationModal.class);
+                    data.add(model);
+                }
+                Collections.reverse(data);
+                setInitList();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void setRecyclerView() {
+        adapter = new NotificationAdapter(NotificationActivity.this, displayData);
+        recyclerView.setLayoutManager(new LinearLayoutManager(NotificationActivity.this));
+        recyclerView.setAdapter(adapter);
+    }
+
     private void setSpinner() {
-        ArrayList<String> notiList = Constants.eventNames;
+        notiList.clear();
+        notiList.addAll(eventNames);
+        notiList.add(0,"Ojass");
+        notiList.add(0,"Subscribed");
+        notiList.add(0,"All");
         ArrayAdapter arrayAdapter = new ArrayAdapter(this,R.layout.spinner_item, notiList);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(arrayAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                ((TextView) adapterView.getChildAt(0)).setTextColor(Color.WHITE);
                 onItemSelect();
+                if(displayData.size()==0){
+                    no_noti_text.setVisibility(View.VISIBLE);
+                }else{
+                    no_noti_text.setVisibility(View.GONE);
+                }
                 //  Toast.makeText(getApplication(),spinner.getSelectedItem().toString(),Toast.LENGTH_SHORT).show();
             }
 
@@ -89,44 +173,68 @@ public class NotificationActivity extends AppCompatActivity {
     private void init() {
         recyclerView = findViewById(R.id.recycler_view);
         spinner = findViewById(R.id.spinner_feed);
-
+        no_noti_text = findViewById(R.id.no_noti_text);
         p = new ProgressDialog(this);
         data = new ArrayList<>();
     }
 
     public void onItemSelect() {
+        displayData.clear();
+        String sel = (String) spinner.getSelectedItem();
 
-        p.setMessage("Loading Feed....");
-        p.setCancelable(true);
-        p.show();
-        ref = FirebaseDatabase.getInstance().getReference().child(FIREBASE_REF_NOTIF).child(spinner.getSelectedItem().toString());
-        ref.keepSynced(true);
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                p.dismiss();
-                data.clear();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String header = ds.child("ques").getValue().toString();
-                    String body = ds.child("ans").getValue().toString();
-                    data.add(new NotificationModal(header, body));
+        for(int i=0;i<data.size();i++){
+            if(sel.compareTo("All")==0){
+                displayData.add(data.get(i));
+                continue;
+            }
+            if(sel.compareTo("Subscribed")==0){
+                if(subscribedEvents.contains(data.get(i).getEvent())){
+                    displayData.add((data.get(i)));
                 }
-
-                NotificationAdapter adapter = new NotificationAdapter(NotificationActivity.this, data);
-                recyclerView.setLayoutManager(new LinearLayoutManager(NotificationActivity.this));
-                recyclerView.setAdapter(adapter);
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+            if(data.get(i).getEvent().compareTo(sel)==0){
+                displayData.add(data.get(i));
             }
-        });
+        }
+
+//        adapter = new NotificationAdapter(NotificationActivity.this, displayData);
+//        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+    }
+
+    private void setInitList() {
+
+        String sel = (String) spinner.getSelectedItem();
+        displayData.clear();
+
+        for(int i=0;i<data.size();i++){
+            if(sel.compareTo("All")==0){
+                displayData.add(data.get(i));
+                continue;
+            }
+            if(data.get(i).getEvent().compareTo(sel)==0){
+                displayData.add(data.get(i));
+            }
+        }
+        if(displayData.size()==0){
+            no_noti_text.setVisibility(View.VISIBLE);
+        }else{
+            no_noti_text.setVisibility(View.GONE);
+        }
+//        adapter = new NotificationAdapter(NotificationActivity.this, displayData);
+//        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(NotificationActivity.this, MainActivity.class));
+        if(firstTymOpen) {
+            startActivity(new Intent(NotificationActivity.this, MainActivity.class));
+            finish();
+        }else {
+            finish();
+        }
     }
 }

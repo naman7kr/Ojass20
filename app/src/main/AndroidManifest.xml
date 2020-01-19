@@ -33,7 +33,7 @@
         <meta-data
             android:name="com.onesignal.NotificationOpened.DEFAULT"
             android:value="DISABLE" />
-
+        <meta-data android:name="com.onesignal.BadgeCount" android:value="ENABLE" />
 
         <activity android:name=".Activities.WalkThroughActivity"   android:screenOrientation="portrait"/>
         <activity android:name=".Activities.SplashScreen"

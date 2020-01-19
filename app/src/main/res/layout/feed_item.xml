@@ -33,6 +33,7 @@
                 style="@style/FeedPostEvent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
                 android:textColor="@color/primaryTextColor"
                 />
 
@@ -69,11 +70,12 @@
             <ImageView
                 android:id="@+id/feed_post_image"
                 android:layout_width="match_parent"
-                android:layout_height="450dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="12dp"
                 android:background="@color/white"
-                android:scaleType="centerCrop"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_launcher_background"
                 android:visibility="visible" />
 
             <ProgressBar
@@ -90,6 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:autoLink="phone|web|email"
+            android:textColorLink="@color/hyperlinkcolor"
             android:autoSizeTextType="uniform"
             android:textColor="@color/primaryTextColor"
             />

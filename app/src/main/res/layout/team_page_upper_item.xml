@@ -82,30 +82,31 @@
             android:weightSum="4"
             android:gravity="bottom|center_horizontal"
             android:paddingBottom="10dp"
+            android:background="@color/colorPrimary"
             >
 
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="60dp"
+                    android:layout_width="50dp"
                     android:layout_marginTop="10dp"
-                    android:layout_weight="1"
                     android:id="@+id/team_member_call"
                     android:src="@drawable/call"
-                    android:layout_height="60dp"/>
+                    android:layout_height="50dp"
+                    android:layout_marginRight="20dp"/>
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="60dp"
+                    android:layout_width="50dp"
                     android:layout_marginTop="10dp"
-                    android:layout_weight="1"
                     android:src="@drawable/whatsapp"
                     android:id="@+id/team_member_whatsapp"
-                    android:layout_height="60dp"/>
+                    android:layout_height="50dp"
+                    android:layout_marginRight="20dp"/>
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="60dp"
+                    android:layout_width="50dp"
                     android:layout_marginTop="10dp"
-                    android:layout_weight="1"
                     android:id="@+id/team_member_facebook"
                     android:src="@drawable/facebook_logo"
-                    android:layout_height="60dp"/>
+                    android:layout_height="50dp"
+                    android:layout_marginRight="20dp"/>
 
         </LinearLayout>
 <!--    </RelativeLayout>-->

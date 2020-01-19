@@ -31,13 +31,8 @@ public class OjassApplication extends Application {
                 .unsubscribeWhenNotificationsAreDisabled(true)
                 .setNotificationOpenedHandler(new ExampleNotificationOpenedHandler())
                 .init();
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
-        Picasso.Builder builder = new Picasso.Builder(this);
-        builder.downloader(new OkHttpDownloader(this, Integer.MAX_VALUE));
-        Picasso built = builder.build();
-        built.setIndicatorsEnabled(false);
-        Picasso.setSingletonInstance(built);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
     public static synchronized OjassApplication getInstance() {
@@ -47,7 +42,9 @@ public class OjassApplication extends Application {
     class ExampleNotificationOpenedHandler implements OneSignal.NotificationOpenedHandler {
         @Override
         public void notificationOpened(OSNotificationOpenResult result) {
-            startActivity(new Intent(OjassApplication.this, NotificationActivity.class));
+            Intent intent = new Intent(OjassApplication.this,NotificationActivity.class);
+            intent.putExtra("nottap",true);
+            startActivity(intent);
         }
     }
 }

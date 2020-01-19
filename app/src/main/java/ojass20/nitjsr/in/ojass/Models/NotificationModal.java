@@ -1,25 +1,31 @@
 package ojass20.nitjsr.in.ojass.Models;
 
 public class NotificationModal {
-    private String header,body;
-    private boolean isExplandable;
+    private String ques,ans,event;
+    private boolean isExplandable=false;
 
-    public NotificationModal(String header, String body) {
-        this.header = header;
-        this.body = body;
+    public NotificationModal(){}
+    public NotificationModal(String ques, String ans, String event) {
+        this.ques = ques;
+        this.ans = ans;
         isExplandable = false;
+        this.event = event;
     }
 
     public void setExplandable(boolean explandable) {
         isExplandable = explandable;
     }
 
-    public String getHeader() {
-        return header;
+    public String getEvent() {
+        return event;
     }
 
-    public String getBody() {
-        return body;
+    public String getQues() {
+        return ques;
+    }
+
+    public String getAns() {
+        return ans;
     }
 
     public boolean isExplandable() {

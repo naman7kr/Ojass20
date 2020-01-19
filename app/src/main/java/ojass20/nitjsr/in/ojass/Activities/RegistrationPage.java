@@ -42,7 +42,14 @@ import java.util.HashMap;
 
 import androidx.appcompat.widget.Toolbar;
 import de.hdodenhof.circleimageview.CircleImageView;
+import ojass20.nitjsr.in.ojass.Models.OTPResponse;
 import ojass20.nitjsr.in.ojass.R;
+import ojass20.nitjsr.in.ojass.Utils.ApiClient;
+import ojass20.nitjsr.in.ojass.Utils.ApiInterface;
+import ojass20.nitjsr.in.ojass.Utils.Constants;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImage;
 
@@ -51,7 +58,7 @@ public class RegistrationPage extends AppCompatActivity {
     private TextInputEditText name_reg, email_reg,mobile_reg,
         college_reg;
     private Spinner tshirt_size_spinner, branch_spinner;
-    private Button register_button, skip_button;
+    private Button register_button, skip_button,verify_otp;
     private CircleImageView self_image;
     private TextView over_text;
 
@@ -83,8 +90,6 @@ public class RegistrationPage extends AppCompatActivity {
         initData();
         current_user_id = mauth.getCurrentUser().getUid();
 
-
-
         if(fromProfile){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
@@ -109,10 +114,43 @@ public class RegistrationPage extends AppCompatActivity {
             }
         });
         setGlideImage(this,mauth.getCurrentUser().getPhotoUrl().toString(),self_image);
-
+        verifyOTP();
         fetch_existing_data();
 
     }
+
+    private void verifyOTP() {
+        verify_otp.setVisibility(View.GONE);
+        verify_otp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mobile_reg.getText().toString().trim().isEmpty()||!Patterns.PHONE.matcher(mobile_reg.getText().toString().trim()).matches() )
+                {
+                    mobile_reg.setError("Please Enter Valid Mobile Number");
+                }else{
+                    ApiInterface apiService =
+                            ApiClient.getClient().create(ApiInterface.class);
+
+                    Call<OTPResponse> call = apiService.sentOTP(Constants.OTP_API_KEY, mobile_reg.getText().toString().trim());
+                    call.enqueue(new Callback<OTPResponse>() {
+                        @Override
+                        public void onResponse(Call<OTPResponse> call, Response<OTPResponse> response) {
+                            response.body().getStatus();
+//                            Log.d("SenderID", sessionId);
+                            //you may add code to automatically fetch OTP from messages.
+                        }
+
+                        @Override
+                        public void onFailure(Call<OTPResponse> call, Throwable t) {
+                            Log.e("ERROR", t.toString());
+                        }
+
+                    });
+                }
+            }
+        });
+    }
+
     private void initData(){
         over_text.setText(mauth.getCurrentUser().getDisplayName().split(" ")[0]);
         name_reg.setText(mauth.getCurrentUser().getDisplayName());
@@ -242,6 +280,7 @@ public class RegistrationPage extends AppCompatActivity {
         over_text = findViewById(R.id.overlap_text);
         skip_button = findViewById(R.id.skip_button_Registration_page);
         toolbar = findViewById(R.id.toolbar);
+        verify_otp = findViewById(R.id.verify_otp);
         setSupportActionBar(toolbar);
         //hide keyboard
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);

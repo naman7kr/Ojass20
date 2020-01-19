@@ -91,6 +91,7 @@ import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_IMG_SRC;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_POSTERIMAGES;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsMap;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.eventNames;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.subscribedEvents;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.updateSubEventsArray;
 import static ojass20.nitjsr.in.ojass.Utils.StringEqualityPercentCheckUsingJaroWinklerDistance.getSimilarity;
 import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImage;
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
         fetchFeedsDataFromFirebase();
 
+        getSubscribedEvents();
         setUpNavigationDrawer();
         //setUpRecyclerView();
 
@@ -173,6 +175,32 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 //        printHashKey(this);
         refresh();
         Log.d("ak47", "onCreate: " + mauth.getCurrentUser().getEmail() + " " + mauth.getCurrentUser().getUid());
+    }
+
+    private void getSubscribedEvents() {
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("SubscribedEvents");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                try {
+
+                    for(DataSnapshot ds: dataSnapshot.getChildren()){
+                        if(ds.child("uid").getValue(String.class).compareTo(mauth.getUid())==0){
+                            //remove Subscription
+                            subscribedEvents.add(ds.child("name").getValue(String.class));
+                        }
+                    }
+
+                }catch (Exception e){
+                    Log.e("TAG", e.getStackTrace().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -241,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 if (!progressDialog.isShowing())
                     progressDialog.show();
                 branchData.clear();
+                eventNames.clear();
                 boolean sizeUpdated = false;
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     if (ds.getKey().equalsIgnoreCase("National College Film Festival"))
@@ -739,8 +768,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         mRecyclerView.setHasFixedSize(true);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-
-        mFeedAdapter = new FeedAdapter(this, getSupportFragmentManager(), listposts, currentuid, this);
+        mFeedAdapter = new FeedAdapter(this, getSupportFragmentManager(), listposts, currentuid, this,mRecyclerView);
         mRecyclerView.setAdapter(mFeedAdapter);
         recyclerview_progress.setVisibility(View.GONE);
 

@@ -36,18 +36,20 @@
 
             />
 
-        <ImageButton
-            android:padding="8dp"
-            android:id="@+id/ib_subscribe_feed"
-            android:layout_alignParentRight="true"
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_bookmark_border_white_36px"
-            android:layout_centerVertical="true"
-            android:background="@android:color/transparent"
-            android:tint="@color/white"
-            android:scaleType="fitCenter"/>
-
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="25sp"
+            android:textColor="@color/white"
+            android:text="No Notifications"
+            android:id="@+id/no_noti_text"
+            android:visibility="gone"
+            />
     </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
@@ -55,6 +57,7 @@
         android:id="@+id/recycler_view"
         android:layout_below="@+id/topbar"
         android:background="@android:color/transparent"
+        android:layout_marginTop="10dp"
         />
 
 </RelativeLayout>

@@ -2,6 +2,7 @@ package ojass20.nitjsr.in.ojass.Adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,11 +46,11 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.header.setText(datalist.get(position).getQues());
-        holder.body.setText(datalist.get(position).getAns());
+        holder.body.setText(Html.fromHtml(datalist.get(position).getAns()));
         holder.root.getBackground().setAlpha(50);
 
         boolean isExpanded = datalist.get(position).isExplandable();
-        holder.body.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+        holder.footerLayout.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -58,14 +59,16 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.ViewHolder> {
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout root;
-        TextView header,body;
+        LinearLayout root,footerLayout;
+        TextView header,body,event_name;
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             header = itemView.findViewById(R.id.header);
             body = itemView.findViewById(R.id.body);
             root = itemView.findViewById(R.id.root);
-
+            footerLayout = itemView.findViewById(R.id.footer_layout);
+            event_name = itemView.findViewById(R.id.event_name);
+            event_name.setVisibility(View.GONE);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -1,6 +1,7 @@
 package ojass20.nitjsr.in.ojass.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,13 +35,23 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.header.setText(datalist.get(datalist.size()-1-position).getHeader());
-        holder.body.setText(datalist.get(datalist.size()-1-position).getBody());
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        NotificationModal model = datalist.get(position);
+        Log.e("LOL",model.getQues());
+        holder.event_name.setText(datalist.get(position).getEvent());
+        holder.header.setText(model.getQues());
+        holder.body.setText(model.getAns());
         holder.root.getBackground().setAlpha(50);
-
-        boolean isExpanded = datalist.get(datalist.size()-1-position).isExplandable();
-        holder.body.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+        boolean isExpanded = datalist.get(position).isExplandable();
+        holder.footer_layout.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NotificationModal data = datalist.get(position);
+                data.setExplandable(!data.isExplandable());
+                notifyItemChanged(position);
+            }
+        });
     }
 
     @Override
@@ -49,22 +60,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout root;
-        TextView header,body;
+        LinearLayout root,footer_layout;
+        TextView header,body,event_name;
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             header = itemView.findViewById(R.id.header);
             body = itemView.findViewById(R.id.body);
             root = itemView.findViewById(R.id.root);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    NotificationModal data = datalist.get(datalist.size()-1-getAdapterPosition());
-                    data.setExplandable(!data.isExplandable());
-                    notifyItemChanged(getAdapterPosition());
-                }
-            });
+            event_name = itemView.findViewById(R.id.event_name);
+            footer_layout = itemView.findViewById(R.id.footer_layout);
         }
     }
 }

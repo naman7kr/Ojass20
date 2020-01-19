@@ -17,4 +17,5 @@
     <color name="navHeader">@color/colorPrimary</color>
     <color name="fab">@color/white</color>
     <color name="grey">#333333</color>
+    <color name="hyperlinkcolor">#288325</color>
 </resources>
