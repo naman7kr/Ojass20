@@ -119,10 +119,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
 
     @Override
     public void onBindViewHolder(@NonNull final CustomViewHolder holder, final int position) {
+        FeedPost fp = feedPosts.get(position);
         holder.eventname.setText(feedPosts.get(position).getEvent());
         holder.subevent_name.setText(feedPosts.get(position).getSubEvent());
         holder.content.setText(feedPosts.get(position).getContent());
-        makeTextViewResizable(holder.content,3,"read more",true,recyclerView,position);
+        makeTextViewResizable(holder.content,3,"read more",true,recyclerView,position,fp);
         holder.like_text.setText(feedPosts.get(position).getLikes().size()+" Likes");
         holder.postImageView.setVisibility(View.VISIBLE);
         holder.progressBar.setVisibility(View.GONE);

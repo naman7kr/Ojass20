@@ -22,6 +22,7 @@ import com.bumptech.glide.request.target.Target;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.R;
 
 public class Utilities {
@@ -54,7 +55,7 @@ public class Utilities {
         }).placeholder(R.mipmap.ic_placeholder).fitCenter().into(iv);
     }
     public static void makeTextViewResizable(final TextView tv,
-                                             final int maxLine, final String expandText, final boolean viewMore, final RecyclerView recyclerView, final int position) {
+                                             final int maxLine, final String expandText, final boolean viewMore, final RecyclerView recyclerView, final int position, final FeedPost feedPost) {
 
         if (tv.getTag() == null) {
             tv.setTag(tv.getText());
@@ -78,7 +79,7 @@ public class Utilities {
                     tv.setText(
                             addClickablePartTextViewResizable(tv.getText()
                                             .toString(), tv, maxLine, expandText,
-                                    viewMore,recyclerView,position), TextView.BufferType.SPANNABLE);
+                                    viewMore,recyclerView,position,feedPost), TextView.BufferType.SPANNABLE);
                 } else if (maxLine > 0 && tv.getLineCount() >= maxLine) {
                     int lineEndIndex = tv.getLayout().getLineEnd(maxLine - 1);
                     String text = tv.getText().subSequence(0,
@@ -89,7 +90,7 @@ public class Utilities {
                     tv.setText(
                             addClickablePartTextViewResizable(tv.getText()
                                             .toString(), tv, maxLine, expandText,
-                                    viewMore,recyclerView,position), TextView.BufferType.SPANNABLE);
+                                    viewMore,recyclerView,position,feedPost), TextView.BufferType.SPANNABLE);
                 } else {
                     int lineEndIndex = tv.getLayout().getLineEnd(
                             tv.getLayout().getLineCount() - 1);
@@ -100,7 +101,7 @@ public class Utilities {
                     tv.setText(
                             addClickablePartTextViewResizable(tv.getText()
                                             .toString(), tv, lineEndIndex, expandText,
-                                    viewMore,recyclerView,position), TextView.BufferType.SPANNABLE);
+                                    viewMore,recyclerView,position,feedPost), TextView.BufferType.SPANNABLE);
                 }
             }
         });
@@ -109,7 +110,7 @@ public class Utilities {
 
     private static SpannableStringBuilder addClickablePartTextViewResizable(
             final String strSpanned, final TextView tv, final int maxLine,
-            final String spanableText, final boolean viewMore, final RecyclerView recyclerView, final int position) {
+            final String spanableText, final boolean viewMore, final RecyclerView recyclerView, final int position, final FeedPost feedPost) {
         SpannableStringBuilder ssb = new SpannableStringBuilder(strSpanned);
 
         if (strSpanned.contains(spanableText)) {
@@ -121,20 +122,20 @@ public class Utilities {
 
                             if (viewMore) {
                                 tv.setLayoutParams(tv.getLayoutParams());
-                                tv.setText(tv.getTag().toString(),
+                                tv.setText(feedPost.getContent(),
                                         TextView.BufferType.SPANNABLE);
                                 tv.invalidate();
                                 makeTextViewResizable(tv, -3, "...read Less",
-                                        false,recyclerView,position);
+                                        false,recyclerView,position,feedPost);
                                 tv.setTextColor(Color.WHITE);
                                 recyclerView.scrollToPosition(position);
                             } else {
                                 tv.setLayoutParams(tv.getLayoutParams());
-                                tv.setText(tv.getTag().toString(),
+                                tv.setText(feedPost.getContent(),
                                         TextView.BufferType.SPANNABLE);
                                 tv.invalidate();
                                 makeTextViewResizable(tv, 3, "...read more",
-                                        true,recyclerView,position);
+                                        true,recyclerView,position,feedPost);
                                 tv.setTextColor(Color.WHITE);
                                 recyclerView.scrollToPosition(position);
                             }
