@@ -4,22 +4,22 @@
     android:id="@+id/singleItemTeamMember"
     android:layout_width="80dp"
     android:layout_height="80dp"
-    android:background="@color/transparent"
+    android:background="@color/colorAccent"
     >
 
     <androidx.cardview.widget.CardView
         android:layout_width="80dp"
-        android:elevation="5dp"
+        android:elevation="0dp"
         android:outlineAmbientShadowColor="#000"
         android:layout_height="80dp"
-        android:background="@color/transparent"
+        android:background="@color/colorAccent"
         >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:background="@color/transparent"
+        android:background="@color/colorAccent"
 >
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="80dp"
@@ -27,7 +27,7 @@
             android:padding="5dp"
             android:src="@mipmap/ic_launcher"
             android:id="@+id/single_team_member_image"
-
+            android:background="@color/colorAccent"
             />
 
     </LinearLayout>

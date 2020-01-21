@@ -70,6 +70,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import me.relex.circleindicator.CircleIndicator;
+import ojass20.nitjsr.in.ojass.Adapters.EmergencyAdapter;
 import ojass20.nitjsr.in.ojass.Adapters.FeedAdapter;
 import ojass20.nitjsr.in.ojass.Adapters.PosterAdapter;
 import ojass20.nitjsr.in.ojass.Fragments.HomeFragment;
@@ -77,6 +78,7 @@ import ojass20.nitjsr.in.ojass.Models.BranchHeadModal;
 import ojass20.nitjsr.in.ojass.Models.BranchModal;
 import ojass20.nitjsr.in.ojass.Models.Comments;
 import ojass20.nitjsr.in.ojass.Models.CoordinatorsModel;
+import ojass20.nitjsr.in.ojass.Models.EmergencyModel;
 import ojass20.nitjsr.in.ojass.Models.EventModel;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.Models.Likes;
@@ -104,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private NavigationView mNavigationDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
     private ImageView mPullUp;
-    private AlertDialog.Builder builder;
     private TranslateAnimation mAnimation;
     private ProgressBar recyclerview_progress;
 
@@ -197,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
     }
     private void initializeInstanceVariables() {
-        builder = new AlertDialog.Builder(this);
+
         ojassApplication = OjassApplication.getInstance();
         listposts = new ArrayList<>();
         isCommentsFragmentOpen = false;
@@ -1047,62 +1048,28 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     }
 
     public void showList() {
+        final  ArrayList<EmergencyModel> data = new ArrayList<>();
+        data.add(new EmergencyModel("OJASS Convenor","9472903552"));
+        data.add(new EmergencyModel("NIT Control Room","9065527391"));
+        data.add(new EmergencyModel("Police","100"));
+        data.add(new EmergencyModel("Fire","102"));
+        data.add(new EmergencyModel("Ambulance","7542928298"));
+        data.add(new EmergencyModel("Women-Helpline","181"));
 
-        final ArrayList<String> emer = new ArrayList<>();
-        emer.add("OJASS Convenor");
-        emer.add("NIT Control Room");
-        emer.add("Police");
-        emer.add("Fire");
-        emer.add("Ambulance");
-        //emer.add("Gas Leakage");
-        //emer.add("Tourist-Helpline");
-        //emer.add("Child-Helpline");
-        //emer.add("Blood-Requirement");
-        emer.add("Women-Helpline");
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_emergency);
+        dialog.getWindow().setLayout(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        RecyclerView rV = dialog.findViewById(R.id.emergency_rview);
+        rV.setLayoutManager(new LinearLayoutManager(this));
 
-        //emer.add("Ambulance Network (Emergency or Non-Emergency)");
-
-
-        final ArrayList<String> num = new ArrayList<>();
-        num.add("9472903552");
-        num.add("9065527391");
-        num.add("100");
-        num.add("102");
-        num.add("7542928298");
-        //num.add("1906");
-        //num.add("1363");
-        //num.add("1098");
-        //num.add("104");
-        num.add("181");
-        //num.add("09343180000");
-
-
-        builder.setTitle("Emergency Numbers");
-        builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+        EmergencyAdapter emergencyAdapter = new EmergencyAdapter(this,data);
+        rV.setAdapter(emergencyAdapter);
+        dialog.findViewById(R.id.dialog_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
                 dialog.dismiss();
             }
         });
-
-        builder.setPositiveButton("", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        final Intent intent = new Intent(Intent.ACTION_DIAL);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, emer);
-        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                intent.setData(Uri.parse("tel:" + num.get(which)));
-                startActivity(intent);
-
-            }
-        });
-
-        AlertDialog dialog = builder.create();
         dialog.show();
     }
 
@@ -1139,7 +1106,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             public void run() {
                 backFlag = 0;
             }
-        }, 3000);
+        }, 2500);
     }
 
     private void compareAppVersion() {

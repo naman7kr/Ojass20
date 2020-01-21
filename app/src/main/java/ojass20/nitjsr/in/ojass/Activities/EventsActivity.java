@@ -132,22 +132,7 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
             }
         });
     }
-    public void showBottomSheet() {
-        bottomSheetOpen = true;
-        EventBottomSheet bottomSheet = new EventBottomSheet();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_in_bottom, R.anim.no_anim);
-        transaction.add(R.id.fragment_layout_for_search, bottomSheet);
-        transaction.commit();
 
-        //Change toolbar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_cancel);
-        //getSupportActionBar().setLogo(R.drawable.ic_cancel);
-        //toolbar.setBackgroundColor(Color.BLACK);
-        toolbar.setTitle(event_search_text.getText().toString());
-        event_search_text.setText("");
-    }
 
     private void hideBottomSheet() {
         bottomSheetOpen = false;
@@ -180,7 +165,14 @@ public class EventsActivity extends AppCompatActivity implements PinchAlphaInter
         for (int i = 0; i < Constants.eventNames.size(); i++) {
             data.add(new EventsDisplayModel(Constants.eventImg[i], Constants.eventNames.get(i), INIT_ALPHA));
         }
+        if(data.size()==0){
+            //go to main activity
+            Intent i = new Intent(this,MainActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
+            finish();
 
+        }
         mAdapter = new EventsGridAdapter(this, width, data,this);
         gridLayout.setAdapter(mAdapter);
     }

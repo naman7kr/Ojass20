@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/colorAccent"
+    >
     <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,17 +11,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_margin="10dp"
+        >
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp">
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@color/colorAccent"
+                >
 
                 <TextView
                     android:id="@+id/title_details"
@@ -29,7 +32,7 @@
                     android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:text="Details"
-                    android:textColor="#000"
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="22dp" />
 
                 <ScrollView
@@ -55,6 +58,7 @@
                             android:paddingBottom="65dp"
                             android:textSize="18sp"
                             android:overScrollMode="never"
+                            android:textColor="@color/primaryTextColor"
                             />
 
                         <TextView
@@ -65,12 +69,11 @@
                             android:textSize="18sp"
                             android:padding="16dp"
                             android:overScrollMode="never"
-                            android:textColor="@color/blue"></TextView>
+                            android:textColor="@color/hyperlinkcolor"
+                            ></TextView>
                     </LinearLayout>
                 </ScrollView>
             </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 </RelativeLayout>

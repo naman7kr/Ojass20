@@ -46,7 +46,12 @@ public class DetailsFragment extends Fragment {
         try {
             final String url = MainActivity.data.get(SubEventActivity.position).getLink();
             TextView textView = view.findViewById(R.id.link);
-            textView.setText(url);
+            textView.setText("Link to problem statement");
+            if(url==null || url.compareTo("")==0){
+                textView.setVisibility(View.GONE);
+            }else{
+                textView.setVisibility(View.VISIBLE);
+            }
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

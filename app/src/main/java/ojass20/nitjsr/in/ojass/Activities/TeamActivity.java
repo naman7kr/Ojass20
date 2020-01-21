@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -98,6 +99,9 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         list = new ArrayList<>();
         teamList = new ArrayList<>();
         teamSpinner = findViewById(R.id.team_name);
+        ArrayAdapter<CharSequence> spAdapter = new ArrayAdapter<CharSequence>(this,R.layout.spinner_item,getResources().getStringArray(R.array.team_names));
+        spAdapter.setDropDownViewResource(R.layout.spinner_item_dropdown);
+        teamSpinner.setAdapter(spAdapter);
 //        bottomList=findViewById(R.id.teamMemberList);
 //        team_upper_list = findViewById(R.id.team_upper_recycler_view);
         team_back_button = findViewById(R.id.team_back_button);
@@ -218,96 +222,6 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
     }
-//    private void setBottomList(){
-//        adapter=new TeamMemberAdapter(TeamActivity.this,this,teamList,true,DEVELOPER);
-//        manager1 = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
-//        bottomList.setLayoutManager(manager1);
-//        bottomList.setAdapter(adapter);
-//        btmSnap = new LinearSnapHelper();
-//        btmSnap.attachToRecyclerView(bottomList);
-////        bottomList.setNestedScrollingEnabled(false);
-////        bottomList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-////            @Override
-////            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-////                super.onScrollStateChanged(recyclerView, newState);
-////                if(newState == RecyclerView.SCROLL_STATE_IDLE){
-//
-////                }
-////            }
-////        });
-//    }
-//    private void setUpperList(){
-//        manager2 = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
-//        upper_adapter=new TeamMemberAdapter(TeamActivity.this,this,teamList,false,DEVELOPER);
-//        team_upper_list.setLayoutManager(manager2);
-//        team_upper_list.setAdapter(upper_adapter);
-//
-//        topSnap = new LinearSnapHelper();
-//        topSnap.attachToRecyclerView(team_upper_list);
-//    }
-//    private void setSwipeLayout(){
-//        swipeLayout.setOnTouchListener(new OnSwipeTouchListener(this){
-//            @Override
-//            public void onSwipeRight() {
-//                super.onSwipeRight();
-//
-//                int pos = (manager1.findFirstVisibleItemPosition()+manager1.findLastCompletelyVisibleItemPosition())/2;
-//                Toast.makeText(TeamActivity.this, String.valueOf(pos), Toast.LENGTH_SHORT).show();
-//                bottomList.getLayoutManager().smoothScrollToPosition(bottomList,new RecyclerView.State(),pos-1);
-//            }
-//
-//            @Override
-//            public void onSwipeLeft() {
-//                super.onSwipeLeft();
-//                int pos = (int)(manager1.findFirstVisibleItemPosition()+manager1.findLastCompletelyVisibleItemPosition())/2+1;
-//                bottomList.getLayoutManager().smoothScrollToPosition(bottomList,new RecyclerView.State(),pos+1);
-//                Toast.makeText(TeamActivity.this, String.valueOf(pos), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-//    private void syncRecyclerViewsAndSpinner() {
-//        bottomList.scrollToPosition(5);
-//        final RecyclerView.OnScrollListener[] scrollListeners = new RecyclerView.OnScrollListener[2];
-//        DisplayMetrics displayMetrics = new DisplayMetrics();
-//        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-//        int height = displayMetrics.heightPixels;
-//        final int width = displayMetrics.widthPixels;
-//        scrollListeners[0] = new RecyclerView.OnScrollListener( )
-//        {
-//
-//
-//            @Override
-//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-////                team_upper_list.removeOnScrollListener(scrollListeners[1]);
-////                team_upper_list.scrollBy(dx, dy);
-////                team_upper_list.addOnScrollListener(scrollListeners[1]);
-//
-//            }
-//        };
-//        scrollListeners[1] = new RecyclerView.OnScrollListener( )
-//        {
-//            @Override
-//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//
-//                    View v = topSnap.findSnapView(manager2);
-//                    bottomList.removeOnScrollListener(scrollListeners[0]);
-//                    bottomList.scrollToPosition(manager2.getPosition(v));
-//                    bottomList.addOnScrollListener(scrollListeners[0]);
-//
-//            }
-//            @Override
-//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                bottomList.removeOnScrollListener(scrollListeners[0]);
-//                bottomList.scrollBy((dx/(width/dpToPx(150))), dy);
-//                bottomList.addOnScrollListener(scrollListeners[0]);
-//            }
-//        };
-//        bottomList.addOnScrollListener(scrollListeners[0]);
-//        team_upper_list.addOnScrollListener(scrollListeners[1]);
-//    }
 
     private void fetchData() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Team");
@@ -396,6 +310,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
                 startActivity(intent);
                 break;
             case R.id.team_member_whatsapp:
+
                 String url = "https://api.whatsapp.com/send?phone=" + MEMBER.whatsapp;
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));

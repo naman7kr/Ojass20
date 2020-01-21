@@ -4,24 +4,24 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/colorAccent"
+    android:padding="10dp"
+    >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@color/colorAccent"
+                >
 
                 <TextView
                     android:typeface="serif"
                     android:id="@+id/title_prize"
                     android:layout_marginTop="15dp"
                     android:layout_marginBottom="10dp"
-                    android:textColor="#000"
+                    android:textColor="@color/primaryTextColor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -55,8 +55,8 @@
 
                                 <ImageView
                                     android:padding="4dp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
                                     android:src="@drawable/first_place" />
 
                                 <TextView
@@ -65,7 +65,7 @@
                                     android:layout_marginLeft="6dp"
                                     android:text="First Prize"
                                     android:layout_gravity="center"
-                                    android:textColor="#FFD700"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"/>
 
                             </LinearLayout>
@@ -81,7 +81,7 @@
                                     android:layout_marginLeft="10dp"
                                     android:textStyle="bold"
                                     android:layout_gravity="center"
-                                    android:textColor="#000000"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"
                                     android:text="@string/Rs"
                                     android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
                                     android:text=""
                                     android:textStyle="bold"
                                     android:layout_gravity="center"
-                                    android:textColor="#000000"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"
                                     android:id="@+id/prize1" />
 
@@ -121,8 +121,8 @@
 
                                 <ImageView
                                     android:padding="4dp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
                                     android:src="@drawable/second_place"
                                     />
 
@@ -132,7 +132,7 @@
                                     android:layout_marginLeft="6dp"
                                     android:text="Second Prize"
                                     android:layout_gravity="center"
-                                    android:textColor="#FFD700"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"/>
 
                             </LinearLayout>
@@ -146,7 +146,7 @@
                                     android:layout_marginLeft="10dp"
                                     android:textStyle="bold"
                                     android:layout_gravity="center"
-                                    android:textColor="#000000"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"
                                     android:text="@string/Rs"
                                     android:layout_width="wrap_content"
@@ -162,7 +162,7 @@
                                     android:text=""
                                     android:textStyle="bold"
                                     android:layout_gravity="center"
-                                    android:textColor="#000000"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"/>
 
                             </LinearLayout>
@@ -185,8 +185,8 @@
 
                                 <ImageView
                                     android:padding="4dp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
                                     android:src="@drawable/third_place" />
 
                                 <TextView
@@ -195,7 +195,7 @@
                                     android:layout_marginLeft="6dp"
                                     android:text="Third Prize"
                                     android:layout_gravity="center"
-                                    android:textColor="#FFD700"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"/>
 
                             </LinearLayout>
@@ -210,7 +210,7 @@
                                     android:layout_marginLeft="10dp"
                                     android:textStyle="bold"
                                     android:layout_gravity="center"
-                                    android:textColor="#000000"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"
                                     android:text="@string/Rs"
                                     android:layout_width="wrap_content"
@@ -226,7 +226,7 @@
                                     android:text=""
                                     android:textStyle="bold"
                                     android:layout_gravity="center"
-                                    android:textColor="#000000"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"/>
 
                             </LinearLayout>
@@ -248,9 +248,9 @@
 
                                 <ImageView
                                     android:padding="4dp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/third_place" />
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/fourth_place" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -258,7 +258,7 @@
                                     android:layout_marginLeft="6dp"
                                     android:text="Fourth Prize"
                                     android:layout_gravity="center"
-                                    android:textColor="#FFD700"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"/>
 
                             </LinearLayout>
@@ -273,7 +273,7 @@
                                     android:layout_marginLeft="10dp"
                                     android:textStyle="bold"
                                     android:layout_gravity="center"
-                                    android:textColor="#000000"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"
                                     android:text="@string/Rs"
                                     android:layout_width="wrap_content"
@@ -289,7 +289,7 @@
                                     android:text=""
                                     android:textStyle="bold"
                                     android:layout_gravity="center"
-                                    android:textColor="#000000"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"/>
 
                             </LinearLayout>
@@ -312,9 +312,9 @@
 
                                 <ImageView
                                     android:padding="4dp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/third_place" />
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/fifth_place" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -322,7 +322,7 @@
                                     android:layout_marginLeft="6dp"
                                     android:text="Fifth Prize"
                                     android:layout_gravity="center"
-                                    android:textColor="#FFD700"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"/>
 
                             </LinearLayout>
@@ -337,7 +337,7 @@
                                     android:layout_marginLeft="10dp"
                                     android:textStyle="bold"
                                     android:layout_gravity="center"
-                                    android:textColor="#000000"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"
                                     android:text="@string/Rs"
                                     android:layout_width="wrap_content"
@@ -353,7 +353,7 @@
                                     android:text=""
                                     android:textStyle="bold"
                                     android:layout_gravity="center"
-                                    android:textColor="#000000"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"/>
 
                             </LinearLayout>
@@ -376,9 +376,9 @@
 
                                 <ImageView
                                     android:padding="4dp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/third_place" />
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/sixth_place" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -386,7 +386,7 @@
                                     android:layout_marginLeft="6dp"
                                     android:text="Sixth Prize"
                                     android:layout_gravity="center"
-                                    android:textColor="#FFD700"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"/>
 
                             </LinearLayout>
@@ -401,7 +401,7 @@
                                     android:layout_marginLeft="10dp"
                                     android:textStyle="bold"
                                     android:layout_gravity="center"
-                                    android:textColor="#000000"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"
                                     android:text="@string/Rs"
                                     android:layout_width="wrap_content"
@@ -417,7 +417,7 @@
                                     android:text=""
                                     android:textStyle="bold"
                                     android:layout_gravity="center"
-                                    android:textColor="#000000"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"/>
 
                             </LinearLayout>
@@ -470,12 +470,14 @@
                                     android:layout_height="wrap_content"
                                     android:text="Best Acting:"
                                     android:textSize="20sp"
+                                    android:textColor="@color/primaryTextColor"
                                     />
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="1500"
                                     android:id="@+id/prize_best_actress"
+                                    android:textColor="@color/primaryTextColor"
                                     />
                             </LinearLayout>
                             <LinearLayout
@@ -486,11 +488,13 @@
                                     android:layout_height="wrap_content"
                                     android:text="Best Cinematographer:"
                                     android:textSize="20sp"
+                                    android:textColor="@color/primaryTextColor"
                                     />
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="1500"
+                                    android:textColor="@color/primaryTextColor"
                                     android:id="@+id/prize_best_cinematographer"
                                     />
                             </LinearLayout>
@@ -502,12 +506,14 @@
                                     android:layout_height="wrap_content"
                                     android:text="Best Story:"
                                     android:textSize="20sp"
+                                    android:textColor="@color/primaryTextColor"
                                     />
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="1500"
                                     android:id="@+id/prize_best_story"
+                                    android:textColor="@color/primaryTextColor"
                                     />
                             </LinearLayout>
                             <LinearLayout
@@ -518,12 +524,14 @@
                                     android:layout_height="wrap_content"
                                     android:text="Best Editor:"
                                     android:textSize="20sp"
+                                    android:textColor="@color/primaryTextColor"
                                     />
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="1500"
                                     android:id="@+id/prize_best_editor"
+                                    android:textColor="@color/primaryTextColor"
                                     />
                             </LinearLayout>
                         </LinearLayout>
@@ -540,24 +548,28 @@
                                 android:layout_height="wrap_content"
                                 android:text="Fabulous Four teams will get Rs. 2000 each"
                                 android:textSize="15sp"
+                                android:textColor="@color/primaryTextColor"
                                 />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="For best innovative design Rs. 1000"
                                 android:textSize="15sp"
+                                android:textColor="@color/primaryTextColor"
                                 />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="For best Design Report Rs. 1500"
                                 android:textSize="15sp"
+                                android:textColor="@color/primaryTextColor"
                                 />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="For best presentation Rs. 500"
                                 android:textSize="15sp"
+                                android:textColor="@color/primaryTextColor"
                                 />
                         </LinearLayout>
                         <TextView
@@ -568,7 +580,7 @@
                             android:id="@+id/text_view"
                             android:gravity="center"
                             android:visibility="gone"
-                            android:textColor="@color/black"/>
+                            android:textColor="@color/primaryTextColor" />
 
                         <LinearLayout
                             android:layout_marginTop="20dp"
@@ -582,7 +594,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
                                 android:text="Total Prize worth"
-                                android:textColor="#000000"
+                                android:textColor="@color/primaryTextColor"
                                 android:textSize="22sp"/>
 
                             <LinearLayout
@@ -595,7 +607,7 @@
                                     android:layout_marginLeft="10dp"
                                     android:textStyle="bold"
                                     android:layout_gravity="center"
-                                    android:textColor="#000000"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"
                                     android:text="@string/Rs"
                                     android:layout_width="wrap_content"
@@ -612,7 +624,7 @@
                                     android:text=""
                                     android:textStyle="bold"
                                     android:layout_gravity="center"
-                                    android:textColor="#000000"
+                                    android:textColor="@color/primaryTextColor"
                                     android:textSize="20sp"/>
 
                             </LinearLayout>
@@ -623,6 +635,6 @@
                 </ScrollView>
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
+
 
     </LinearLayout>

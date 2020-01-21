@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -87,7 +88,9 @@ public class TeamMemberAdapter extends PagerAdapter {
         whatsapp_upper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = "https://api.whatsapp.com/send?phone="+list.get(position).whatsapp;
+
+                String url = "https://api.whatsapp.com/send?phone=+91"+list.get(position).whatsapp;
+//                Toast.makeText(context, url, Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 context.startActivity(i);

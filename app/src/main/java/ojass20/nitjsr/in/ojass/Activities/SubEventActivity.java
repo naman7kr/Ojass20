@@ -33,6 +33,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -150,21 +151,30 @@ public class SubEventActivity extends AppCompatActivity {
         sv_fab.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
             @Override
             public boolean onActionSelected(SpeedDialActionItem actionItem) {
+                ViewGroup viewGroup = findViewById(android.R.id.content);
+                View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialog_layout, viewGroup, false);
+                mLL = new ArrayList<>();
+                mLL.add((LinearLayout) dialogView.findViewById(R.id.one));
+                mLL.add((LinearLayout) dialogView.findViewById(R.id.two));
+                mLL.add((LinearLayout) dialogView.findViewById(R.id.three));
+                mAbout = dialogView.findViewById(R.id.about_data);
                 if (actionItem.getId() == R.id.item1) {
                     //Toast.makeText(SubEventActivity.this, "About clicked dumbass", Toast.LENGTH_SHORT).show();
-
+                    mLL.get(0).setVisibility(View.GONE);
+                    mLL.get(1).setVisibility(View.GONE);
+                    mLL.get(2).setVisibility(View.GONE);
+                    mAbout.setVisibility(View.VISIBLE);
                     Rect displayRectangle = new Rect();
                     Window window = SubEventActivity.this.getWindow();
                     window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
                     final AlertDialog.Builder builder = new AlertDialog.Builder(SubEventActivity.this, R.style.CustomAlertDialog);
-                    ViewGroup viewGroup = findViewById(android.R.id.content);
-                    View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialog_layout, viewGroup, false);
+
 //                dialogView.setMinimumWidth((int) (displayRectangle.width() * 1f));
 //                dialogView.setMinimumHeight((int) (displayRectangle.height() * 1f));
                     builder.setView(dialogView);
                     final AlertDialog alertDialog = builder.create();
-                    mAbout = dialogView.findViewById(R.id.about_data);
-                    mAbout.setVisibility(View.VISIBLE);
+
+
                     mHeading = dialogView.findViewById(R.id.heading);
                     String s = Constants.eventNames.get(mainEventPosition);
                     mHeading.setText(s);
@@ -172,11 +182,8 @@ public class SubEventActivity extends AppCompatActivity {
 
                     alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-
-                    ImageView dialogIcon = dialogView.findViewById(R.id.dialog_icon);
-                    dialogIcon.setImageDrawable(getResources().getDrawable(R.drawable.pinned_dialog));
                     alertDialog.show();
-                    ImageView dismiss_button = dialogView.findViewById(R.id.dismiss_dialog);
+                    Button dismiss_button = dialogView.findViewById(R.id.dismiss_dialog);
                     dismiss_button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -186,21 +193,20 @@ public class SubEventActivity extends AppCompatActivity {
 
                     return true;
                 }
-                if (actionItem.getId() == R.id.item2) {
+                else if (actionItem.getId() == R.id.item2) {
                     //Toast.makeText(SubEventActivity.this, "Heads clicked dumbass", Toast.LENGTH_SHORT).show();
-
+                    mAbout.setVisibility(View.GONE);
                     Rect displayRectangle = new Rect();
                     Window window = SubEventActivity.this.getWindow();
                     window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
                     final AlertDialog.Builder builder = new AlertDialog.Builder(SubEventActivity.this, R.style.CustomAlertDialog);
-                    ViewGroup viewGroup = findViewById(android.R.id.content);
-                    View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialog_layout, viewGroup, false);
+
                     final ArrayList<BranchHeadModal> bhNames = MainActivity.branchData.get(Constants.eventNames.get(mainEventPosition)).getBranchHead();
                     dialogView.setMinimumWidth((int) (displayRectangle.width() / 1.5f * 1f));
                     dialogView.setMinimumHeight((int) (displayRectangle.height() / 5f * 1f));
                     builder.setView(dialogView);
                     final AlertDialog alertDialog = builder.create();
-                    mLL = new ArrayList<>();
+
                     mProfile = new ArrayList<>();
                     mCall = new ArrayList<>();
                     mWhatsapp = new ArrayList<>();
@@ -212,9 +218,7 @@ public class SubEventActivity extends AppCompatActivity {
                         s = "Branch Head";
                     mHeading.setText(s);
 
-                    mLL.add((LinearLayout) dialogView.findViewById(R.id.one));
-                    mLL.add((LinearLayout) dialogView.findViewById(R.id.two));
-                    mLL.add((LinearLayout) dialogView.findViewById(R.id.three));
+
 
                     mProfile.add((ImageView) dialogView.findViewById(R.id.img1));
                     mProfile.add((ImageView) dialogView.findViewById(R.id.img2));
@@ -331,11 +335,8 @@ public class SubEventActivity extends AppCompatActivity {
                     }
                     alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-
-                    ImageView dialogIcon = dialogView.findViewById(R.id.dialog_icon);
-                    dialogIcon.setImageDrawable(getResources().getDrawable(R.drawable.dialog_head));
                     alertDialog.show();
-                    ImageView dismiss_button = dialogView.findViewById(R.id.dismiss_dialog);
+                    TextView dismiss_button = dialogView.findViewById(R.id.dismiss_dialog);
                     dismiss_button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

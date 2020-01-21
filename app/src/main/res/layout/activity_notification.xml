@@ -27,11 +27,13 @@
 
         <Spinner
             android:id="@+id/spinner_feed"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textAlignment="center"
             android:layout_centerHorizontal="true"
-            android:spinnerMode="dialog"
+            android:layout_toRightOf="@id/ib_back_feed"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="50dp"
             android:background="@drawable/spinner_background"
 
             />
