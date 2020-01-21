@@ -95,6 +95,7 @@ public class HomeFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mLeftArrow.setClickable(false);
                     swipeLeft();
                 }
             }
@@ -104,6 +105,7 @@ public class HomeFragment extends Fragment implements
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
+                mRightArrow.setClickable(false);
                 swipeRight();
             }
         });
@@ -167,10 +169,10 @@ public class HomeFragment extends Fragment implements
     }
 
     private void setUpArrayList() {
-        mItems.add(new HomePage("Events", "#9B03FB", 0, R.drawable.ic_launcher_background, 0, R.drawable.square_events_images, R.mipmap.violet_back));//purple
-        mItems.add(new HomePage("Gurugyan", "#FB0303", 1, R.drawable.ic_launcher_foreground, -90, R.drawable.square_gurugyan_image, R.mipmap.red_back));//red
-        mItems.add(new HomePage("Itinerary", "#03FB2C", 2, R.drawable.ic_launcher_background, -180, R.drawable.square_itinerary_image, R.mipmap.green_back));//green
-        mItems.add(new HomePage("Maps", "#0F03FB", 3, R.drawable.ic_launcher_foreground, -270, R.drawable.square_maps_image, R.mipmap.blue_back));//blue
+        mItems.add(new HomePage("Events", "#9B03FB", 0, R.drawable.ic_launcher_background, 0, R.drawable.square_events_images, R.drawable.violet_back));//purple
+        mItems.add(new HomePage("Gurugyan", "#FB0303", 1, R.drawable.ic_launcher_foreground, -90, R.drawable.square_gurugyan_image, R.drawable.red_back));//red
+        mItems.add(new HomePage("Itinerary", "#03FB2C", 2, R.drawable.ic_launcher_background, -180, R.drawable.square_itinerary_image, R.drawable.green_back));//green
+        mItems.add(new HomePage("Maps", "#0F03FB", 3, R.drawable.ic_launcher_foreground, -270, R.drawable.square_maps_image, R.drawable.blue_back));//blue
     }
 
     private void detectBottomTabClick() {
@@ -222,6 +224,7 @@ public class HomeFragment extends Fragment implements
             public void onAnimationEnd(Animation animation) {
                 swipeImage2.setImageDrawable(getActivity().getDrawable(mItems.get(mInd).getmImageSpecificId()));
                 swipeImage2.startAnimation(fadeIn);
+                mRightArrow.setClickable(true);
             }
 
             @Override
@@ -277,6 +280,7 @@ public class HomeFragment extends Fragment implements
             public void onAnimationEnd(Animation animation) {
                 swipeImage2.setImageDrawable(getActivity().getDrawable(mItems.get(mInd).getmImageSpecificId()));
                 swipeImage2.startAnimation(fadeIn);
+                mLeftArrow.setClickable(true);
             }
 
             @Override

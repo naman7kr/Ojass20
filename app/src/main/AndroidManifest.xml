@@ -18,7 +18,8 @@
         android:launchMode="singleInstance"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.ActivityZoomableImage"></activity>
+        <activity android:name=".Activities.ActivityZoomableImage"
+            android:screenOrientation="portrait" ></activity>
         <activity
             android:name=".Activities.FeedbackActivity"
             android:parentActivityName=".Activities.MainActivity"
