@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@mipmap/violet_back"></ImageView>
+            android:src="@drawable/violet_back"></ImageView>
 
         <ImageView
             android:id="@+id/fake_background2"
@@ -27,7 +27,7 @@
             android:layout_height="match_parent"
             android:layout_alignRight="@id/fake_background1"
             android:scaleType="centerCrop"
-            android:src="@mipmap/violet_back"></ImageView>
+            android:src="@drawable/violet_back"></ImageView>
 
         <RelativeLayout
             android:layout_width="match_parent"
