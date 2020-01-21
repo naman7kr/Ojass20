@@ -19,7 +19,6 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,13 +49,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.jsoup.Jsoup;
@@ -98,6 +97,7 @@ import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImage;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragInterface, ViewPager.OnPageChangeListener, FeedAdapter.CommentClickInterface {
     private static final String LOG_TAG = "Main";
+    private static final int LOAD_COUNT = 5;
     private DrawerLayout mDrawer;
     private View mDrwawerHeaderView;
     private Toolbar mToolbar;
@@ -137,11 +137,13 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private CircleIndicator indicator;
     private SwipeRefreshLayout refreshLayout;
     private NestedScrollView scrollView;
-    private boolean mScrollDown = false;
+    private boolean mScrollDown = true;
     private boolean isFragOpen = false;
     private Handler backHandler;
     private int backFlag = 0;
     private String currentVersion;
+    private Boolean reachedEnd = false;
+
     String urlOfApp = "https://play.google.com/store/apps/details?id=ojass20.nitjsr.in.ojass";
 
     @Override
@@ -151,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 //        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
         init();
         initializeInstanceVariables();
+        setUpRecyclerView();
         setSlider();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -175,6 +178,49 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 //        printHashKey(this);
         refresh();
         Log.d("ak47", "onCreate: " + mauth.getCurrentUser().getEmail() + " " + mauth.getCurrentUser().getUid());
+    }
+    void init() {
+        homeContainer = findViewById(R.id.home_container);
+        recyclerview_progress = findViewById(R.id.recycler_view_progress);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mNavigationDrawer = (NavigationView) findViewById(R.id.navigation_view);
+
+        mDrwawerHeaderView = mNavigationDrawer.inflateHeaderView(R.layout.nav_header);
+        mPullUp = findViewById(R.id.pull_up);
+
+        mRecyclerView = findViewById(R.id.feed_recycler_view);
+        viewPager = findViewById(R.id.viewpager_poster);
+        indicator = findViewById(R.id.indicator_slider);
+        refreshLayout = findViewById(R.id.swipe_refresh);
+        scrollView = findViewById(R.id.nested_scroll_main);
+
+    }
+    private void initializeInstanceVariables() {
+        builder = new AlertDialog.Builder(this);
+        ojassApplication = OjassApplication.getInstance();
+        listposts = new ArrayList<>();
+        isCommentsFragmentOpen = false;
+
+        mauth = FirebaseAuth.getInstance();
+        currentuid = mauth.getCurrentUser().getUid();
+
+        mAnimation = new TranslateAnimation(
+                TranslateAnimation.ABSOLUTE, 0f,
+                TranslateAnimation.ABSOLUTE, 0f,
+                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
+                TranslateAnimation.RELATIVE_TO_PARENT, 0.005f);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+        float x = (float) Math.sqrt(convertDpToPixel(125, this) * convertDpToPixel(125, this) - convertDpToPixel(41, this) * convertDpToPixel(41, this));
+        float x1 = (float) Math.sqrt(convertDpToPixel(125, this) * convertDpToPixel(125, this) - convertDpToPixel(57, this) * convertDpToPixel(57, this));
+
+        float m1 = width / 2 - x;
+        m1 = m1 - convertDpToPixel(9, this);
+        m1 = m1 + (x - x1);
+        float m2 = m1 + 2 * x1;
     }
 
     private void getSubscribedEvents() {
@@ -316,51 +362,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         });
     }
 
-    void init() {
-        homeContainer = findViewById(R.id.home_container);
-        recyclerview_progress = findViewById(R.id.recycler_view_progress);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mNavigationDrawer = (NavigationView) findViewById(R.id.navigation_view);
-
-        mDrwawerHeaderView = mNavigationDrawer.inflateHeaderView(R.layout.nav_header);
-        mPullUp = findViewById(R.id.pull_up);
-
-        mRecyclerView = findViewById(R.id.feed_recycler_view);
-        viewPager = findViewById(R.id.viewpager_poster);
-        indicator = findViewById(R.id.indicator_slider);
-        refreshLayout = findViewById(R.id.swipe_refresh);
-        scrollView = findViewById(R.id.nested_scroll_main);
-
-    }
-
-    private void initializeInstanceVariables() {
-        builder = new AlertDialog.Builder(this);
-        ojassApplication = OjassApplication.getInstance();
-        listposts = new ArrayList<>();
-        isCommentsFragmentOpen = false;
-
-        mauth = FirebaseAuth.getInstance();
-        currentuid = mauth.getCurrentUser().getUid();
-
-        mAnimation = new TranslateAnimation(
-                TranslateAnimation.ABSOLUTE, 0f,
-                TranslateAnimation.ABSOLUTE, 0f,
-                TranslateAnimation.RELATIVE_TO_PARENT, 0f,
-                TranslateAnimation.RELATIVE_TO_PARENT, 0.005f);
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = displayMetrics.widthPixels;
-        float x = (float) Math.sqrt(convertDpToPixel(125, this) * convertDpToPixel(125, this) - convertDpToPixel(41, this) * convertDpToPixel(41, this));
-        float x1 = (float) Math.sqrt(convertDpToPixel(125, this) * convertDpToPixel(125, this) - convertDpToPixel(57, this) * convertDpToPixel(57, this));
-
-        float m1 = width / 2 - x;
-        m1 = m1 - convertDpToPixel(9, this);
-        m1 = m1 + (x - x1);
-        float m2 = m1 + 2 * x1;
-    }
-
     void refresh() {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -383,7 +384,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         //code to fetch more data for endless scrolling
                         if (mScrollDown) {
 //                            Toast.makeText(ojassApplication, "SCroll down", Toast.LENGTH_SHORT).show();
-                            TranslateAnimation tr = new TranslateAnimation(0.0f, 0.0f, 0, 30);
+                            TranslateAnimation tr = new TranslateAnimation(0.0f, 0.0f, 0, 100);
                             tr.setDuration(100);
                             mPullUp.startAnimation(tr);
                             mScrollDown = false;
@@ -393,7 +394,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         if (!mScrollDown) {
 //                            Toast.makeText(ojassApplication, "SCroll up", Toast.LENGTH_SHORT).show();
                             mPullUp.setVisibility(View.VISIBLE);
-                            TranslateAnimation tr = new TranslateAnimation(0.0f, 0.0f, 0, -30);
+                            TranslateAnimation tr = new TranslateAnimation(0.0f, 0.0f, 100, 0);
                             tr.setDuration(100);
                             mPullUp.startAnimation(tr);
                             mScrollDown = true;
@@ -536,67 +537,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         }
     }
 
-    private void fetchFeedsDataFromFirebase() {
-        dref = FirebaseDatabase.getInstance().getReference().child("Feeds");
-        dref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                recyclerview_progress.setVisibility(View.VISIBLE);
-                listposts.clear();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    //FeedPost post = ds.getValue(FeedPost.class);
-                    String post_id_temp = ds.getKey();
-                    boolean flag = false;
 
-                    ArrayList<Likes> mlikes = new ArrayList<>();
-                    for (DataSnapshot dslike : ds.child("likes").getChildren()) {
-                        //Likes like=dslike.getValue(Likes.class);
-                        String temp = dslike.getValue().toString();
-                        Likes like = new Likes(temp);
-                        mlikes.add(like);
-                        if (temp.equals(currentuid)) {
-                            flag = true;
-                        }
-                    }
-
-                    ArrayList<Comments> mcomments = new ArrayList<>();
-                    for (DataSnapshot dscomment : ds.child("comments").getChildren()) {
-                        Comments comment = dscomment.getValue(Comments.class);
-                        mcomments.add(comment);
-                    }
-
-                    String content = ds.child("content").getValue().toString();
-                    String event_name = ds.child("event").getValue().toString();
-                    String subevent_name = ds.child("subEvent").getValue().toString();
-                    String image_url = ds.child("imageURL").getValue().toString();
-                    String timestamp = (ds.hasChild("timestamp")) ? ds.child("timestamp").getValue().toString() : "0";
-
-                    FeedPost post = new FeedPost(timestamp, flag, post_id_temp, content, event_name, image_url, subevent_name, mlikes, mcomments);
-
-                    Log.e("vila", post.getImageURL());
-                    listposts.add(post);
-                    Collections.sort(listposts);
-                }
-                setUpRecyclerView();
-                Log.e("VIVZ", "onDataChange: listposts count = " + listposts.size());
-                mFeedAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        initializeInstanceVariables();
-        //setUpRecyclerView();
-
-//        setUpArrayList();
-        setUpNavigationDrawer();
-        setUpAnimationForImageView(mPullUp);
-        detectTouchEvents();
-
-    }
 
     private void eventStuff() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Events");
@@ -765,18 +706,86 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     }
 
     private void setUpRecyclerView() {
-        mRecyclerView.setHasFixedSize(true);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mFeedAdapter = new FeedAdapter(this, getSupportFragmentManager(), listposts, currentuid, this,mRecyclerView);
         mRecyclerView.setAdapter(mFeedAdapter);
         recyclerview_progress.setVisibility(View.GONE);
 
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String numpost = preferences.getString("PostNo", "");
         mRecyclerView.scrollToPosition(Integer.parseInt(numpost));
     }
+    private void fetchFeedsDataFromFirebase() {
+        Query query;
 
+        query = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("Feeds");
+//                .startAt(mPageEndOffset)
+//                .limitToFirst(mPageLimit);
+
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                recyclerview_progress.setVisibility(View.VISIBLE);
+                listposts.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    //FeedPost post = ds.getValue(FeedPost.class);
+                    String post_id_temp = ds.getKey();
+                    boolean flag = false;
+
+                    ArrayList<Likes> mlikes = new ArrayList<>();
+                    for (DataSnapshot dslike : ds.child("likes").getChildren()) {
+                        //Likes like=dslike.getValue(Likes.class);
+                        String temp = dslike.getValue().toString();
+                        Likes like = new Likes(temp);
+                        mlikes.add(like);
+                        if (temp.equals(currentuid)) {
+                            flag = true;
+                        }
+                    }
+
+                    ArrayList<Comments> mcomments = new ArrayList<>();
+                    for (DataSnapshot dscomment : ds.child("comments").getChildren()) {
+                        Comments comment = dscomment.getValue(Comments.class);
+                        mcomments.add(comment);
+                    }
+
+                    String content = ds.child("content").getValue().toString();
+                    String event_name = ds.child("event").getValue().toString();
+                    String subevent_name = ds.child("subEvent").getValue().toString();
+                    String image_url = ds.child("imageURL").getValue().toString();
+                    String timestamp = (ds.hasChild("timestamp")) ? ds.child("timestamp").getValue().toString() : "0";
+
+                    FeedPost post = new FeedPost(timestamp, flag, post_id_temp, content, event_name, image_url, subevent_name, mlikes, mcomments);
+
+                    Log.e("vila", post.getImageURL());
+                    listposts.add(post);
+                }
+                setUpRecyclerView();
+                Collections.sort(listposts);
+                Log.e("VIVZ", "onDataChange: listposts count = " + listposts.size());
+                mFeedAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        initializeInstanceVariables();
+        //setUpRecyclerView();
+
+//        setUpArrayList();
+        setUpNavigationDrawer();
+        setUpAnimationForImageView(mPullUp);
+        detectTouchEvents();
+
+    }
 
     private void detectTouchEvents() {
         //pullup button click
@@ -893,6 +902,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
         profile_name.setOnClickListener(onClickListener);
         profile_picture.setOnClickListener(onClickListener);
+        mDrwawerHeaderView.setOnClickListener(onClickListener);
+
         mDrwawerHeaderView.findViewById(R.id.nav_header_alert).setOnClickListener(onClickListener);
 
         if(!isRegistrationComplete){
@@ -1038,7 +1049,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     public void showList() {
 
         final ArrayList<String> emer = new ArrayList<>();
-        emer.add("Emergency");
+        emer.add("OJASS Convenor");
+        emer.add("NIT Control Room");
         emer.add("Police");
         emer.add("Fire");
         emer.add("Ambulance");
@@ -1047,15 +1059,16 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         //emer.add("Child-Helpline");
         //emer.add("Blood-Requirement");
         emer.add("Women-Helpline");
+
         //emer.add("Ambulance Network (Emergency or Non-Emergency)");
 
 
         final ArrayList<String> num = new ArrayList<>();
-
-        num.add("112");
+        num.add("9472903552");
+        num.add("9065527391");
         num.add("100");
         num.add("102");
-        num.add("108");
+        num.add("7542928298");
         //num.add("1906");
         //num.add("1363");
         //num.add("1098");

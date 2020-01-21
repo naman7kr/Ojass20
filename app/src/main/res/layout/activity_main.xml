@@ -139,14 +139,12 @@
 
                         <ImageView
                             android:id="@+id/pull_up"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
                             android:layout_alignParentBottom="true"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginBottom="32dp"
-                            android:background="@drawable/circle"
-                            android:padding="4dp"
-                            android:src="@drawable/up_24dp"
+                            android:layout_marginBottom="12dp"
+                            android:src="@mipmap/swipe_up"
                             android:visibility="visible" />
 
                     </RelativeLayout>

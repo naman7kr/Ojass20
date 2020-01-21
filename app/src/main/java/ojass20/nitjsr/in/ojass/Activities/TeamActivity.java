@@ -67,7 +67,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
     ImageView imageView;
     LinearLayout linearLayout;
     ViewPager mPager;
-
+    TeamMemberAdapter mAdapter;
     boolean spinner_bug_flag = false, spinner_bug_flag_for_onTabselect = false;
 
     @Override
@@ -85,7 +85,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
 //        syncRecyclerViewsAndTabs();
         fetchData();
         //to set Team Member's data
-//        setData();
+//        getData();
         //Temporary push data
 //      fetch data
 //      pushData();
@@ -93,7 +93,6 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
     }
-
     private void init() {
        // swipeLayout = findViewById(R.id.swipe_layout);
         list = new ArrayList<>();
@@ -111,7 +110,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
         for (int i = 0; i < teamList.size(); i++) {
             tabLayout.addTab(tabLayout.newTab().setText("t" + (i + 1)));
         }
-        TeamMemberAdapter mAdapter = new TeamMemberAdapter(this,this, teamList);
+        mAdapter = new TeamMemberAdapter(this,this, teamList);
         mPager.setAdapter(mAdapter);
         mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setupWithViewPager(mPager);
@@ -153,7 +152,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         FILTER = position;
-        Log.e("onItemSelected: ", "level 167");
+//        Log.e("onItemSelected: ", "level 167");
         if(spinner_bug_flag){
             //no extra work needed
             spinner_bug_flag=false;
@@ -197,7 +196,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
                 else spinner_bug_flag_for_onTabselect=false;
                 teamSpinner.setSelection(team_no);
-                Log.e("onTabSelected: ", "selection continues..." + tab.getPosition());
+//                Log.e("onTabSelected: ", "selection continues..." + tab.getPosition());
 
 
                 Animation anim = AnimationUtils.loadAnimation(TeamActivity.this, R.anim.scale_in_tv);
@@ -218,7 +217,6 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
 
             }
         });
-
     }
 //    private void setBottomList(){
 //        adapter=new TeamMemberAdapter(TeamActivity.this,this,teamList,true,DEVELOPER);
@@ -313,13 +311,14 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private void fetchData() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Team");
+        ref.keepSynced(true);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 teamList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     TeamMember m = ds.getValue(TeamMember.class);
-                    Log.d("pubg", "onDataChange: " + m.name);
+//                    Log.d("pubg", "onDataChange: " + m.name);
                     if (!teamList.contains(m))
                         teamList.add(m);
 
@@ -328,7 +327,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
 //                adapter.notifyDataSetChanged();
 //                upper_adapter.notifyDataSetChanged();
 //                filter();
-
+//                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -346,7 +345,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void filter() {
-        Log.d(TAG, "filter: " + FILTER);
+//        Log.d(TAG, "filter: " + FILTER);
         teamList.clear();
         for (TeamMember member : list) {
             if (member.team == FILTER)
@@ -356,7 +355,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
             //onSelected(0);
         adapter.notifyDataSetChanged();
         upper_adapter.notifyDataSetChanged();
-        Log.e("TAG", String.valueOf(teamList.size()));
+//        Log.e("TAG", String.valueOf(teamList.size()));
     }
 
     @Override

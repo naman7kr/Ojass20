@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         android:focusable="true"
         android:paddingTop="66dp"
+        android:overScrollMode="never"
         />
 
     <include

@@ -33,6 +33,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -43,6 +44,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ojass20.nitjsr.in.ojass.Activities.ActivityZoomableImage;
 import ojass20.nitjsr.in.ojass.Activities.MainActivity;
 import ojass20.nitjsr.in.ojass.Fragments.CommentsFragment;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
@@ -180,6 +182,16 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
 
         final DatabaseReference dref= FirebaseDatabase.getInstance().getReference().child("Feeds");
 
+        holder.postImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context, ActivityZoomableImage.class);
+                i.putExtra("img",feedPosts.get(position).getImageURL());
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((MainActivity)context,
+                        holder.postImage,"feedsImg");
+                context.startActivity(i,options.toBundle());
+            }
+        });
         holder.comment_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
