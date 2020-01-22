@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private Handler backHandler;
     private int backFlag = 0;
     private String currentVersion;
-    private Boolean reachedEnd = false;
+    private Boolean refresh_flag = false, first_time_flag = true;
 
     String urlOfApp = "https://play.google.com/store/apps/details?id=ojass20.nitjsr.in.ojass";
 
@@ -154,7 +154,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 //        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
         init();
         initializeInstanceVariables();
-        setUpRecyclerView();
         setSlider();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -164,8 +163,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
         fetchBranchHead();
 //        eventStuff();
-
+        setUpRecyclerView();
         fetchFeedsDataFromFirebase();
+
 
         getSubscribedEvents();
         setUpNavigationDrawer();
@@ -180,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         refresh();
         Log.d("ak47", "onCreate: " + mauth.getCurrentUser().getEmail() + " " + mauth.getCurrentUser().getUid());
     }
+
     void init() {
         homeContainer = findViewById(R.id.home_container);
         recyclerview_progress = findViewById(R.id.recycler_view_progress);
@@ -197,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         scrollView = findViewById(R.id.nested_scroll_main);
 
     }
+
     private void initializeInstanceVariables() {
 
         ojassApplication = OjassApplication.getInstance();
@@ -231,14 +233,14 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 try {
 
-                    for(DataSnapshot ds: dataSnapshot.getChildren()){
-                        if(ds.child("uid").getValue(String.class).compareTo(mauth.getUid())==0){
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        if (ds.child("uid").getValue(String.class).compareTo(mauth.getUid()) == 0) {
                             //remove Subscription
                             subscribedEvents.add(ds.child("name").getValue(String.class));
                         }
                     }
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     Log.e("TAG", e.getStackTrace().toString());
                 }
             }
@@ -256,40 +258,39 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         fetchRegistrationStatus();
     }
 
-    private void fetchRegistrationStatus(){
+    private void fetchRegistrationStatus() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users").
                 child(mauth.getUid());
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int fields = 0;
-                if(dataSnapshot.hasChild("email")){
-                    if(!(dataSnapshot.child("email").getValue().equals("")))
-                        fields ++;
+                if (dataSnapshot.hasChild("email")) {
+                    if (!(dataSnapshot.child("email").getValue().equals("")))
+                        fields++;
                 }
-                if(dataSnapshot.hasChild("mobile")){
-                    if(!(dataSnapshot.child("mobile").getValue().equals("")))
-                        fields ++;
+                if (dataSnapshot.hasChild("mobile")) {
+                    if (!(dataSnapshot.child("mobile").getValue().equals("")))
+                        fields++;
                 }
-                if(dataSnapshot.hasChild("college")){
-                    if(!(dataSnapshot.child("college").getValue().equals("")))
-                        fields ++;
+                if (dataSnapshot.hasChild("college")) {
+                    if (!(dataSnapshot.child("college").getValue().equals("")))
+                        fields++;
                 }
-                if(dataSnapshot.hasChild("branch")){
-                    if(!(dataSnapshot.child("branch").getValue().equals("")))
-                        fields ++;
+                if (dataSnapshot.hasChild("branch")) {
+                    if (!(dataSnapshot.child("branch").getValue().equals("")))
+                        fields++;
                 }
-                if(dataSnapshot.hasChild("tshirtSize")){
-                    if(!(dataSnapshot.child("tshirtSize").getValue().equals("")))
-                        fields ++;
+                if (dataSnapshot.hasChild("tshirtSize")) {
+                    if (!(dataSnapshot.child("tshirtSize").getValue().equals("")))
+                        fields++;
                 }
 
                 Log.d(LOG_TAG, "this--> " + fields);
-                if(fields == 5){
+                if (fields == 5) {
                     isRegistrationComplete = true;
                     mDrwawerHeaderView.findViewById(R.id.nav_header_alert).setVisibility(View.GONE);
-                }
-                else{
+                } else {
                     isRegistrationComplete = false;
                     mDrwawerHeaderView.findViewById(R.id.nav_header_alert).setVisibility(View.VISIBLE);
                 }
@@ -367,8 +368,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (mFeedAdapter != null)
-                    mFeedAdapter.notifyDataSetChanged();
+                refresh_flag = true;
+                fetchFeedsDataFromFirebase();
+//                if (mFeedAdapter != null)
+//                    mFeedAdapter.notifyDataSetChanged();
                 if (mPosterAdapter != null)
                     mPosterAdapter.notifyDataSetChanged();
                 refreshLayout.setRefreshing(false);
@@ -539,7 +542,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     }
 
 
-
     private void eventStuff() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Events");
         progressDialog = new ProgressDialog(this);
@@ -548,7 +550,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         progressDialog.show();
 
         data = new ArrayList<>();
-
 
 
         ref.addValueEventListener(new ValueEventListener() {
@@ -709,15 +710,16 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private void setUpRecyclerView() {
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mFeedAdapter = new FeedAdapter(this, getSupportFragmentManager(), listposts, currentuid, this,mRecyclerView);
+        mFeedAdapter = new FeedAdapter(this, getSupportFragmentManager(), listposts, currentuid, this, mRecyclerView);
         mRecyclerView.setAdapter(mFeedAdapter);
         recyclerview_progress.setVisibility(View.GONE);
 
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String numpost = preferences.getString("PostNo", "0");
-        mRecyclerView.scrollToPosition(Integer.parseInt(numpost));
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        String numpost = preferences.getString("PostNo", "0");
+//        mRecyclerView.scrollToPosition(Integer.parseInt(numpost));
     }
+
     private void fetchFeedsDataFromFirebase() {
         Query query;
 
@@ -731,6 +733,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(refresh_flag == false && !first_time_flag){
+                    return;
+                }
+                first_time_flag = false;
+                refresh_flag = false;
+                Log.e("onDataChange: ", "level 89");
                 recyclerview_progress.setVisibility(View.VISIBLE);
                 listposts.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -766,10 +774,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                     Log.e("vila", post.getImageURL());
                     listposts.add(post);
                 }
+
                 setUpRecyclerView();
                 Collections.sort(listposts);
                 Log.e("VIVZ", "onDataChange: listposts count = " + listposts.size());
-                mFeedAdapter.notifyDataSetChanged();
+                //mFeedAdapter.notifyDataSetChanged();
+                recyclerview_progress.setVisibility(View.GONE);
             }
 
             @Override
@@ -778,13 +788,13 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             }
         });
 
-        initializeInstanceVariables();
-        //setUpRecyclerView();
-
-//        setUpArrayList();
-        setUpNavigationDrawer();
-        setUpAnimationForImageView(mPullUp);
-        detectTouchEvents();
+//        initializeInstanceVariables();
+//        //setUpRecyclerView();
+//
+////        setUpArrayList();
+//        setUpNavigationDrawer();
+//        setUpAnimationForImageView(mPullUp);
+//        detectTouchEvents();
 
     }
 
@@ -889,7 +899,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         ImageView profile_picture = mDrwawerHeaderView.findViewById(R.id.user_profile_picture);
         if (mauth.getCurrentUser().getPhotoUrl() != null) {
             profile_picture.setImageDrawable(null);
-            setGlideImage(this,mauth.getCurrentUser().getPhotoUrl().toString(),profile_picture);
+            setGlideImage(this, mauth.getCurrentUser().getPhotoUrl().toString(), profile_picture);
         }
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -907,10 +917,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
         mDrwawerHeaderView.findViewById(R.id.nav_header_alert).setOnClickListener(onClickListener);
 
-        if(!isRegistrationComplete){
+        if (!isRegistrationComplete) {
             mDrwawerHeaderView.findViewById(R.id.nav_header_alert).setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             mDrwawerHeaderView.findViewById(R.id.nav_header_alert).setVisibility(View.GONE);
         }
 
@@ -1048,13 +1057,13 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     }
 
     public void showList() {
-        final  ArrayList<EmergencyModel> data = new ArrayList<>();
-        data.add(new EmergencyModel("OJASS Convenor","9472903552"));
-        data.add(new EmergencyModel("NIT Control Room","9065527391"));
-        data.add(new EmergencyModel("Police","100"));
-        data.add(new EmergencyModel("Fire","102"));
-        data.add(new EmergencyModel("Ambulance","7542928298"));
-        data.add(new EmergencyModel("Women-Helpline","181"));
+        final ArrayList<EmergencyModel> data = new ArrayList<>();
+        data.add(new EmergencyModel("OJASS Convenor", "9472903552"));
+        data.add(new EmergencyModel("NIT Control Room", "9065527391"));
+        data.add(new EmergencyModel("Police", "100"));
+        data.add(new EmergencyModel("Fire", "102"));
+        data.add(new EmergencyModel("Ambulance", "7542928298"));
+        data.add(new EmergencyModel("Women-Helpline", "181"));
 
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_emergency);
@@ -1062,7 +1071,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         RecyclerView rV = dialog.findViewById(R.id.emergency_rview);
         rV.setLayoutManager(new LinearLayoutManager(this));
 
-        EmergencyAdapter emergencyAdapter = new EmergencyAdapter(this,data);
+        EmergencyAdapter emergencyAdapter = new EmergencyAdapter(this, data);
         rV.setAdapter(emergencyAdapter);
         dialog.findViewById(R.id.dialog_cancel).setOnClickListener(new View.OnClickListener() {
             @Override

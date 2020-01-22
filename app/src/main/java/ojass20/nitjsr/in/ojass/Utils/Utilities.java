@@ -128,7 +128,7 @@ public class Utilities {
                                 makeTextViewResizable(tv, -3, "...read Less",
                                         false,recyclerView,position,feedPost);
                                 tv.setTextColor(Color.WHITE);
-                                recyclerView.scrollToPosition(position);
+//                                recyclerView.scrollToPosition(position);
                             } else {
                                 tv.setLayoutParams(tv.getLayoutParams());
                                 tv.setText(feedPost.getContent(),
@@ -137,7 +137,7 @@ public class Utilities {
                                 makeTextViewResizable(tv, 3, "...read more",
                                         true,recyclerView,position,feedPost);
                                 tv.setTextColor(Color.WHITE);
-                                recyclerView.scrollToPosition(position);
+//                                recyclerView.scrollToPosition(position);
                             }
 
                         }
