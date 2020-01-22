@@ -715,7 +715,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String numpost = preferences.getString("PostNo", "");
+        String numpost = preferences.getString("PostNo", "0");
         mRecyclerView.scrollToPosition(Integer.parseInt(numpost));
     }
     private void fetchFeedsDataFromFirebase() {
