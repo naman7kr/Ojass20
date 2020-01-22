@@ -83,6 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/image_profile_activity"
             android:layout_marginTop="8dp"
+            android:layout_marginStart="10dp"
             android:fontFamily="@font/opensans"
             android:text="Rohit Kumar Singh"
             android:textColor="#fff"
@@ -92,6 +93,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:gravity="center_vertical"
             android:id="@+id/profile_alert"
             android:layout_below="@+id/username_profile_activity"
@@ -318,7 +320,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/opensans"
-                    android:text="Edit Profile"
+                    android:text="Complete Registration"
                     android:textColor="#fff"
                     android:textSize="14sp" />
             </LinearLayout>

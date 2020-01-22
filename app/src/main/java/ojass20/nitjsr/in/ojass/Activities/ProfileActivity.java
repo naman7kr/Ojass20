@@ -42,7 +42,7 @@ import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImage;
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final long ANIM_DUR = 300;
-    private LinearLayout mEventsInterested, mMyEvents, mMerchandise, mQR, mEditProfile;
+    private LinearLayout mEventsInterested, mMyEvents, mMerchandise, mQR, mEditProfile, mProfileAlert;
     private static final String LOG_TAG = "Profile";
     private RelativeLayout mDetailsLayout;
     private ArrayList<ValueAnimator> mAnimators;
@@ -78,6 +78,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         user_name.setText(mauth.getCurrentUser().getDisplayName());
 
         clickHandlers();
+
+
     }
 
     void clickHandlers(){
@@ -92,6 +94,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         mMyEvents.setOnClickListener(this);
         mMerchandise.setOnClickListener(this);
         mEditProfile.setOnClickListener(this);
+        mProfileAlert.setOnClickListener(this);
     }
     @Override
     protected void onResume() {
@@ -156,6 +159,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         mImageViews = new ArrayList<>();
         mBack = findViewById(R.id.back_arrow);
         mLogout = findViewById(R.id.profile_logout);
+        mProfileAlert = findViewById(R.id.profile_alert);
 
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
