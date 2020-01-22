@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 //        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
         init();
         initializeInstanceVariables();
-        setUpRecyclerView();
+
         setSlider();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
         fetchBranchHead();
 //        eventStuff();
-
+        setUpRecyclerView();
         fetchFeedsDataFromFirebase();
 
         getSubscribedEvents();
@@ -711,11 +711,11 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mFeedAdapter = new FeedAdapter(this, getSupportFragmentManager(), listposts, currentuid, this,mRecyclerView);
         mRecyclerView.setAdapter(mFeedAdapter);
-        recyclerview_progress.setVisibility(View.GONE);
+        recyclerview_progress.setVisibility(View.VISIBLE);
 
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String numpost = preferences.getString("PostNo", "");
+        String numpost = preferences.getString("PostNo", "0");
         mRecyclerView.scrollToPosition(Integer.parseInt(numpost));
     }
     private void fetchFeedsDataFromFirebase() {
@@ -731,7 +731,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                recyclerview_progress.setVisibility(View.VISIBLE);
+                recyclerview_progress.setVisibility(View.GONE);
                 listposts.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     //FeedPost post = ds.getValue(FeedPost.class);
@@ -766,7 +766,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                     Log.e("vila", post.getImageURL());
                     listposts.add(post);
                 }
-                setUpRecyclerView();
+
                 Collections.sort(listposts);
                 Log.e("VIVZ", "onDataChange: listposts count = " + listposts.size());
                 mFeedAdapter.notifyDataSetChanged();
@@ -777,14 +777,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
             }
         });
-
-        initializeInstanceVariables();
-        //setUpRecyclerView();
-
-//        setUpArrayList();
-        setUpNavigationDrawer();
-        setUpAnimationForImageView(mPullUp);
-        detectTouchEvents();
 
     }
 

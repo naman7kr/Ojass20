@@ -127,28 +127,31 @@ public class FeedbackActivity extends AppCompatActivity {
         name.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         name.setKeyListener(null);
         Submit=findViewById(R.id.FeedbackSubmit);
+        if(FirebaseAuth.getInstance().getCurrentUser().getEmail()!=null){
+            email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+            email.setEnabled(false);
+        }
 
-
-        ref.child("Users").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-
-                    HashMap<String,String> user=(HashMap<String,String>)dataSnapshot1.getValue();
-                    if(user.get("uid").equalsIgnoreCase(FirebaseAuth.getInstance().getCurrentUser().getUid()))
-                    {
-                        email.setText(user.get("email"));
-                        email.setKeyListener(null);
-                    }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        ref.child("Users").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+//
+//                    HashMap<String,String> user=(HashMap<String,String>)dataSnapshot1.getValue();
+//                    if(user.get("uid").equalsIgnoreCase(FirebaseAuth.getInstance().getCurrentUser().getUid()))
+//                    {
+//                        email.setText(user.get("email"));
+//                        email.setKeyListener(null);
+//                    }
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
         ref.child("feedback").addValueEventListener(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -185,6 +188,7 @@ public class FeedbackActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Feedback");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
     }
     public void closeKeyboard() {
         getWindow().setSoftInputMode(

@@ -20,8 +20,9 @@ android {
         applicationId "ojass20.nitjsr.in.ojass"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 3
-        versionName "2.0"
+        versionCode 4
+        versionName "2.1"
+        resConfigs "en", "US"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [
@@ -51,9 +52,8 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.google.android.material:material:1.0.0'
-
     implementation 'com.android.support:design:28.0.0'
-
+    implementation 'com.github.IslamKhSh:CardSlider:0.4'
     // firebase
     implementation 'com.google.firebase:firebase-auth:19.1.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
@@ -70,22 +70,14 @@ dependencies {
     implementation 'me.relex:circleindicator:1.2.2@aar'
     implementation 'de.hdodenhof:circleimageview:3.0.1'
 
-    implementation 'com.github.IslamKhSh:CardSlider:0.4'
-
-    implementation 'com.ogaclejapan.arclayout:library:1.1.0@aar'
 
     //One Signal
     implementation 'com.onesignal:OneSignal:[3.11.2, 3.99.99]'
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'com.google.android.play:core:1.6.4'
 
-    implementation 'jp.wasabeef:blurry:3.0.0'
-
-    implementation 'com.bignerdranch.android:expandablerecyclerview:1.0.3'
-
     implementation 'org.jsoup:jsoup:1.10.1'
     implementation 'es.voghdev.pdfviewpager:library:1.1.0'
-    implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.squareup.okhttp:okhttp:2.7.2'
 
 

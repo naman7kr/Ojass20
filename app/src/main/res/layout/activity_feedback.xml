@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_width="match_parent"
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+    <ScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@mipmap/events_background"
+        android:layout_below="@+id/toolbar"
     >
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -13,11 +17,7 @@
 
     tools:context=".Activities.FeedbackActivity"
     >
-    <include
-        layout="@layout/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -36,7 +36,6 @@
             android:layout_gravity="center"
            />
         <EditText
-
             android:background="#ffffff"
             android:layout_margin="30dp"
             android:id="@+id/FeedBackName"
@@ -48,7 +47,6 @@
             android:textSize="16sp"
            />
         <EditText
-
             android:background="#ffffff"
             android:id="@+id/FeedBackSubject"
             android:layout_margin="30dp"
@@ -60,7 +58,7 @@
             android:textSize="16sp"
             />
         <EditText
-
+            android:paddingLeft="5dp"
             android:background="#ffffff"
             android:layout_margin="30dp"
             android:id="@+id/FeedbackFeedBack"
@@ -80,9 +78,13 @@
             android:padding="20dp"
             android:id="@+id/FeedbackSubmit"
             android:layout_marginHorizontal="20dp"
-            android:background="#22d61b"/>
+            android:background="@color/colorPrimary"/>
     </LinearLayout>
 
 
 </LinearLayout>
 </ScrollView>
+    <include
+        layout="@layout/toolbar"
+        />
+</RelativeLayout>

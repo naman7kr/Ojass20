@@ -7,9 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 
-import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,9 +19,7 @@ import java.util.List;
 
 import ojass20.nitjsr.in.ojass.Adapters.FAQAdapter;
 import ojass20.nitjsr.in.ojass.Models.FaqModel;
-import ojass20.nitjsr.in.ojass.Models.TitleChild;
-import ojass20.nitjsr.in.ojass.Models.TitleCreater;
-import ojass20.nitjsr.in.ojass.Models.TitleParent;
+
 import ojass20.nitjsr.in.ojass.R;
 
 public class FaqActivity extends AppCompatActivity {

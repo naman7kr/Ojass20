@@ -12,19 +12,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
-import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ojass20.nitjsr.in.ojass.Models.FaqModel;
-import ojass20.nitjsr.in.ojass.Models.NotificationModal;
-import ojass20.nitjsr.in.ojass.Models.TitleChild;
-import ojass20.nitjsr.in.ojass.Models.TitleParent;
+
 import ojass20.nitjsr.in.ojass.R;
-import ojass20.nitjsr.in.ojass.Utils.TitleChildViewHolder;
-import ojass20.nitjsr.in.ojass.Utils.TitleParentViewHolder;
+
 public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.ViewHolder> {
 
     ArrayList<FaqModel> datalist;
