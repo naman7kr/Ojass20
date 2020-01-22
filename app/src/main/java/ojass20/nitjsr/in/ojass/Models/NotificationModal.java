@@ -1,8 +1,8 @@
 package ojass20.nitjsr.in.ojass.Models;
 
 public class NotificationModal {
-    private String ques,ans,event;
-    private boolean isExplandable=false;
+    public String ques,ans,event;
+    public boolean isExplandable=false;
 
     public NotificationModal(){}
     public NotificationModal(String ques, String ans, String event) {

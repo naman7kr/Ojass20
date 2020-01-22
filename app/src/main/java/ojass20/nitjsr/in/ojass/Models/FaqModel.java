@@ -2,8 +2,8 @@ package ojass20.nitjsr.in.ojass.Models;
 
 public class FaqModel {
 
-    String ques, ans;
-    private boolean isExplandable;
+    public String ques, ans;
+    public boolean isExplandable;
 
     public FaqModel(String ques, String ans) {
         this.ques=ques;
