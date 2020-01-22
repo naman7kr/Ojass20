@@ -233,8 +233,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 try {
 
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        if (ds.child("uid").getValue(String.class).compareTo(mauth.getUid()) == 0) {
+                    for(DataSnapshot ds: dataSnapshot.getChildren()){
+                        if(ds.child("uid").getValue(String.class).compareTo(mauth.getUid())==0){
                             //remove Subscription
                             subscribedEvents.add(ds.child("name").getValue(String.class));
                         }

@@ -18,10 +18,10 @@ public class IntroAdapter extends PagerAdapter {
     private Context context;
     private ImageView iv;
     private static final int sliderImg[] = {
-            R.drawable.ic_launcher_background,
-            R.drawable.ic_launcher_background,
-            R.drawable.ic_launcher_background,
-            R.drawable.ic_launcher_background
+            R.mipmap.intro_qr,
+            R.mipmap.intro_map,
+            R.mipmap.intro_profile,
+            R.mipmap.intro_home
     };
 
     public IntroAdapter(Context context, int[] slideLayouts, int[] slideLayoutsImageView){

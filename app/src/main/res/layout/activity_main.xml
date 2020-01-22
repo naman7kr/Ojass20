@@ -161,6 +161,7 @@
         android:id="@+id/home_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
         android:elevation="120dp"/>
 
     <com.google.android.material.navigation.NavigationView

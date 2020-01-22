@@ -12,6 +12,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 
@@ -31,6 +33,7 @@ public class ActivityZoomableImage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        hideStatusBar();
         setContentView(R.layout.activity_zoomable_image);
         String img_src = getIntent().getStringExtra("img");
         imageView = findViewById(R.id.zoom_img);
@@ -41,7 +44,8 @@ public class ActivityZoomableImage extends AppCompatActivity {
         getSupportActionBar().setTitle("Ojass'20");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+
+        toolbar.setBackgroundColor(getResources().getColor(R.color.transparent));
         final Drawable upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_white);
         upArrow.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
@@ -58,6 +62,12 @@ public class ActivityZoomableImage extends AppCompatActivity {
             }
         }).placeholder(R.mipmap.ic_placeholder).fitCenter().diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(imageView);
     }
+
+    private void hideStatusBar() {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
     @Override
     public void onBackPressed() {
         ActivityCompat.finishAfterTransition(this);

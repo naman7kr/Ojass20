@@ -37,7 +37,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 import androidx.appcompat.widget.Toolbar;
@@ -61,10 +63,10 @@ public class RegistrationPage extends AppCompatActivity {
     private Button register_button, skip_button,verify_otp;
     private CircleImageView self_image;
     private TextView over_text;
-
+    private ArrayList<String> branch_list;
     private boolean fromProfile;
 
-    private String[] tshirt_sizes_list, branch_list;
+    private String[] tshirt_sizes_list;
 
     private FirebaseAuth mauth;
     private String current_user_id;
@@ -76,9 +78,9 @@ public class RegistrationPage extends AppCompatActivity {
         setContentView(ojass20.nitjsr.in.ojass.R.layout.activity_registration_page);
 
         init();
-
-        branch_list = getResources().getStringArray(R.array.eng_courses);
-        Arrays.sort(branch_list);
+        branch_list = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.eng_courses)));
+        Collections.sort(branch_list);
+        branch_list.add("Others");
         ArrayAdapter<String> branchAdapter = new ArrayAdapter<String>(this, R.layout.
                 spinner_item, branch_list);
         branch_spinner.setAdapter(branchAdapter);
@@ -197,8 +199,8 @@ public class RegistrationPage extends AppCompatActivity {
 
                 if(dataSnapshot.hasChild("branch")){
                     String branch = dataSnapshot.child("branch").getValue(String.class);
-                    for(int i = 0;i < branch_list.length;i ++){
-                        if(branch.equals(branch_list[i])){
+                    for(int i = 0;i < branch_list.size();i ++){
+                        if(branch.equals(branch_list.get(i))){
                             branch_spinner.setSelection(i);
                             break;
                         }
@@ -232,7 +234,7 @@ public class RegistrationPage extends AppCompatActivity {
         data.put("email",email_reg.getText().toString());
         data.put("mobile",mobile_reg.getText().toString());
         data.put("college",college_reg.getText().toString());
-        data.put("branch", branch_list[(int) branch_spinner.getSelectedItemId()]);
+        data.put("branch", branch_list.get((int) branch_spinner.getSelectedItemId()));
 
         data.put("tshirtSize",tshirt_sizes_list[tshirt_size_spinner.getSelectedItemPosition()]);
 
