@@ -42,7 +42,9 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         holder.header.setText(datalist.get(position).getQues());
-        holder.body.setText(datalist.get(position).getAns());
+        if(datalist.get(position).getAns() != null){
+            holder.body.setText(Html.fromHtml(datalist.get(position).getAns()));
+        }
         holder.root.getBackground().setAlpha(50);
 
         boolean isExpanded = datalist.get(position).isExplandable();
