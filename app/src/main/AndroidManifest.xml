@@ -63,9 +63,6 @@
             android:parentActivityName=".Activities.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.Help"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".Activities.EventsActivity"
             android:screenOrientation="portrait" />
         <activity

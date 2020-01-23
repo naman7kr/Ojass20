@@ -3,8 +3,8 @@ package ojass20.nitjsr.in.ojass.Models;
 import java.util.ArrayList;
 
 public class BranchModal {
-    String about;
-    ArrayList<BranchHeadModal> branchHead;
+    public String about;
+    public ArrayList<BranchHeadModal> branchHead;
 
     public BranchModal(String about, ArrayList<BranchHeadModal> branchHead) {
         this.about = about;

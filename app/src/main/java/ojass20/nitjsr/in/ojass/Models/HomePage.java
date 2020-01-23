@@ -2,12 +2,12 @@ package ojass20.nitjsr.in.ojass.Models;
 
 public class HomePage {
     public String mTitle;
-    private int mImageId;
+    public  int mImageId;
     public String mCircleColor;
     public int mIndex;
-    private int mAngle;
-    private int mImageSpecificId;
-    private int mBackground;
+    public  int mAngle;
+    public  int mImageSpecificId;
+    public  int mBackground;
 
     public HomePage(String mTitle, String mCircleColor, int mIndex, int mImageId, int angle, int mImageSpecificId, int mBackground) {
         this.mTitle = mTitle;

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class FeedPost implements Comparable{
 
-    String timestamp;
+    public String timestamp;
     public String event;
     public String subEvent;
     public String content;

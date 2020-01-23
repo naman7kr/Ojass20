@@ -7,10 +7,10 @@ import com.google.gson.annotations.SerializedName;
 public class OTPResponse {
     @SerializedName("Status")
     @Expose
-    private String status;
+    public  String status;
     @SerializedName("Details")
     @Expose
-    private String details;
+    public  String details;
 
     public String getStatus() {
         return status;

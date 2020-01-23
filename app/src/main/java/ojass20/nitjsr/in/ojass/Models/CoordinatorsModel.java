@@ -4,8 +4,8 @@ package ojass20.nitjsr.in.ojass.Models;
 public class CoordinatorsModel {
 
 
-    String name;
-    String phone;
+    public String name;
+    public String phone;
 
 
     public CoordinatorsModel(String name, String phone) {

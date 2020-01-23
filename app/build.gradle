@@ -20,8 +20,8 @@ android {
         applicationId "ojass20.nitjsr.in.ojass"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 4
-        versionName "2.1"
+        versionCode 6
+        versionName "2.1.2"
         resConfigs "en", "US"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

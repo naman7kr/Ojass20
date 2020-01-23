@@ -8,11 +8,11 @@ import java.util.ArrayList;
 
 public class EventModel {
 
-    String about;
-    String branch;
-    String details;
-    String name;
-    String link;
+    public String about;
+    public String branch;
+    public String details;
+    public String name;
+    public String link;
 
 
 

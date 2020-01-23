@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         editor.apply();
 
         fetchBranchHead();
-//        eventStuff();
+
         setUpRecyclerView();
         fetchFeedsDataFromFirebase();
 
@@ -762,7 +762,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         Comments comment = dscomment.getValue(Comments.class);
                         mcomments.add(comment);
                     }
-
+                    Log.e("onDataChange: ", ds.child("event").getValue().toString());
                     String content = ds.child("content").getValue().toString();
                     String event_name = ds.child("event").getValue().toString();
                     String subevent_name = ds.child("subEvent").getValue().toString();
