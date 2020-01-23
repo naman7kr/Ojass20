@@ -1,7 +1,6 @@
 package ojass20.nitjsr.in.ojass.Adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,14 +29,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.item_notif,parent,false);
+        View view = inflater.inflate(R.layout.item_notif, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         NotificationModal model = datalist.get(position);
-        Log.e("LOL",model.getQues());
+//        Log.e("LOL",model.getQues());
         holder.event_name.setText(datalist.get(position).getEvent());
         holder.header.setText(model.getQues());
         holder.body.setText(model.getAns());
@@ -60,8 +59,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout root,footer_layout;
-        TextView header,body,event_name;
+        LinearLayout root, footer_layout;
+        TextView header, body, event_name;
+
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             header = itemView.findViewById(R.id.header);
