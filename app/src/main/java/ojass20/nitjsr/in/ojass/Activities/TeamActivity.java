@@ -166,7 +166,7 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
             for (int i = 0; i < teamList.size(); i++) {
                 int team_no;
                 if (position == 0) {
-                    team_no = 1;
+                    team_no = 0;
                 } else if (position == 1) {
                     team_no = 1;
                 } else {
@@ -189,7 +189,10 @@ public class TeamActivity extends AppCompatActivity implements AdapterView.OnIte
                 mPager.setCurrentItem(tab.getPosition());
                 TeamMember temp = teamList.get(tab.getPosition());
                 int team_no = temp.team;
-                if (team_no>=0 && team_no <=5){
+                if(team_no==0){
+                    team_no=0;
+                }
+                else if (team_no>=1 && team_no <=5){
                     team_no=1;
                 }
                 else{
