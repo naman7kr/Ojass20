@@ -1,7 +1,6 @@
 package ojass20.nitjsr.in.ojass.Adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +29,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.item_notif,parent,false);
+        View view = inflater.inflate(R.layout.item_notif, parent, false);
         return new ViewHolder(view);
     }
 
@@ -62,8 +61,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout root,footer_layout;
-        TextView header,body,event_name;
+        LinearLayout root, footer_layout;
+        TextView header, body, event_name;
+
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             header = itemView.findViewById(R.id.header);

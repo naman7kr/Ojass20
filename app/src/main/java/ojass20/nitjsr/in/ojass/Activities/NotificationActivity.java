@@ -1,21 +1,18 @@
 package ojass20.nitjsr.in.ojass.Activities;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,8 +26,6 @@ import java.util.Collections;
 import ojass20.nitjsr.in.ojass.Adapters.NotificationAdapter;
 import ojass20.nitjsr.in.ojass.Models.NotificationModal;
 import ojass20.nitjsr.in.ojass.R;
-import ojass20.nitjsr.in.ojass.Utils.Constants;
-import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
 
 import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_NOTIF;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.eventNames;
@@ -42,15 +37,16 @@ public class NotificationActivity extends AppCompatActivity {
     ProgressDialog p;
     Spinner spinner;
     DatabaseReference ref;
-    ArrayList<NotificationModal> data,displayData=new ArrayList<>();
+    ArrayList<NotificationModal> data, displayData = new ArrayList<>();
     NotificationAdapter adapter;
     TextView no_noti_text;
     ArrayList<String> notiList = new ArrayList<>();
     private boolean firstTymOpen = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        firstTymOpen = getIntent().getBooleanExtra("nottap",false);
+        firstTymOpen = getIntent().getBooleanExtra("nottap", false);
         setContentView(R.layout.activity_notification);
 
         init();
@@ -60,10 +56,10 @@ public class NotificationActivity extends AppCompatActivity {
         findViewById(R.id.ib_back_feed).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(firstTymOpen) {
+                if (firstTymOpen) {
                     startActivity(new Intent(NotificationActivity.this, MainActivity.class));
                     finish();
-                }else{
+                } else {
                     finish();
                 }
             }
@@ -72,7 +68,7 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     private void getEventList() {
-        if(eventNames.size()!=18 ){
+        if (eventNames.size() != 18) {
             eventNames.clear();
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Branches");
             ref.keepSynced(true);
@@ -102,8 +98,7 @@ public class NotificationActivity extends AppCompatActivity {
 
                 }
             });
-        }
-        else {
+        } else {
             setSpinner();
             getData();
         }
@@ -144,19 +139,19 @@ public class NotificationActivity extends AppCompatActivity {
     private void setSpinner() {
         notiList.clear();
         notiList.addAll(eventNames);
-        notiList.add(0,"Ojass");
-        notiList.add(0,"Subscribed");
-        notiList.add(0,"All");
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this,R.layout.spinner_item, notiList);
+        notiList.add(0, "Ojass");
+        notiList.add(0, "Subscribed");
+        notiList.add(0, "All");
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.spinner_item, notiList);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(arrayAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 onItemSelect();
-                if(displayData.size()==0){
+                if (displayData.size() == 0) {
                     no_noti_text.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     no_noti_text.setVisibility(View.GONE);
                 }
                 //  Toast.makeText(getApplication(),spinner.getSelectedItem().toString(),Toast.LENGTH_SHORT).show();
@@ -182,17 +177,17 @@ public class NotificationActivity extends AppCompatActivity {
         displayData.clear();
         String sel = (String) spinner.getSelectedItem();
 
-        for(int i=0;i<data.size();i++){
-            if(sel.compareTo("All")==0){
+        for (int i = 0; i < data.size(); i++) {
+            if (sel.compareTo("All") == 0) {
                 displayData.add(data.get(i));
                 continue;
             }
-            if(sel.compareTo("Subscribed")==0){
-                if(subscribedEvents.contains(data.get(i).getEvent())){
+            if (sel.compareTo("Subscribed") == 0) {
+                if (subscribedEvents.contains(data.get(i).getEvent())) {
                     displayData.add((data.get(i)));
                 }
             }
-            if(data.get(i).getEvent().compareTo(sel)==0){
+            if (data.get(i).getEvent().compareTo(sel) == 0) {
                 displayData.add(data.get(i));
             }
         }
@@ -208,18 +203,18 @@ public class NotificationActivity extends AppCompatActivity {
         String sel = (String) spinner.getSelectedItem();
         displayData.clear();
 
-        for(int i=0;i<data.size();i++){
-            if(sel.compareTo("All")==0){
+        for (int i = 0; i < data.size(); i++) {
+            if (sel.compareTo("All") == 0) {
                 displayData.add(data.get(i));
                 continue;
             }
-            if(data.get(i).getEvent().compareTo(sel)==0){
+            if (data.get(i).getEvent().compareTo(sel) == 0) {
                 displayData.add(data.get(i));
             }
         }
-        if(displayData.size()==0){
+        if (displayData.size() == 0) {
             no_noti_text.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             no_noti_text.setVisibility(View.GONE);
         }
 //        adapter = new NotificationAdapter(NotificationActivity.this, displayData);
@@ -230,10 +225,10 @@ public class NotificationActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(firstTymOpen) {
+        if (firstTymOpen) {
             startActivity(new Intent(NotificationActivity.this, MainActivity.class));
             finish();
-        }else {
+        } else {
             finish();
         }
     }

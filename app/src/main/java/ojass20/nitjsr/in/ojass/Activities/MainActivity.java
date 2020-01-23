@@ -762,17 +762,23 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         Comments comment = dscomment.getValue(Comments.class);
                         mcomments.add(comment);
                     }
-                    Log.e("onDataChange: ", ds.child("event").getValue().toString());
-                    String content = ds.child("content").getValue().toString();
-                    String event_name = ds.child("event").getValue().toString();
-                    String subevent_name = ds.child("subEvent").getValue().toString();
-                    String image_url = ds.child("imageURL").getValue().toString();
-                    String timestamp = (ds.hasChild("timestamp")) ? ds.child("timestamp").getValue().toString() : "0";
+                    try {
+                        String content = ds.child("content").getValue().toString();
+                        String event_name = ds.child("event").getValue().toString();
+                        String subevent_name = ds.child("subEvent").getValue().toString();
+                        String image_url = ds.child("imageURL").getValue().toString();
+                        String timestamp = (ds.hasChild("timestamp")) ? ds.child("timestamp").getValue().toString() : "0";
 
-                    FeedPost post = new FeedPost(timestamp, flag, post_id_temp, content, event_name, image_url, subevent_name, mlikes, mcomments);
+                        FeedPost post = new FeedPost(timestamp, flag, post_id_temp, content, event_name, image_url, subevent_name, mlikes, mcomments);
 
-                    Log.e("vila", post.getImageURL());
-                    listposts.add(post);
+                        Log.e("vila", post.getImageURL());
+                        listposts.add(post);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e(LOG_TAG,e.getLocalizedMessage());
+                        continue;
+                    }
                 }
 
                 setUpRecyclerView();
