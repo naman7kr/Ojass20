@@ -66,7 +66,7 @@ public class PrizeFragment extends Fragment {
                 (name.compareToIgnoreCase("MAT-SIM")==0) ||
                 (name.compareToIgnoreCase("Pro-Lo-Co")==0) ||
                 (name.compareToIgnoreCase("Hack-De-Science")==0) ||
-                (name.compareToIgnoreCase("FIFA")==0)
+                (name.compareToIgnoreCase("FIFA'19")==0)
                 //||
                 //(name.compareToIgnoreCase("agnikund")==0) ||
                 //(name.compareToIgnoreCase("knockout")==0)
@@ -145,7 +145,7 @@ public class PrizeFragment extends Fragment {
             prize1_T.setVisibility(View.GONE);
             prize2_T.setVisibility(View.GONE);
             prize3_T.setVisibility(View.GONE);
-        }else if(em.getName().compareToIgnoreCase("FIFA")==0){
+        }else if(em.getName().compareToIgnoreCase("FIFA'19")==0){
             text_firstyear.setText("1v1");
             text_secondyear.setText("2v2");
             text_thirdyear.setVisibility(View.GONE);

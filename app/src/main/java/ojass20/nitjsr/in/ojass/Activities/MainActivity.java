@@ -697,7 +697,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                         (name.compareToIgnoreCase("MAT-SIM") == 0) ||
                         (name.compareToIgnoreCase("Pro-Lo-Co") == 0) ||
                         (name.compareToIgnoreCase("Hack-De-Science") == 0) ||
-                        (name.compareToIgnoreCase("FIFA") == 0)
+                        (name.compareToIgnoreCase("FIFA'19") == 0)
             //||
             //(name.compareToIgnoreCase("agnikund")==0) ||
             //(name.compareToIgnoreCase("knockout")==0)
