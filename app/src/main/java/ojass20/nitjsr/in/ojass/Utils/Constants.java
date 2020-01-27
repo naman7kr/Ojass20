@@ -20,6 +20,7 @@ public class Constants {
     public static final String FIREBASE_REF_POSTERIMAGES = "PosterImages";
     public static final String FIREBASE_REF_IMG_SRC = "img_url";
     public static final String OTP_API_KEY = "3e01d6ec-3a86-11ea-9fa5-0200cd936042";
+    public static final String PLAYSTORE_LINK = "https://play.google.com/store/apps/details?id=ojass20.nitjsr.in.ojass&hl=en";
     public static final int[] eventImg = new int[]{
             R.mipmap.akriti,
             R.mipmap.avartan,

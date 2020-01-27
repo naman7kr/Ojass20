@@ -36,7 +36,7 @@ public class FeedbackActivity extends AppCompatActivity {
     EditText name, email, subject, feedback;
     Button Submit;
     int Count = -1;
-
+    String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +53,12 @@ public class FeedbackActivity extends AppCompatActivity {
         boolean check = true;
         if (TextUtils.isEmpty(email.getText().toString().trim())) {
             Toast.makeText(this, "Email Empty", Toast.LENGTH_LONG).show();
+
+            check = false;
+        }
+        if(!email.getText().toString().trim().matches(emailPattern)){
+            Toast.makeText(this, "Invalid Email", Toast.LENGTH_LONG).show();
+
             check = false;
         }
         if (TextUtils.isEmpty(name.getText().toString().trim())) {

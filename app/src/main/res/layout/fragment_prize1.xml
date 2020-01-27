@@ -538,6 +538,42 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="5dp"
+                            android:id="@+id/most_innovative_prize_layout"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="6dp"
+                                android:text="Most Innovative Bot prize"
+                                android:layout_gravity="center"
+                                android:textColor="@color/primaryTextColor"
+                                android:textSize="20sp"
+                                android:id="@+id/most_innovative_text"
+                                />
+                            <TextView
+                                android:layout_marginLeft="15dp"
+                                android:textStyle="bold"
+                                android:layout_gravity="center"
+                                android:textColor="@color/primaryTextColor"
+                                android:textSize="20sp"
+                                android:text="@string/Rs"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="1000"
+                                android:layout_marginLeft="10dp"
+                                android:textColor="@color/primaryTextColor"
+                                android:textSize="20sp"
+                                android:id="@+id/most_innovative_prize"
+                                />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:gravity="center"
                             android:layout_marginTop="10dp"
@@ -546,28 +582,28 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Fabulous Four teams will get Rs. 2000 each"
+                                android:text="Top 4 teams(Excluding winners): Rs. 2500"
                                 android:textSize="15sp"
                                 android:textColor="@color/primaryTextColor"
                                 />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="For best innovative design Rs. 1000"
+                                android:text="For best innovative design Rs. 2000"
                                 android:textSize="15sp"
                                 android:textColor="@color/primaryTextColor"
                                 />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="For best Design Report Rs. 1500"
+                                android:text="For best Design Report Rs. 2000"
                                 android:textSize="15sp"
                                 android:textColor="@color/primaryTextColor"
                                 />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="For best presentation Rs. 500"
+                                android:text="For best presentation Rs. 1000"
                                 android:textSize="15sp"
                                 android:textColor="@color/primaryTextColor"
                                 />

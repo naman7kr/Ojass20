@@ -76,33 +76,65 @@ public class TeamMemberAdapter extends PagerAdapter {
         name_upper.setText(list.get(position).name);
         designation_upper.setText(list.get(position).desig);
         setGlideImage(context,list.get(position).img,profile_upper);
+        if(getEmailUsers(position)){
+            if(list.get(position).desig.compareTo("Technical Secretary")!=0){
+                facebook_upper.setVisibility(View.GONE);
+            }
+            call_upper.setVisibility(View.GONE);
+            whatsapp_upper.setImageResource(R.drawable.gmail_icon);
+        }
 //        Glide.with(context).asBitmap().fitCenter().load(list.get(position).img).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(profile_upper);
         call_upper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String phone = list.get(position).call;
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
-                context.startActivity(intent);
+                try {
+                    String phone = list.get(position).call;
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+                    context.startActivity(intent);
+                }catch (Exception e){Toast.makeText(context, "Not Available", Toast.LENGTH_SHORT).show();}
+
             }
         });
         whatsapp_upper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent i;
+                try {
+                    if(getEmailUsers(position)){
+                        if(list.get(position).desig.compareTo("Technical Secretary")==0) {
+                            i = new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + "techsec.sc@nitjsr.ac.in"));
+                            context.startActivity(i.createChooser(i, "Choose an Email Client"));
+                        }else{
+                            Toast.makeText(context, "Not available", Toast.LENGTH_SHORT).show();
+                        }
 
-                String url = "https://api.whatsapp.com/send?phone=+91"+list.get(position).whatsapp;
-//                Toast.makeText(context, url, Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                context.startActivity(i);
-            }
+                    }else {
+                        i = new Intent(Intent.ACTION_VIEW);
+                        String url = "https://api.whatsapp.com/send?phone=+91" + list.get(position).whatsapp;
+//                   Toast.makeText(context, url, Toast.LENGTH_SHORT).show();
+
+                        i.setData(Uri.parse(url));
+                        context.startActivity(i);
+                    }
+
+                }catch (Exception e){
+                    Toast.makeText(context, "Not Available", Toast.LENGTH_SHORT).show();
+                }
+                }
+
         });
         facebook_upper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent viewIntent = new Intent("android.intent.action.VIEW",Uri.parse(list.get(position).facebook));
-                if(dev)
-                    viewIntent=new Intent("android.intent.action.VIEW",Uri.parse(list.get(position).github));
-                context.startActivity(viewIntent);
+                try {
+                    Intent viewIntent = new Intent("android.intent.action.VIEW",Uri.parse(list.get(position).facebook));
+                    if(dev)
+                        viewIntent=new Intent("android.intent.action.VIEW",Uri.parse(list.get(position).github));
+                    context.startActivity(viewIntent);
+                }catch (Exception e){
+                    Toast.makeText(context, "Not Available Now", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         arrow_left.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +151,12 @@ public class TeamMemberAdapter extends PagerAdapter {
         });
         container.addView(v);
         return v;
+    }
+
+    private boolean getEmailUsers(int position) {
+        if(list.get(position).desig.compareTo("Technical Secretary")==0 || list.get(position).team==0)
+            return true;
+        return false;
     }
 
     //    public TeamMemberAdapter(Context context,OnClickItem onClickItem, ArrayList<TeamMember> list,boolean side,boolean dev) {

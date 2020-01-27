@@ -479,8 +479,8 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
-        Log.e("HomeFrag", mFakeImage.getLeft() + " " + mFakeImage.getRight() + " " + mFakeImage.getTop() + " " + mFakeImage.getBottom());
-        Log.e("HomeFrag", e.getX() + " " + e.getY());
+//        Log.e("HomeFrag", mFakeImage.getLeft() + " " + mFakeImage.getRight() + " " + mFakeImage.getTop() + " " + mFakeImage.getBottom());
+//        Log.e("HomeFrag", e.getX() + " " + e.getY());
         if (((int) e.getX() >= mFakeImage.getLeft() && (int) e.getX() <= mFakeImage.getRight()) && ((int) e.getY() >= mFakeImage.getTop() && (int) e.getY() <= mFakeImage.getBottom())) {
             Log.e("HomeFrag", "I'm called");
             switch (mInd) {
@@ -497,7 +497,7 @@ public class HomeFragment extends Fragment implements
                     startActivity(new Intent(getContext(), MapsActivity.class));
                     break;
                 default:
-                    Log.e("LOL", "Bhai sahab ye kis line mein aa gye aap?");
+//                    Log.e("LOL", "Bhai sahab ye kis line mein aa gye aap?");
             }
         }
         return true;

@@ -20,7 +20,7 @@ android {
         applicationId "ojass20.nitjsr.in.ojass"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 7
+        versionCode 10
         versionName "2.1.3"
         resConfigs "en", "US"
         multiDexEnabled true

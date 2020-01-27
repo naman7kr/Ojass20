@@ -25,9 +25,9 @@ import ojass20.nitjsr.in.ojass.Utils.BtmNavVisCallback;
 public class PrizeFragment extends Fragment {
     private LinearLayout prize_layout;
     private TextView prize1,prize2,prize3,prize4,prize5,prize6,prizeT,prize1_F,prize2_F,prize3_F,prize1_S,prize2_S,prize3_S,prize1_T,prize2_T,prize3_T,prize1_Th,prize2_Th,prize3_Th;
-    private LinearLayout first,second,third,fourth,fifth,sixth,director_cut_layout,no_ground_zone_layout;
+    private LinearLayout first,second,third,fourth,fifth,sixth,director_cut_layout,no_ground_zone_layout,most_innovative_prize_layout;
     private LinearLayout first_first,first_second,first_third,second_first,second_second,second_third,third_first,third_second,third_third;
-    private TextView text_firstyear,text_secondyear,text_thirdyear, text_view;
+    private TextView text_firstyear,text_secondyear,text_thirdyear, text_view,most_innovative_prize,most_innovative_text;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -94,6 +94,27 @@ public class PrizeFragment extends Fragment {
         if(em.getName().compareToIgnoreCase("Film Chaupaal") == 0){
             text_view.setVisibility(View.VISIBLE);
             text_view.setText("Other prizes  ₹ 8000");
+        }
+        // for deus x machina
+        if(em.getBranch().compareToIgnoreCase("Deus-X-Machina")==0){
+            most_innovative_prize_layout.setVisibility(View.VISIBLE);
+            most_innovative_text.setText("Most Innovative Bot prize");
+            if(em.getName().compareToIgnoreCase("360 Mania")==0){
+                most_innovative_prize.setText("2000");
+            }else if(em.getName().compareToIgnoreCase("Battleship")==0){
+                most_innovative_prize.setText("3000");
+            }else if(em.getName().compareToIgnoreCase("BOT-A MAZE")==0){
+                most_innovative_prize.setText("6000");
+            }else if(em.getName().compareToIgnoreCase("Hurdles Hunter")==0){
+                most_innovative_prize.setText("2000");
+            }else if(em.getName().compareToIgnoreCase("Mac Fifa")==0){
+                most_innovative_prize.setText("2000");
+            }else{
+                most_innovative_text.setText("Special Event ( 2 vs 2 )");
+                most_innovative_prize.setText("6000");
+            }
+        }else{
+            most_innovative_prize_layout.setVisibility(View.GONE);
         }
         PrizeModel1 p1 = em.getP1();
         if(p1.getPrize1()!=null && p1.getPrize1()!=Long.valueOf(0)) {
@@ -222,6 +243,9 @@ public class PrizeFragment extends Fragment {
         prizeT.setText(String.valueOf(p2.getPrizeT()));
     }
     void init1(View view){
+        most_innovative_prize_layout = view.findViewById(R.id.most_innovative_prize_layout);
+        most_innovative_text = view.findViewById(R.id.most_innovative_text);
+        most_innovative_prize = view.findViewById(R.id.most_innovative_prize);
         prize_layout = view.findViewById(R.id.prize_layout);
         prize1 = view.findViewById(R.id.prize1);
         prize2 = view.findViewById(R.id.prize2);

@@ -738,7 +738,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 }
                 first_time_flag = false;
                 refresh_flag = false;
-                Log.e("onDataChange: ", "level 89");
+//                Log.e("onDataChange: ", "level 89");
                 recyclerview_progress.setVisibility(View.VISIBLE);
                 listposts.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -771,19 +771,19 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
                         FeedPost post = new FeedPost(timestamp, flag, post_id_temp, content, event_name, image_url, subevent_name, mlikes, mcomments);
 
-                        Log.e("vila", post.getImageURL());
+//                        Log.e("vila", post.getImageURL());
                         listposts.add(post);
                     }
                     catch (Exception e)
                     {
-                        Log.e(LOG_TAG,e.getLocalizedMessage());
+//                        Log.e(LOG_TAG,e.getLocalizedMessage());
                         continue;
                     }
                 }
 
                 setUpRecyclerView();
                 Collections.sort(listposts);
-                Log.e("VIVZ", "onDataChange: listposts count = " + listposts.size());
+//                Log.e("VIVZ", "onDataChange: listposts count = " + listposts.size());
                 //mFeedAdapter.notifyDataSetChanged();
                 recyclerview_progress.setVisibility(View.GONE);
             }
@@ -964,7 +964,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     public void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment = null;
         Class fragmentClass = null;
-        Log.d("ak47", "selectDrawerItem: " + menuItem.getItemId());
+//        Log.d("ak47", "selectDrawerItem: " + menuItem.getItemId());
         switch (menuItem.getItemId()) {
             case R.id.events:
                 startActivity(new Intent(MainActivity.this, EventsActivity.class));
@@ -1195,7 +1195,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         dialog.findViewById(R.id.update).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=ojass20.nitjsr.in.ojass")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=ojass20.nitjsr.in.ojass&hl=en")));
                 dialog.dismiss();
             }
         });
