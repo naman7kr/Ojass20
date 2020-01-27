@@ -42,6 +42,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -188,8 +189,7 @@ public class SubEventActivity extends AppCompatActivity {
                     });
 
                     return true;
-                }
-                else if (actionItem.getId() == R.id.item2) {
+                } else if (actionItem.getId() == R.id.item2) {
                     //Toast.makeText(SubEventActivity.this, "Heads clicked dumbass", Toast.LENGTH_SHORT).show();
                     mAbout.setVisibility(View.GONE);
                     Rect displayRectangle = new Rect();
@@ -213,7 +213,6 @@ public class SubEventActivity extends AppCompatActivity {
                     if (mBranchEvents.contains(mEventName.trim()))
                         s = "Branch Head";
                     mHeading.setText(s);
-
 
 
                     mProfile.add((ImageView) dialogView.findViewById(R.id.img1));
@@ -258,7 +257,7 @@ public class SubEventActivity extends AppCompatActivity {
                                 }
                             });
                             try {
-                                setGlideImage(SubEventActivity.this, bhNames.get(i).getImg(),mProfile.get(i));
+                                setGlideImage(SubEventActivity.this, bhNames.get(i).getImg(), mProfile.get(i));
                             } catch (Exception e) {
                                 Log.d("hello", bhNames.get(i).getName());
                             }
@@ -289,7 +288,7 @@ public class SubEventActivity extends AppCompatActivity {
                                 }
                             });
                             try {
-                                setGlideImage(SubEventActivity.this,bhNames.get(i).getImg(),mProfile.get(i));
+                                setGlideImage(SubEventActivity.this, bhNames.get(i).getImg(), mProfile.get(i));
                             } catch (Exception e) {
                                 Log.d("hello", bhNames.get(i).getName());
                             }
@@ -323,7 +322,7 @@ public class SubEventActivity extends AppCompatActivity {
                                 }
                             });
                             try {
-                                setGlideImage(SubEventActivity.this, bhNames.get(i).getImg(),mProfile.get(i));
+                                setGlideImage(SubEventActivity.this, bhNames.get(i).getImg(), mProfile.get(i));
                             } catch (Exception e) {
                                 Log.d("hello", bhNames.get(i).getName());
                             }
@@ -420,11 +419,16 @@ public class SubEventActivity extends AppCompatActivity {
     }
 
     ArrayList<SubEventsModel> getData() {
+        Log.e("SubEvent", SubEventsList.size() + "");
         HashMap<Integer, ArrayList<String>> subEventsName = SubEventsList;
         data.clear();
         Log.e("xx", "called again " + subEventsName.size());
+        HashSet<String> hashSet = new HashSet<>();
         for (int i = 0; i < subEventsName.get(mainEventPosition).size(); i++) {
-            data.add(new SubEventsModel(subEventsName.get(mainEventPosition).get(i)));
+            if (!hashSet.contains(subEventsName.get(mainEventPosition).get(i))) {
+                hashSet.add(subEventsName.get(mainEventPosition).get(i));
+                data.add(new SubEventsModel(subEventsName.get(mainEventPosition).get(i)));
+            }
         }
         return data;
     }
@@ -458,11 +462,11 @@ public class SubEventActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.subevents_menu,menu);
+        getMenuInflater().inflate(R.menu.subevents_menu, menu);
         this.menu = menu;
-        if(checkSubscribe()){
+        if (checkSubscribe()) {
             menu.findItem(R.id.subscribe).setIcon(R.drawable.ic_subscibed);
-        }else{
+        } else {
             menu.findItem(R.id.subscribe).setIcon(R.drawable.ic_unsubscribed);
         }
         return true;
@@ -480,30 +484,30 @@ public class SubEventActivity extends AppCompatActivity {
                 //go to EventsActivity with transition
                 finishAfterTransition();
             }
-        }else if(item.getItemId() == R.id.subscribe){
+        } else if (item.getItemId() == R.id.subscribe) {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("SubscribedEvents");
             //onSubscribe
             Log.e("SUBSCRIBE", eventNames.get(mainEventPosition));
             item.setEnabled(false);
 //            final MenuItem menuItem = menu.findItem(R.id.subscribe);
 //            showDialog
-            if(checkSubscribe()){
+            if (checkSubscribe()) {
                 //unsubscribe
-                Log.e("TAB","LOL");
+                Log.e("TAB", "LOL");
 
                 unSubscribeEvent(ref);
-            }else{
+            } else {
                 //subscribe
 
                 String key = ref.push().getKey();
-                Map<String,String> val = new HashMap<>();
-                val.put("name",eventNames.get(mainEventPosition));
-                val.put("uid",mAuth.getUid());
+                Map<String, String> val = new HashMap<>();
+                val.put("name", eventNames.get(mainEventPosition));
+                val.put("uid", mAuth.getUid());
                 ref.child(key).setValue(val).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         subscribedEvents.add(eventNames.get(mainEventPosition));
-                        Toast.makeText(SubEventActivity.this, "Subscribed to "+ eventNames.get(mainEventPosition), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SubEventActivity.this, "Subscribed to " + eventNames.get(mainEventPosition), Toast.LENGTH_SHORT).show();
                         menu.findItem(R.id.subscribe).setIcon(R.drawable.ic_subscibed);
                         item.setEnabled(true);
                     }
@@ -522,27 +526,27 @@ public class SubEventActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 try {
-                    for(DataSnapshot ds: dataSnapshot.getChildren()){
-                        if(ds.child("uid").getValue(String.class).compareTo(mAuth.getUid())==0
-                            && ds.child("name").getValue(String.class).compareTo(eventNames.get(mainEventPosition))==0
-                        ){
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        if (ds.child("uid").getValue(String.class).compareTo(mAuth.getUid()) == 0
+                                && ds.child("name").getValue(String.class).compareTo(eventNames.get(mainEventPosition)) == 0
+                        ) {
                             ds.getRef().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     menu.findItem(R.id.subscribe).setIcon(R.drawable.ic_unsubscribed);
                                     menu.findItem(R.id.subscribe).setEnabled(true);
-                                    Toast.makeText(SubEventActivity.this, "Unsubscribed from "+eventNames.get(mainEventPosition), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SubEventActivity.this, "Unsubscribed from " + eventNames.get(mainEventPosition), Toast.LENGTH_SHORT).show();
                                     Iterator<String> it = subscribedEvents.iterator();
                                     while (it.hasNext()) {
                                         String s = it.next();
-                                        if(s.compareTo(eventNames.get(mainEventPosition))==0)
+                                        if (s.compareTo(eventNames.get(mainEventPosition)) == 0)
                                             it.remove();
                                     }
                                 }
                             });
                         }
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
             }
@@ -556,12 +560,13 @@ public class SubEventActivity extends AppCompatActivity {
 
     private boolean checkSubscribe() {
 
-        if(subscribedEvents.contains(eventNames.get(mainEventPosition))){
+        if (subscribedEvents.contains(eventNames.get(mainEventPosition))) {
             return true;
 
         }
         return false;
     }
+
     public void getPostion(int pos) {
         String event = SubEventsList.get(mainEventPosition).get(pos).trim();
         Log.e("this", "" + event);
