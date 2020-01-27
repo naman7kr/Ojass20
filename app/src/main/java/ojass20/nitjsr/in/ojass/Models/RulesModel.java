@@ -5,7 +5,7 @@ package ojass20.nitjsr.in.ojass.Models;
  */
 
 public class RulesModel {
-    String text;
+    public String text;
 
 
     public RulesModel(String text) {

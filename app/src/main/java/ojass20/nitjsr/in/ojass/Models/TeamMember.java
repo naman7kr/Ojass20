@@ -20,9 +20,4 @@ public class TeamMember {
         this.linkdin=linkdin;
     }
 
-    @Override
-    public boolean equals(@Nullable Object obj) {
-        TeamMember teamMember=(TeamMember)obj;
-        return teamMember.name.equalsIgnoreCase(this.name)&&teamMember.team==this.team;
-    }
 }

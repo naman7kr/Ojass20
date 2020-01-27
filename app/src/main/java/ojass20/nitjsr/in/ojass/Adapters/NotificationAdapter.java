@@ -35,22 +35,24 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        NotificationModal model = datalist.get(position);
-//        Log.e("LOL",model.getQues());
-        holder.event_name.setText(datalist.get(position).getEvent());
-        holder.header.setText(model.getQues());
-        holder.body.setText(model.getAns());
-        holder.root.getBackground().setAlpha(50);
-        boolean isExpanded = datalist.get(position).isExplandable();
-        holder.footer_layout.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NotificationModal data = datalist.get(position);
-                data.setExplandable(!data.isExplandable());
-                notifyItemChanged(position);
-            }
-        });
+        try {
+            NotificationModal model = datalist.get(position);
+            holder.event_name.setText(datalist.get(position).getEvent());
+            holder.header.setText(model.getQues());
+            holder.body.setText(model.getAns());
+            holder.root.getBackground().setAlpha(50);
+            boolean isExpanded = datalist.get(position).isExplandable();
+            holder.footer_layout.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NotificationModal data = datalist.get(position);
+                    data.setExplandable(!data.isExplandable());
+                    notifyItemChanged(position);
+                }
+            });
+        }catch (Exception e){}
+
     }
 
     @Override

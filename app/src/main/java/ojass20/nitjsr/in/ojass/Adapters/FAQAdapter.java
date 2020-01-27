@@ -40,15 +40,19 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        try {
+            holder.header.setText(datalist.get(position).getQues());
+            if(datalist.get(position).getAns()!=null) {
+                holder.body.setText(Html.fromHtml(datalist.get(position).getAns()));
+            }
+            holder.root.getBackground().setAlpha(50);
 
-        holder.header.setText(datalist.get(position).getQues());
-        if(datalist.get(position).getAns() != null){
-            holder.body.setText(Html.fromHtml(datalist.get(position).getAns()));
+            boolean isExpanded = datalist.get(position).isExplandable();
+            holder.footerLayout.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+        }catch (Exception e){
+
         }
-        holder.root.getBackground().setAlpha(50);
 
-        boolean isExpanded = datalist.get(position).isExplandable();
-        holder.footerLayout.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
     }
 
     @Override

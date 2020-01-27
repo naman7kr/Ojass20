@@ -20,3 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -keepnames class org.jsoup.nodes.Entities
+-keep class ojass20.nitjsr.in.ojass.Models.**{*;}

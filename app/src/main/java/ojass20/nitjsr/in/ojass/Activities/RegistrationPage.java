@@ -178,13 +178,13 @@ public class RegistrationPage extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.hasChild("email")){
                     String email = dataSnapshot.child("email").getValue(String.class);
-                    if(email_reg!=null && (email_reg.getText().toString()).compareTo("")!=0) {
-                        email_reg.setText(email);
-                        email_reg.setEnabled(false);
-//                        Toast.makeText(RegistrationPage.this, email_reg.getText().toString(), Toast.LENGTH_SHORT).show();
-                    }else{
-                        email_reg.setEnabled(true);
-                    }
+//                    if(email_reg!=null && (email_reg.getText().toString()).compareTo("")!=0) {
+//                        email_reg.setText(email);
+////                        email_reg.setEnabled(false);
+////                        Toast.makeText(RegistrationPage.this, email_reg.getText().toString(), Toast.LENGTH_SHORT).show();
+//                    }else{
+//                        email_reg.setEnabled(true);
+//                    }
                 }
                 if(dataSnapshot.hasChild("mobile")){
                     String mobile = dataSnapshot.child("mobile").getValue(String.class);

@@ -1,7 +1,7 @@
 package ojass20.nitjsr.in.ojass.Models;
 
 public class EventHeadModal {
-    String name,phone;
+    public String name,phone;
 
     public EventHeadModal(String name, String phone){
         this.name=name;

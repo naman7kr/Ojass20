@@ -2,7 +2,7 @@ package ojass20.nitjsr.in.ojass.Models;
 
 public class BranchHeadModal {
 
-    String cn, name, img, wn;
+    public String cn, name, img, wn;
 
     public BranchHeadModal(String cn, String name, String img, String wn) {
         this.cn = cn;
