@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         >
 
 
@@ -53,8 +53,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:justificationMode="inter_word"
-                            android:paddingLeft="20dp"
-                            android:paddingRight="20dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
                             android:paddingBottom="65dp"
                             android:textSize="18sp"
                             android:overScrollMode="never"

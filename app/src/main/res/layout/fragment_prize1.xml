@@ -577,6 +577,50 @@
                             android:orientation="vertical"
                             android:gravity="center"
                             android:layout_marginTop="10dp"
+                            android:id="@+id/film_chaupaal_layout"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Best Actor  Rs. 1500"
+                                android:textSize="15sp"
+                                android:textColor="@color/primaryTextColor"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Best Story  Rs. 1500"
+                                android:textSize="15sp"
+                                android:textColor="@color/primaryTextColor"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Best Editing  Rs. 1500"
+                                android:textSize="15sp"
+                                android:textColor="@color/primaryTextColor"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Best Cinematography  Rs. 1500"
+                                android:textSize="15sp"
+                                android:textColor="@color/primaryTextColor"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Two Consolation Prize each of Rs. 1000"
+                                android:textSize="15sp"
+                                android:textColor="@color/primaryTextColor"
+                                />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_marginTop="10dp"
                             android:id="@+id/no_ground_zone_layout"
                             >
                             <TextView
@@ -611,11 +655,11 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="20sp"
+                            android:textSize="15sp"
                             tools:text="Other prizes : 2000"
                             android:id="@+id/text_view"
                             android:gravity="center"
-                            android:visibility="gone"
+                            android:visibility="visible"
                             android:textColor="@color/primaryTextColor" />
 
                         <LinearLayout

@@ -25,7 +25,7 @@ import ojass20.nitjsr.in.ojass.Utils.BtmNavVisCallback;
 public class PrizeFragment extends Fragment {
     private LinearLayout prize_layout;
     private TextView prize1,prize2,prize3,prize4,prize5,prize6,prizeT,prize1_F,prize2_F,prize3_F,prize1_S,prize2_S,prize3_S,prize1_T,prize2_T,prize3_T,prize1_Th,prize2_Th,prize3_Th;
-    private LinearLayout first,second,third,fourth,fifth,sixth,director_cut_layout,no_ground_zone_layout,most_innovative_prize_layout;
+    private LinearLayout first,second,third,fourth,fifth,sixth,director_cut_layout,no_ground_zone_layout,most_innovative_prize_layout,film_chaupaal_layout;
     private LinearLayout first_first,first_second,first_third,second_first,second_second,second_third,third_first,third_second,third_third;
     private TextView text_firstyear,text_secondyear,text_thirdyear, text_view,most_innovative_prize,most_innovative_text;
     @Nullable
@@ -92,8 +92,9 @@ public class PrizeFragment extends Fragment {
             text_view.setText("Other prizes  ₹ 1000");
         }
         if(em.getName().compareToIgnoreCase("Film Chaupaal") == 0){
-            text_view.setVisibility(View.VISIBLE);
-            text_view.setText("Other prizes  ₹ 8000");
+            film_chaupaal_layout.setVisibility(View.VISIBLE);
+        }else{
+            film_chaupaal_layout.setVisibility(View.GONE);
         }
         // for deus x machina
         if(em.getBranch().compareToIgnoreCase("Deus-X-Machina")==0){
@@ -263,6 +264,7 @@ public class PrizeFragment extends Fragment {
         no_ground_zone_layout = view.findViewById(R.id.no_ground_zone_layout);
         prizeT = view.findViewById(R.id.total_prize);
         text_view = view.findViewById(R.id.text_view);
+        film_chaupaal_layout = view.findViewById(R.id.film_chaupaal_layout);
     }
     void init2(View view){
         prize_layout = view.findViewById(R.id.prize_layout);

@@ -145,9 +145,11 @@ public class SubEventActivity extends AppCompatActivity {
         //set Image
         iv.setImageResource(Constants.eventImg[mainEventPosition]);
 
-        sv_fab.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
+        sv_fab.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener()
+        {
             @Override
-            public boolean onActionSelected(SpeedDialActionItem actionItem) {
+            public boolean onActionSelected(SpeedDialActionItem actionItem)
+            {
                 ViewGroup viewGroup = findViewById(android.R.id.content);
                 View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialog_layout, viewGroup, false);
                 mLL = new ArrayList<>();
@@ -189,7 +191,8 @@ public class SubEventActivity extends AppCompatActivity {
                     });
 
                     return true;
-                } else if (actionItem.getId() == R.id.item2) {
+                } else if (actionItem.getId() == R.id.item2)
+                {
                     //Toast.makeText(SubEventActivity.this, "Heads clicked dumbass", Toast.LENGTH_SHORT).show();
                     mAbout.setVisibility(View.GONE);
                     Rect displayRectangle = new Rect();

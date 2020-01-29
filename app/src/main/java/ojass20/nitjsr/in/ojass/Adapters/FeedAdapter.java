@@ -52,11 +52,9 @@ import ojass20.nitjsr.in.ojass.Fragments.CommentsFragment;
 import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.Models.Likes;
 import ojass20.nitjsr.in.ojass.R;
-import ojass20.nitjsr.in.ojass.Utils.RecyclerClickInterface;
-
 import static ojass20.nitjsr.in.ojass.Utils.Utilities.makeTextViewResizable;
-import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImage;
-import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImageWithoutCaching;
+import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImageAdjustedSize;
+
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHolder> {
 
@@ -138,7 +136,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         if (feedPosts.get(position).getImageURL() == null || feedPosts.get(position).getImageURL().equals("")) {
             holder.postImageView.setVisibility(View.GONE);
         } else {
-            setGlideImageWithoutCaching(context, feedPosts.get(position).getImageURL(), holder.postImage);
+            setGlideImageAdjustedSize(context, feedPosts.get(position).getImageURL(), holder.postImage);
         }
         mpost_id = feedPosts.get(position).getPostid();
 

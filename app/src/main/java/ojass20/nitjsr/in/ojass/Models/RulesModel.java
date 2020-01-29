@@ -6,17 +6,21 @@ package ojass20.nitjsr.in.ojass.Models;
 
 public class RulesModel {
     public String text;
+    public int ruleNo;
 
-
-    public RulesModel(String text) {
+    public RulesModel(int ruleNo, String text) {
 
         this.text = text;
-
+        this.ruleNo = ruleNo;
 
     }
     public RulesModel()
     {
 
+    }
+
+    public int getRuleNo() {
+        return ruleNo;
     }
 
     public String getText() {

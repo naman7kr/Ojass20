@@ -1,16 +1,20 @@
 package ojass20.nitjsr.in.ojass.Utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.text.Html;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
+
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.DisplayMetrics;
 import android.view.View;
+
+
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -26,7 +30,11 @@ import ojass20.nitjsr.in.ojass.Models.FeedPost;
 import ojass20.nitjsr.in.ojass.R;
 
 public class Utilities {
-
+    public static int deviceWidth(Activity activity){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
+    }
     public static void setGlideImage(final Context context,final String imgSrc, final ImageView iv){
         Glide.with(context).load(imgSrc).listener(new RequestListener<Drawable>() {
             @Override
@@ -40,7 +48,24 @@ public class Utilities {
             }
         }).placeholder(R.mipmap.ic_placeholder).fitCenter().diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(iv);
     }
+    public static void setGlideImageAdjustedSize(final Context context,final String imgSrc, final ImageView iv){
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) iv.getLayoutParams();
+        params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        params.height = deviceWidth((Activity) context);
+        Glide.with(context).load(imgSrc).listener(new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                return false;
+            }
 
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                iv.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                return false;
+            }
+        }).placeholder(R.mipmap.ic_placeholder)
+                .fitCenter().diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(iv);
+    }
     public static void setGlideImageWithoutCaching(final Context context,final String imgSrc, final ImageView iv){
         Glide.with(context).load(imgSrc).listener(new RequestListener<Drawable>() {
             @Override
@@ -52,7 +77,8 @@ public class Utilities {
             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                 return false;
             }
-        }).placeholder(R.mipmap.ic_placeholder).fitCenter().into(iv);
+        }).placeholder(R.mipmap.ic_placeholder)
+                .fitCenter().into(iv);
     }
     public static void makeTextViewResizable(final TextView tv,
                                              final int maxLine, final String expandText, final boolean viewMore, final RecyclerView recyclerView, final int position, final FeedPost feedPost) {

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -26,17 +25,16 @@ import android.view.animation.Animation;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -67,6 +65,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import me.relex.circleindicator.CircleIndicator;
@@ -95,6 +94,7 @@ import static ojass20.nitjsr.in.ojass.Utils.Constants.eventNames;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.subscribedEvents;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.updateSubEventsArray;
 import static ojass20.nitjsr.in.ojass.Utils.StringEqualityPercentCheckUsingJaroWinklerDistance.getSimilarity;
+import static ojass20.nitjsr.in.ojass.Utils.Utilities.deviceWidth;
 import static ojass20.nitjsr.in.ojass.Utils.Utilities.setGlideImage;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragInterface, ViewPager.OnPageChangeListener, FeedAdapter.CommentClickInterface {
@@ -214,9 +214,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 TranslateAnimation.RELATIVE_TO_PARENT, 0f,
                 TranslateAnimation.RELATIVE_TO_PARENT, 0.005f);
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = displayMetrics.widthPixels;
+        int width = deviceWidth(this);
         float x = (float) Math.sqrt(convertDpToPixel(125, this) * convertDpToPixel(125, this) - convertDpToPixel(41, this) * convertDpToPixel(41, this));
         float x1 = (float) Math.sqrt(convertDpToPixel(125, this) * convertDpToPixel(125, this) - convertDpToPixel(57, this) * convertDpToPixel(57, this));
 
@@ -306,6 +304,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private void fetchBranchHead() {
         branchData = new HashMap<>();
         progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Please Wait");
         progressDialog.setMessage("Initialising App data...");
         progressDialog.setCancelable(false);
         progressDialog.show();
@@ -545,13 +544,15 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private void eventStuff() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Events");
         progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Please Wait");
+
         progressDialog.setMessage("Initialising App data...");
         progressDialog.setCancelable(false);
         progressDialog.show();
 
         data = new ArrayList<>();
 
-
+        ref.keepSynced(true);
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -662,10 +663,13 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
                             for (DataSnapshot d : ds.child("rules").getChildren()) {
                                 if (d.exists()) {
+                                    int ruleNo = Integer.parseInt(d.getKey().substring(4));
+
                                     String s = d.child("text").getValue().toString();
-                                    rulesModelArrayList.add(new RulesModel(s));
+                                    rulesModelArrayList.add(new RulesModel(ruleNo,s));
                                 }
                             }
+                            Collections.sort(rulesModelArrayList,new RulesSorter());
                         } catch (Exception e) {
                             Log.d("hello", ds.child("name").getValue().toString());
                         }
@@ -687,7 +691,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             }
         });
     }
-
     private boolean checkPrizeType(String name) {
         if (
             //(name.compareToIgnoreCase("embetrix")==0 ) ||
@@ -1236,5 +1239,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 //            Log.e("hello", "printHashKey()", e);
 //        }
 //    }
+    public class RulesSorter implements Comparator<RulesModel> {
+
+    @Override
+    public int compare(RulesModel o1, RulesModel o2) {
+        return o1.getRuleNo()-o2.getRuleNo();
+    }
+}
 
 }
