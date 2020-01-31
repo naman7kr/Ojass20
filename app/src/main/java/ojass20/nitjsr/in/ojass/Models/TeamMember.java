@@ -3,11 +3,11 @@ package ojass20.nitjsr.in.ojass.Models;
 import androidx.annotation.Nullable;
 
 public class TeamMember {
-    public String name,desig,whatsapp,facebook,github,call,img,insta,linkdin;
+    public String name,desig,whatsapp,facebook,github,call,img,insta,linkdin,email;
     public int team;
 
     public TeamMember(){}
-    public TeamMember(String name, String desig, String whatsapp, String facebook,String insta,String linkdin, String github, String call,String img, int team) {
+    public TeamMember(String name, String desig, String whatsapp, String facebook,String insta,String linkdin, String github, String call,String img, int team,String email) {
         this.name = name;
         this.desig = desig;
         this.whatsapp = whatsapp;
@@ -18,6 +18,7 @@ public class TeamMember {
         this.img=img;
         this.insta=insta;
         this.linkdin=linkdin;
+        this.email = email;
     }
 
 }

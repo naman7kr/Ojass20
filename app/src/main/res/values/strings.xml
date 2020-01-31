@@ -106,5 +106,11 @@
         <item>XXL</item>
         <item>XXXL</item>
     </string-array>
+    <string name="techfest">NIT Jamshedpur</string>
+    <string name="about_us">
+        In the current era of advancing technology and automation, it is necessary that we be updated with the practical methodologies. Thus, to promote the idea of constructive thinking and sustainable growth, ​National Institute of Technology, Jamshedpur​ is organising the Thirteen installment of its annual Techno-Management fest, Ojass\'20 from February-28,2020 to March-1,2020. Ojass is the second largest fest of its kind in East India. It is a grand theatre of technological innovation and business calibre.
+With events ranging from filmmaking and photography to quizzes and prototype presentations, Ojass has events for everyone. Reinventing itself each year, Ojass sets new standards and hence, new challenges for everyone with every edition. The theme of Ojass\'20 is \"Indic Erudition\". So, buckle up and join us on this journey on February-28.
 
+    </string>
+    <string name="ojass_date">February-28,2020 to March-1,2020</string>
 </resources>

@@ -77,20 +77,30 @@ public class TeamMemberAdapter extends PagerAdapter {
         designation_upper.setText(list.get(position).desig);
         setGlideImage(context,list.get(position).img,profile_upper);
         if(getEmailUsers(position)){
+            call_upper.setImageResource(R.drawable.gmail_icon);
+            whatsapp_upper.setImageResource(R.drawable.ic_icon_instagram);
             if(list.get(position).desig.compareTo("Technical Secretary")!=0){
+                whatsapp_upper.setVisibility(View.GONE);
                 facebook_upper.setVisibility(View.GONE);
             }
-            call_upper.setVisibility(View.GONE);
-            whatsapp_upper.setImageResource(R.drawable.gmail_icon);
         }
 //        Glide.with(context).asBitmap().fitCenter().load(list.get(position).img).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(profile_upper);
         call_upper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    String phone = list.get(position).call;
-                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
-                    context.startActivity(intent);
+                    if(getEmailUsers(position)){
+                        if(!list.get(position).email.isEmpty()){
+                            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + list.get(position).email));
+                            context.startActivity(i.createChooser(i, "Choose an Email Client"));
+                        }else{
+                            Toast.makeText(context, "Not available", Toast.LENGTH_SHORT).show();
+                        }
+                    }else {
+                        String phone = list.get(position).call;
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+                        context.startActivity(intent);
+                    }
                 }catch (Exception e){Toast.makeText(context, "Not Available", Toast.LENGTH_SHORT).show();}
 
             }
@@ -101,13 +111,8 @@ public class TeamMemberAdapter extends PagerAdapter {
                 Intent i;
                 try {
                     if(getEmailUsers(position)){
-                        if(list.get(position).desig.compareTo("Technical Secretary")==0) {
-                            i = new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + "techsec.sc@nitjsr.ac.in"));
-                            context.startActivity(i.createChooser(i, "Choose an Email Client"));
-                        }else{
-                            Toast.makeText(context, "Not available", Toast.LENGTH_SHORT).show();
-                        }
-
+                        Intent likeIng = new Intent(Intent.ACTION_VIEW, Uri.parse(list.get(position).insta));
+                        context.startActivity(likeIng);
                     }else {
                         i = new Intent(Intent.ACTION_VIEW);
                         String url = "https://api.whatsapp.com/send?phone=+91" + list.get(position).whatsapp;
@@ -116,6 +121,7 @@ public class TeamMemberAdapter extends PagerAdapter {
                         i.setData(Uri.parse(url));
                         context.startActivity(i);
                     }
+
 
                 }catch (Exception e){
                     Toast.makeText(context, "Not Available", Toast.LENGTH_SHORT).show();
@@ -127,10 +133,12 @@ public class TeamMemberAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 try {
-                    Intent viewIntent = new Intent("android.intent.action.VIEW",Uri.parse(list.get(position).facebook));
-                    if(dev)
-                        viewIntent=new Intent("android.intent.action.VIEW",Uri.parse(list.get(position).github));
+
+                    Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(list.get(position).facebook));
+                    if (dev)
+                        viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(list.get(position).github));
                     context.startActivity(viewIntent);
+
                 }catch (Exception e){
                     Toast.makeText(context, "Not Available Now", Toast.LENGTH_SHORT).show();
                 }
