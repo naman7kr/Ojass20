@@ -42,7 +42,7 @@
             android:title="@string/feedback" />
         <item
             android:id="@+id/about_us"
-            android:icon="@drawable/icon_ojass"
+            android:icon="@drawable/ojass_icon_trns"
             android:title="About Us"
             />
         <item

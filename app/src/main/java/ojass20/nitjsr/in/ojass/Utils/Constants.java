@@ -119,7 +119,7 @@ public class Constants {
                 SubEventsList.get(j).clear();
             SubEventsList.put(j, entry.getValue());
         }
-        Log.e("cons", "" + SubEventsList.size());
+
     }
     public static ArrayList<String> subscribedEvents = new ArrayList<>();
 

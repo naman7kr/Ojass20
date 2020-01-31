@@ -19,7 +19,6 @@ import ojass20.nitjsr.in.ojass.Models.EventModel;
 import ojass20.nitjsr.in.ojass.Models.PrizeModel1;
 import ojass20.nitjsr.in.ojass.Models.PrizeModel2;
 import ojass20.nitjsr.in.ojass.R;
-import ojass20.nitjsr.in.ojass.Utils.BtmNavVisCallback;
 
 
 public class PrizeFragment extends Fragment {
@@ -89,12 +88,24 @@ public class PrizeFragment extends Fragment {
 
         if(em.getName().compareToIgnoreCase("Mad-Ad") == 0){
             text_view.setVisibility(View.VISIBLE);
-            text_view.setText("Other prizes  ₹ 1000");
+            text_view.setText("One Consolation prize  ₹ 1000");
+        }
+        if(em.getName().compareToIgnoreCase("NSCET")==0){
+            text_view.setText("Rs. 5000 for each branch x 6 branches");
+            text_view.setVisibility(View.VISIBLE);
+        }
+        if(em.getName().compareToIgnoreCase("LENS VIEW")==0){
+            text_view.setText("One Consolation prize ₹ 1000");
+            text_view.setVisibility(View.VISIBLE);
         }
         if(em.getName().compareToIgnoreCase("Film Chaupaal") == 0){
             film_chaupaal_layout.setVisibility(View.VISIBLE);
         }else{
             film_chaupaal_layout.setVisibility(View.GONE);
+        }
+        if(em.getName().compareToIgnoreCase("Jumbo Films")==0){
+            text_view.setText("Two prizes ₹ 1000");
+            text_view.setVisibility(View.VISIBLE);
         }
         // for deus x machina
         if(em.getBranch().compareToIgnoreCase("Deus-X-Machina")==0){
@@ -265,6 +276,7 @@ public class PrizeFragment extends Fragment {
         prizeT = view.findViewById(R.id.total_prize);
         text_view = view.findViewById(R.id.text_view);
         film_chaupaal_layout = view.findViewById(R.id.film_chaupaal_layout);
+
     }
     void init2(View view){
         prize_layout = view.findViewById(R.id.prize_layout);
