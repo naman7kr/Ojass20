@@ -17,6 +17,7 @@ import java.util.Map;
 import ojass20.nitjsr.in.ojass.R;
 
 public class Constants {
+    public static final String PACKAGE_NAME = "ojass20.nitjsr.in.ojass";
     public static final String FIREBASE_REF_POSTERIMAGES = "PosterImages";
     public static final String FIREBASE_REF_IMG_SRC = "img_url";
     public static final String OTP_API_KEY = "3e01d6ec-3a86-11ea-9fa5-0200cd936042";
@@ -118,7 +119,7 @@ public class Constants {
                 SubEventsList.get(j).clear();
             SubEventsList.put(j, entry.getValue());
         }
-        Log.e("cons", "" + SubEventsList.size());
+
     }
     public static ArrayList<String> subscribedEvents = new ArrayList<>();
 

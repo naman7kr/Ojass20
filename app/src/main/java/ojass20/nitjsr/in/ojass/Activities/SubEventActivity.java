@@ -20,6 +20,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.os.Handler;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 
 import android.util.Log;
@@ -175,7 +177,8 @@ public class SubEventActivity extends AppCompatActivity {
 
 
                     mHeading = dialogView.findViewById(R.id.heading);
-                    String s = Constants.eventNames.get(mainEventPosition);
+                    SpannableString s = new SpannableString(Constants.eventNames.get(mainEventPosition));
+                    s.setSpan(new UnderlineSpan(), 0, s.length(), 0);
                     mHeading.setText(s);
                     mAbout.setText(Html.fromHtml(MainActivity.branchData.get(Constants.eventNames.get(mainEventPosition)).getAbout()));
 

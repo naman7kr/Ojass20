@@ -25,6 +25,7 @@ import android.view.animation.Animation;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -154,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         init();
         initializeInstanceVariables();
         setSlider();
-
+        setupToolbar();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("PostNo", Integer.toString(0));
@@ -180,12 +181,28 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         Log.d("ak47", "onCreate: " + mauth.getCurrentUser().getEmail() + " " + mauth.getCurrentUser().getUid());
     }
 
+    private void setupToolbar() {
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setTitle("");
+        Button toolbarText = mToolbar.findViewById(R.id.toolbar_title);
+        toolbarText.setText("Ojass'20");
+        toolbarText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(MainActivity.this,AboutActivity.class);
+                startActivity(intent1);
+            }
+        });
+    }
+
     void init() {
         homeContainer = findViewById(R.id.home_container);
         recyclerview_progress = findViewById(R.id.recycler_view_progress);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mNavigationDrawer = (NavigationView) findViewById(R.id.navigation_view);
+        mToolbar =  findViewById(R.id.toolbar);
+        mDrawer =  findViewById(R.id.drawer_layout);
+        mNavigationDrawer =  findViewById(R.id.navigation_view);
 
         mDrwawerHeaderView = mNavigationDrawer.inflateHeaderView(R.layout.nav_header);
         mPullUp = findViewById(R.id.pull_up);
@@ -898,10 +915,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
 
 
     private void setUpNavigationDrawer() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("Ojass'20");
         TextView profile_name = mDrwawerHeaderView.findViewById(R.id.user_profile_name);
         profile_name.setText(mauth.getCurrentUser().getDisplayName());
         ImageView profile_picture = mDrwawerHeaderView.findViewById(R.id.user_profile_picture);
@@ -990,6 +1003,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
                 Intent intent = new Intent(MainActivity.this, DeveloperActivity.class);
                 intent.putExtra("DEV", "DEV");
                 startActivity(intent);
+                break;
+            case R.id.about_us:
+                Intent intent1 = new Intent(MainActivity.this,AboutActivity.class);
+                startActivity(intent1);
                 break;
             case R.id.logout:
                 mDrawer.closeDrawer(GravityCompat.START);
@@ -1203,41 +1220,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         });
         dialog.show();
         dialog.getWindow().setLayout(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("New update");
-//        builder.setMessage("We have changed since we last met. Let's get the updates.");
-//        builder.setCancelable(false);
-//        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=ojass20.nitjsr.in.ojass")));
-//                dialog.dismiss();
-//            }
-//        });
-//        builder.setNegativeButton("Later", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                dialog.dismiss();
-//            }
-//        });
-//        builder.show();
     }
-
-//    public static void printHashKey(Context pContext) {
-//        try {
-//            PackageInfo info = pContext.getPackageManager().getPackageInfo(pContext.getPackageName(), PackageManager.GET_SIGNATURES);
-//            for (Signature signature : info.signatures) {
-//                MessageDigest md = MessageDigest.getInstance("SHA");
-//                md.update(signature.toByteArray());
-//                String hashKey = new String(Base64.encode(md.digest(), 0));
-//                Log.i("hello", "printHashKey() Hash Key: " + hashKey);
-//            }
-//        } catch (NoSuchAlgorithmException e) {
-//            Log.e("hello", "printHashKey()", e);
-//        } catch (Exception e) {
-//            Log.e("hello", "printHashKey()", e);
-//        }
-//    }
     public class RulesSorter implements Comparator<RulesModel> {
 
     @Override

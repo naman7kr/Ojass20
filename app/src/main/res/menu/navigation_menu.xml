@@ -36,15 +36,15 @@
             android:icon="@drawable/ic_question_answer_black_24dp"
             android:title="@string/faqs" />
 
-        <!--<item
-            android:id="@+id/help"
-            android:icon="@drawable/ic_live_help_black_24dp"
-            android:title="@string/help" />
-        --><item
+       <item
             android:id="@+id/feedback"
             android:icon="@drawable/ic_feedback_black_24dp"
             android:title="@string/feedback" />
-
+        <item
+            android:id="@+id/about_us"
+            android:icon="@drawable/ojass_icon_trns"
+            android:title="About Us"
+            />
         <item
             android:id="@+id/logout"
             android:icon="@drawable/ic_logout"
