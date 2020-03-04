@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,13 +47,14 @@ public class DetailsFragment extends Fragment {
         try {
             final String url = MainActivity.data.get(SubEventActivity.position).getLink();
             TextView textView = view.findViewById(R.id.link);
-            if(MainActivity.data.get(SubEventActivity.position).name=="Spectra"){
+            if(MainActivity.data.get(SubEventActivity.position).name.compareToIgnoreCase("Spectra")==0){
                 textView.setText("Here is a Sample Abstract");
             }else {
                 textView.setText("Link to problem statement");
             }
             if(url==null || url.compareTo("")==0){
                 textView.setVisibility(View.GONE);
+                Log.e("TAG","LOL");
             }else{
                 textView.setVisibility(View.VISIBLE);
             }
