@@ -46,7 +46,11 @@ public class DetailsFragment extends Fragment {
         try {
             final String url = MainActivity.data.get(SubEventActivity.position).getLink();
             TextView textView = view.findViewById(R.id.link);
-            textView.setText("Link to problem statement");
+            if(MainActivity.data.get(SubEventActivity.position).name=="Spectra"){
+                textView.setText("Here is a Sample Abstract");
+            }else {
+                textView.setText("Link to problem statement");
+            }
             if(url==null || url.compareTo("")==0){
                 textView.setVisibility(View.GONE);
             }else{
