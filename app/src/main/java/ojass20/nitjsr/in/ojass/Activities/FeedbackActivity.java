@@ -42,11 +42,14 @@ public class FeedbackActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
         /* to initialize data */
-        init();
-        initToolbar();
-        setListner();
-        closeKeyboard();
+        try {
+            init();
+            initToolbar();
+            setListner();
+            closeKeyboard();
+        }catch (Exception e){
 
+        }
     }
 
     private boolean validate() {
@@ -84,12 +87,13 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     private void set() {
+        final String currentTime = System.currentTimeMillis() / 1000 + "";
         formdata = new HashMap<>();
         formdata.put("email", email.getText().toString().trim());
         formdata.put("name", name.getText().toString().trim());
         formdata.put("message", feedback.getText().toString().trim());
         formdata.put("subject", subject.getText().toString().trim());
-
+        formdata.put("timestamp",currentTime);
 
     }
 
@@ -161,14 +165,19 @@ public class FeedbackActivity extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Count = 0;
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    HashMap<String, String> feedback = (HashMap<String, String>) dataSnapshot1.getValue();
-                    if (feedback.get("name").equalsIgnoreCase(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())) {
-                        Count++;
+                try {
+                    Count = 0;
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        HashMap<String, String> feedback = (HashMap<String, String>) dataSnapshot1.getValue();
+                        if (feedback.get("name").equalsIgnoreCase(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())) {
+                            Count++;
+                        }
                     }
+                    Submit.setText("SUBMIT(" + (5 - Count) + ")");
+                }catch (Exception e){
+
                 }
-                Submit.setText("SUBMIT(" + (5 - Count) + ")");
+
 
             }
 

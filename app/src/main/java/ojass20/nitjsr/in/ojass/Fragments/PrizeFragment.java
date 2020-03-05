@@ -107,6 +107,10 @@ public class PrizeFragment extends Fragment {
             text_view.setText("Two prizes ₹ 1000");
             text_view.setVisibility(View.VISIBLE);
         }
+        if(em.getName().compareToIgnoreCase("Kahanikaar(Story Telling)")==0){
+            text_view.setText("Top 4 participants will be awarded Rs. 1000 each");
+            text_view.setVisibility(View.VISIBLE);
+        }
         // for deus x machina
         if(em.getBranch().compareToIgnoreCase("Deus-X-Machina")==0){
             most_innovative_prize_layout.setVisibility(View.VISIBLE);

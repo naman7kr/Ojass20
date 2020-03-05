@@ -12,7 +12,7 @@
     <application
         android:name=".Utils.OjassApplication"
         android:allowBackup="true"
-        android:icon="@drawable/icon_ojass"
+        android:icon="@mipmap/icon_ojass"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:launchMode="singleInstance"

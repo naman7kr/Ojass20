@@ -90,6 +90,7 @@ import ojass20.nitjsr.in.ojass.Utils.OjassApplication;
 
 import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_IMG_SRC;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.FIREBASE_REF_POSTERIMAGES;
+import static ojass20.nitjsr.in.ojass.Utils.Constants.PLAYSTORE_LINK;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.SubEventsMap;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.eventNames;
 import static ojass20.nitjsr.in.ojass.Utils.Constants.subscribedEvents;
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
     private String currentVersion;
     private Boolean refresh_flag = false, first_time_flag = true;
 
-    String urlOfApp = "https://play.google.com/store/apps/details?id=ojass20.nitjsr.in.ojass";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -713,7 +714,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
             //(name.compareToIgnoreCase("embetrix")==0 ) ||
                 (name.compareToIgnoreCase("High Voltage Concepts") == 0) ||
                         (name.compareToIgnoreCase("electrospection") == 0) ||
-                        (name.compareToIgnoreCase("Electro Scribble") == 0) ||
+                        (name.compareToIgnoreCase("Electroscribble") == 0) ||
                         (name.compareToIgnoreCase("MAT-SIM") == 0) ||
                         (name.compareToIgnoreCase("Pro-Lo-Co") == 0) ||
                         (name.compareToIgnoreCase("Hack-De-Science") == 0) ||
@@ -1161,7 +1162,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Home
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                Document document = Jsoup.connect(urlOfApp)
+                Document document = Jsoup.connect(PLAYSTORE_LINK)
                         .timeout(30000)
 //                        .userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
 //                        .referrer("http://www.google.com")

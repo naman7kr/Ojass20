@@ -254,13 +254,16 @@ public class LoginActivity extends AppCompatActivity {
         dref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child(mAuth.getCurrentUser().getUid()).exists()){
-                    Log.e("46onDataChange: ","heyy");
-                    sendToMainActicity();
-                }
-                else {
-                    sendToRegisteredActivity();
-                }
+                try {
+                    if(dataSnapshot.child(mAuth.getCurrentUser().getUid()).exists()){
+                        Log.e("46onDataChange: ","heyy");
+                        sendToMainActicity();
+                    }
+                    else {
+                        sendToRegisteredActivity();
+                    }
+                }catch (Exception e){}
+
 //                for(DataSnapshot ds:dataSnapshot.getChildren())
 //                {
 //                    Log.e("onDataChange: ",mAuth.getCurrentUser().getUid());

@@ -19,7 +19,7 @@
             android:layout_height="52dp"
             android:layout_gravity="center_vertical"
             android:scaleType="centerCrop"
-            android:src="@drawable/icon_ojass" />
+            android:src="@mipmap/icon_ojass" />
 
         <LinearLayout
             android:layout_width="match_parent"

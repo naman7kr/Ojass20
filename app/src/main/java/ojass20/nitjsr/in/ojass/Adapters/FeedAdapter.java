@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -129,7 +130,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.CustomViewHold
         holder.subevent_name.setText(feedPosts.get(position).getSubEvent());
         holder.content.setText(feedPosts.get(position).getContent());
         makeTextViewResizable(holder.content, 3, "read more", true, recyclerView, position, fp);
-        holder.like_text.setText(feedPosts.get(position).getLikes().size() + " Likes");
+        holder.like_text.setText(Html.fromHtml(feedPosts.get(position).getLikes().size() + " Likes"));
         holder.postImageView.setVisibility(View.VISIBLE);
         holder.progressBar.setVisibility(View.GONE);
         Log.e("Hey", feedPosts.get(position).getImageURL());

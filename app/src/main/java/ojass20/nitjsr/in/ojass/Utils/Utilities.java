@@ -49,9 +49,9 @@ public class Utilities {
         }).placeholder(R.mipmap.ic_placeholder).fitCenter().diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(iv);
     }
     public static void setGlideImageAdjustedSize(final Context context,final String imgSrc, final ImageView iv){
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) iv.getLayoutParams();
-        params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-        params.height = deviceWidth((Activity) context);
+//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) iv.getLayoutParams();
+//        params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+//        params.height = params.width;
         Glide.with(context).load(imgSrc).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -64,7 +64,9 @@ public class Utilities {
                 return false;
             }
         }).placeholder(R.mipmap.ic_placeholder)
-                .fitCenter().diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(iv);
+                .fitCenter()
+                .dontAnimate()
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(iv);
     }
     public static void setGlideImageWithoutCaching(final Context context,final String imgSrc, final ImageView iv){
         Glide.with(context).load(imgSrc).listener(new RequestListener<Drawable>() {
